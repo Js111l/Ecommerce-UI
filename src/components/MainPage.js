@@ -47,8 +47,7 @@ const MainPage = (props) => {
   const search = (e) => {
 
   }
-  const menuBarOnClickFunction = (e) => {
-  }
+
   const responsiveOptions = [
     {
       breakpoint: '1199px',

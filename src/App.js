@@ -4,47 +4,29 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import MainPage from './components/MainPage';
 import { InputText } from 'primereact/inputtext';
 import { Menubar } from 'primereact/menubar';
+import LoginContainer from './containers/LoginContainer';
+import RegisterContainer from './containers/RegisterContainer';
+import { useNavigate } from 'react-router-dom/dist/umd/react-router-dom.development';
+import MenuBarContainer from './containers/MenuBarContainer';
 
 
 function App() {
 
-  const items = [
-    {
-      icon: 'pi pi-fw pi-search',
-      command: () => menuBarOnClickFunction('checkout')
-    },
-    {
-      icon: 'pi pi-fw pi-heart',
-      command: () => menuBarOnClickFunction('checkout')
-    },
-    {
-      icon: 'pi pi-fw pi-user',
-      command: () => menuBarOnClickFunction('checkout'),
-      items: [
-        {
-            label: 'Zaloguj sie', //TODO -> tlumaczenia
-        },
-        {
-            label: 'Zarejestruj sie',
-        },
-      ]
-    },
-    {
-      icon: 'pi pi-fw pi-shopping-cart',
-      command: () => menuBarOnClickFunction('checkout')
-    },
-  ];
-  const menuBarOnClickFunction = (e) => {
-    //navigation('/'+e);
-  }
-
   return (
     <Router>
-           <Menubar model={items}/>
+          <MenuBarContainer>
+          </MenuBarContainer>
       <main>
         <Routes>
           <Route path='/'
-            Component={MainPage} />
+            Component={MainPage}
+          />
+          <Route path='/login'
+            Component={LoginContainer}
+          />
+          <Route path='/register'
+            Component={RegisterContainer}
+          />
         
   
         </Routes>
