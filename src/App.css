@@ -66,3 +66,6 @@
   min-width: 45px;
   max-width: fit-content;
 }
+.p-menubar .p-menuitem .p-submenu-list{
+  width: fit-content;
+}
