@@ -18,32 +18,36 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    color: white;
   }
-  to {
-    transform: rotate(360deg);
+  
+  .App-link {
+    color: #61dafb;
   }
-}
-@media screen and (max-width: 960px) {
-  .p-menubar .p-menubar-button {
+  
+  @keyframes App-logo-spin {
+    from {
+      transform: rotate(0deg);
+    }
+  
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  @media screen and (max-width: 960px) {
+    .p-menubar .p-menubar-button {
       display: none;
-  }
-  .p-menubar {
+    }
+  
+    .p-menubar {
       position: inherit;
-  }
-  .p-menubar .p-menubar-root-list {
+    }
+  
+    .p-menubar .p-menubar-root-list {
       display: flex;
       align-items: center;
       position: unset;
@@ -52,20 +56,65 @@
       border: unset;
       box-shadow: unset;
       width: unset;
+    }
   }
-}
-.p-menubar {
-  width: 100%;
-  display: flex;
-  justify-content: flex-end;
-  padding-right: 90px;
-}
-.p-menubar .p-menuitem {
-  position: relative;
-  /* width: 45px; */
-  min-width: 45px;
-  max-width: fit-content;
-}
-.p-menubar .p-menuitem .p-submenu-list{
-  width: fit-content;
-}
+  
+  .p-menubar {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 90px;
+  }
+  
+  .p-menubar .p-menuitem {
+    position: relative;
+    /* width: 45px; */
+    min-width: 45px;
+    max-width: fit-content;
+  }
+  
+  .p-menubar .p-menuitem .p-submenu-list {
+    width: fit-content;
+  }
+  
+  .column {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .login-container {
+    max-width: 600px;
+    background-color:#545557;
+  }
+  .child {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .content-container{
+    max-width: 1280px;
+    width: 100%;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: auto;
+    padding-right: 0rem;
+    padding-left: 0rem;
+  }
+  .p-password{
+    width:'100%';
+  }
+
+  .login-label{
+    font-size: medium;
+    font-weight:600;
+    padding-bottom: 10px;
+  }
+  .login-description{
+    padding-bottom: 30px;
+  }
+  .register-welcome-text{
+    padding-bottom: 10px;
+  }

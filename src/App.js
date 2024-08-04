@@ -8,6 +8,8 @@ import LoginContainer from './containers/LoginContainer';
 import RegisterContainer from './containers/RegisterContainer';
 import { useNavigate } from 'react-router-dom/dist/umd/react-router-dom.development';
 import MenuBarContainer from './containers/MenuBarContainer';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 
 function App() {
