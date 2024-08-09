@@ -1,23 +1,15 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react";
-import { Password } from 'primereact/password';
+import { useEffect } from "react";
 import PasswordCredentialsContainer from "./PasswordCredentialsContainer";
 import { Button } from "primereact/button";
 
 const LoginContainer = (props) => {
-    //const navigation = useNavigate();
-    const [loading, setLoading] = useState(true);
-  
-  
-    useEffect(() => {
-      const fetchProducts = async () => {
-  
-      };
-  
-      fetchProducts();
-    }, []);
-  
-  
+  useEffect(() => {
+    const fetchProducts = async () => {
+
+    };
+    fetchProducts();
+  }, []);
+
     const renderNewClientRegister = () => {
       return (
         <div style={{
@@ -62,11 +54,10 @@ const LoginContainer = (props) => {
     }
 
     return (
-      <div>
         <div className="content-container"
           style={{
             paddingTop: '140px'
-          }}>
+          }}> 
           <div className="row">
             <div className="col-md-6">
               <div className="login-label">Logowanie</div>
@@ -74,16 +65,16 @@ const LoginContainer = (props) => {
                 Jeśli posiadasz już konto, zaloguj się przy użyciu adresu e-mail.
               </div>
               <div className="column">
-                <PasswordCredentialsContainer/>
+                <PasswordCredentialsContainer
+                  setLoading={props.setLoading}
+                  showMessage={props.showMessage}
+                />
               </div>
             </div>
             <div className="col-md-6">
               {renderNewClientRegister()}
             </div>
           </div>
-        </div>
-        <div>
-        </div>
       </div>
     );
   };

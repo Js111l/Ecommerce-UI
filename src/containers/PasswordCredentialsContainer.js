@@ -2,18 +2,40 @@ import { Password } from "primereact/password";
 import { InputText } from 'primereact/inputtext';
 import { useState } from "react";
 import { Button } from "primereact/button";
-
+import AuthService from "../services/AuthService";
+import { useNavigate } from "react-router-dom";
+import { ProgressSpinner } from 'primereact/progressspinner';
 
 const PasswordCredentialsContainer = (props) => {
   const [password, setPassword] = useState(undefined);
   const [login, setLogin] = useState(undefined);
+  const service = new AuthService();
+  const navigate=useNavigate();
 
+ const loginUser = () => {
+  props.setLoading(true);
+    service
+      .login({
+        email: login,
+        password: password
+      }).then((response) => {
+          service.setToken(response);
+          props.setLoading(false);
+          navigate('/');
+      }).catch((err) => {
+        props.setLoading(false);
+        //error message TODO
+        props.showMessage('error','Wystapil blad poczas logowania')
+      })
+  }
   return (
     <div className="column">
       <label>E-mail</label>
       <InputText
         value={login}
-        onChange={(e) => setLogin(e.target.value)}
+        onChange={(e) => {
+          setLogin(e.target.value)
+        }}
         style={{
           width: '100%'
         }}
@@ -38,10 +60,14 @@ const PasswordCredentialsContainer = (props) => {
           }}>
             <span>Nie pamiętasz hasła?</span>
           </a>
-          <Button label="Zaloguj" variant="login-button" />
+
+          <Button label="Zaloguj" variant="login-button"
+          onClick={()=>{
+              loginUser()
+          }} />
         </div>
       </div>
-    </div>
+      </div>
   );
 };
 
