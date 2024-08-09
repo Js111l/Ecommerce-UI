@@ -21,11 +21,12 @@ const PasswordCredentialsContainer = (props) => {
       }).then((response) => {
           service.setToken(response);
           props.setLoading(false);
+          props.showMessage('success','Pomyślnie zalogowano')
           navigate('/');
       }).catch((err) => {
         props.setLoading(false);
         //error message TODO
-        props.showMessage('error','Wystapil blad poczas logowania')
+        props.showMessage('error','Wystapil blad poczas logowania '+err)
       })
   }
   return (
