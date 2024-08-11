@@ -4,11 +4,11 @@
 export default class AuthService{
 
     constructor() {
-        this.url = "http://localhost:8080/login"
+        this.url = "http://localhost:8080"
     }
 
     login(data){
-        return fetch(this.url, {
+        return fetch(this.url + '/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -25,6 +25,20 @@ export default class AuthService{
 
     }
 
+    register(data){
+        return fetch(this.url + '/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => {
+            return response;
+        });
+
+    }
     setToken(token){
         localStorage.setItem("token",token);
     }

@@ -3,7 +3,6 @@ import './App.css';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import MainPage from './components/MainPage';
 import LoginContainer from './containers/LoginContainer';
-import RegisterContainer from './containers/RegisterContainer';
 import MenuBarContainer from './containers/MenuBarContainer';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Messages } from 'primereact/messages';
@@ -17,8 +16,8 @@ function App() {
   const [loading, setLoading] = useState(false);
   const toast = useRef(null);
 
-  const showMessage = (type, message, summary) => {
-    toast.current.show({ severity: type, summary: summary, detail: message, life: 3000 });
+  const showMessage = (type, message, summary, sticky) => {
+    toast.current.show({ severity: type, summary: summary, detail: message, life: 3000, sticky: sticky});
   }
 
   return (
@@ -43,9 +42,8 @@ function App() {
                 showMessage={showMessage}
               />}
           />
-          <Route path='/register'
-            Component={RegisterContainer}
-          />
+         
+
         </Routes>
         {loading && (
           <div style={{

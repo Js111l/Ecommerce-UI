@@ -9,6 +9,7 @@ import { ProgressSpinner } from 'primereact/progressspinner';
 const PasswordCredentialsContainer = (props) => {
   const [password, setPassword] = useState(undefined);
   const [login, setLogin] = useState(undefined);
+
   const service = new AuthService();
   const navigate=useNavigate();
 
@@ -26,9 +27,31 @@ const PasswordCredentialsContainer = (props) => {
       }).catch((err) => {
         props.setLoading(false);
         //error message TODO
+        console.log(err);
         props.showMessage('error','Wystapil blad poczas logowania '+err)
       })
   }
+  const registerUser = () => {
+    console.log(props)
+
+    props.setLoading(true);
+    service
+      .register({
+        email: login,
+        password: password
+      }).then((response) => {
+        service.setToken(response);
+        props.setLoading(false);
+        props.setRegister(false);
+        props.showMessage('success', 'Aby dokończyć proces rejestracji prosimy o kliknięcie w link aktywacyjny wysłany na podany adres e-mail', null, true)
+      }).catch((err) => {
+        props.setLoading(false);
+        //error message TODO
+        console.log(err);
+        props.showMessage('error', 'Wystapil blad poczas rejestracji ' + err)
+      })
+  }
+
   return (
     <div className="column">
       <label>E-mail</label>
@@ -56,15 +79,18 @@ const PasswordCredentialsContainer = (props) => {
           justifyContent: 'flex-end',
           marginRight: '20px',
         }}>
-          <a href="" style={{
-            marginRight: 'auto'
-          }}>
-            <span>Nie pamiętasz hasła?</span>
-          </a>
+          {props.register ?
+            null :
+            <a href="" style={{
+              marginRight: 'auto'
+            }}>
+              <span>Nie pamiętasz hasła?</span>
+            </a>
+          }
 
-          <Button label="Zaloguj" variant="login-button"
+          <Button label={props.register ? "Zarejestruj" : "Zaloguj"} variant="login-button"
           onClick={()=>{
-              loginUser()
+            props.register ? registerUser() : loginUser()
           }} />
         </div>
       </div>

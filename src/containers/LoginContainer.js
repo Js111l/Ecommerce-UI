@@ -1,8 +1,9 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import PasswordCredentialsContainer from "./PasswordCredentialsContainer";
 import { Button } from "primereact/button";
 
 const LoginContainer = (props) => {
+  const [register, setRegister] = useState(false);
   useEffect(() => {
     const fetchProducts = async () => {
 
@@ -44,7 +45,9 @@ const LoginContainer = (props) => {
               <div style={{
                 marginRight: '20px'
               }}>
-                <Button label="Załóż konto" variant="login-button" />
+                <Button label="Załóż konto" variant="login-button" onClick={()=>{
+                  setRegister(true)
+                }} />
               </div>
               <Button label="Kontynuuj jako gość" variant="login-button" />
             </div>
@@ -53,6 +56,25 @@ const LoginContainer = (props) => {
       );
     }
 
+  const renderRegisterForm = () => {
+    return (
+      <div className="col-md-6">
+        <div className="login-label">Rejestracja</div>
+        <div className="login-description">
+           Wypełnij formularz, aby ukończyć proces rejestracji
+        </div>
+        <div className="column">
+          <PasswordCredentialsContainer
+            setLoading={props.setLoading}
+            showMessage={props.showMessage}
+            register={register}
+            setRegister={setRegister}
+          />
+        </div>
+      </div>
+    )
+  }
+
     return (
         <div className="content-container"
           style={{
@@ -60,7 +82,7 @@ const LoginContainer = (props) => {
           }}> 
           <div className="row">
             <div className="col-md-6">
-              <div className="login-label">Logowanie</div>
+            <div className="login-label"> Logowanie</div>
               <div className="login-description">
                 Jeśli posiadasz już konto, zaloguj się przy użyciu adresu e-mail.
               </div>
@@ -72,7 +94,11 @@ const LoginContainer = (props) => {
               </div>
             </div>
             <div className="col-md-6">
-              {renderNewClientRegister()}
+              {register ?
+                renderRegisterForm()
+                :
+                renderNewClientRegister()
+            }
             </div>
           </div>
       </div>
