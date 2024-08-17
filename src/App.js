@@ -31,9 +31,6 @@ function App() {
           <Toast ref={toast} position={'top-center'} />
         </div>
         <Routes>
-          <Route path='/'
-            Component={MainPage}
-          />
           <Route path='/login'
             element={
               <LoginContainer
@@ -42,7 +39,14 @@ function App() {
                 showMessage={showMessage}
               />}
           />
-         
+            <Route path='/'
+            element={
+              <MainPage
+                loading={loading}
+                setLoading={setLoading}
+                showMessage={showMessage}
+              />}
+          />
 
         </Routes>
         {loading && (
