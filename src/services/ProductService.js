@@ -7,8 +7,8 @@ export default class ProductService{
         this.url = "http://localhost:8080"
     }
 
-    getDashboard(data){
-        return fetch(this.url + '/products/dashboard', {
+    getDashboard(data, bestseller){
+        return fetch(this.url + `/products/dashboard?bestseller=${true}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
