@@ -68,7 +68,7 @@
   
   .p-menubar .p-menuitem {
     position: relative;
-    /* width: 45px; */
+    width: 45px; 
     min-width: 45px;
     max-width: fit-content;
   }
@@ -132,4 +132,31 @@
   align-items: 'center';
   justify-content: 'center';
   text-align: 'center';
+}
+.custom-menubar {
+  justify-content: space-between;
+}
+
+.custom-menubar .p-menubar-start {
+  /* width: '920px'; */
+  padding-left: 40%;
+  position: relative;
+  z-index: 1, 
+}
+
+
+
+
+  .card {
+    background: var(--surface-card);
+    padding: 2rem;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+}
+
+.p-card{
+  box-shadow: none;
+}
+.p-card .p-component col{
+  width: 100px;
 }

@@ -9,6 +9,7 @@ import { Messages } from 'primereact/messages';
 import { BlockUI } from 'primereact/blockui';
 import LoaderContainer from './containers/LoaderContainer';
 import { Toast } from 'primereact/toast';
+import CategoryContainer from './containers/CategoryContainer';
 
 
 
@@ -34,6 +35,14 @@ function App() {
           <Route path='/login'
             element={
               <LoginContainer
+                loading={loading}
+                setLoading={setLoading}
+                showMessage={showMessage}
+              />}
+          />
+          <Route path='/category/list'
+            element={
+              <CategoryContainer
                 loading={loading}
                 setLoading={setLoading}
                 showMessage={showMessage}
