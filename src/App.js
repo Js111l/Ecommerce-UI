@@ -10,6 +10,7 @@ import { BlockUI } from 'primereact/blockui';
 import LoaderContainer from './containers/LoaderContainer';
 import { Toast } from 'primereact/toast';
 import CategoryContainer from './containers/CategoryContainer';
+import ProductDetailsContainer from './containers/ProductDetailsContainer';
 
 
 
@@ -35,6 +36,14 @@ function App() {
           <Route path='/login'
             element={
               <LoginContainer
+                loading={loading}
+                setLoading={setLoading}
+                showMessage={showMessage}
+              />}
+          />
+          <Route path='/product/details/:id'
+            element={
+              <ProductDetailsContainer
                 loading={loading}
                 setLoading={setLoading}
                 showMessage={showMessage}

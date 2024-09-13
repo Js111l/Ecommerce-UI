@@ -6,10 +6,15 @@ import { Tag } from 'primereact/tag';
 import { classNames } from 'primereact/utils';
 import ProductService from "../services/ProductService";
 import {Card } from 'primereact/card'
+import { Dropdown } from "primereact/dropdown";
+import { Paginator } from 'primereact/paginator';
+
 const CategoryListContainer = (props) => {
     const [loading, setLoading] = useState(true);
     const [layout, setLayout] = useState('grid');
     const [products, setProducts] = useState([]);
+    const [first, setFirst] = useState(0);
+    const [rows, setRows] = useState(10);
 
     const service = new ProductService();
 
@@ -116,439 +121,742 @@ const CategoryListContainer = (props) => {
         );
     };
 
+    const onPageChange = (event) => {
+      setFirst(event.first);
+      setRows(event.rows);
+  };
+
     return (
       <div>
-      <div className="row">
-        {/* <DataView value={products.slice(1,3)} itemTemplate={itemTemplate} layout={layout} header={header()} />
-        <DataView value={products.slice(1,3)} itemTemplate={itemTemplate} layout={layout} header={header()} />
-        <DataView value={products.slice(1,3)} itemTemplate={itemTemplate} layout={layout} header={header()} /> */}
-   (
-    <Card className="col"
-     style={{
-      width:'100px'
-    }}>
-      <div className="col-2 col-sm-2 col-lg-2 col-xl-2 p-2" key={'product.id'}>
-        <div className="p-4 border-1 surface-border surface-card border-round">
-          <div className="flex flex-column align-items-center gap-3 py-5">
-            <img className="w-9 shadow-2 border-round" src={`https://primefaces.org/cdn/primereact/images/product/${'product.image'}`}
-            alt={'product.name'} />
-            <div className="text-2xl font-bold">{'product.name'}</div>
-            <Rating value={'product.rating'} readOnly cancel={false}></Rating>
+        <div style={{maxWidth:'90%'}}>
+          <div
+            className="row"
+            style={{ marginLeft: "35%", marginTop: "5%", maxWidth: "100%" }}
+          >
+            <Dropdown
+              placeholder="Sortuj"
+              style={{
+                width: "13%",
+                marginRight: "20px",
+              }}
+            ></Dropdown>
+            <Dropdown
+              placeholder="Kategoria"
+              style={{
+                width: "13%",
+                marginRight: "20px",
+              }}
+            ></Dropdown>
+            <Dropdown
+              placeholder="Marka"
+              style={{
+                width: "13%",
+                marginRight: "20px",
+              }}
+            ></Dropdown>
+            <Dropdown
+              placeholder="Kolor"
+              style={{
+                width: "13%",
+                marginRight: "20px",
+              }}
+            ></Dropdown>
+          </div>
+          <div className="row" style={{ marginLeft: "35%", marginTop: "1%" }}>
+            <Dropdown
+              placeholder="Faktura"
+              style={{
+                width: "13%",
+                marginRight: "20px",
+              }}
+            ></Dropdown>
+            <Dropdown
+              placeholder="Cena"
+              style={{
+                width: "13%",
+                marginRight: "20px",
+              }}
+            ></Dropdown>
+            <Dropdown
+              placeholder="Długość rękawa"
+              style={{
+                width: "13%",
+                marginRight: "20px",
+              }}
+            ></Dropdown>
+            <Dropdown
+              placeholder="Fason"
+              style={{
+                width: "13%",
+                marginRight: "20px",
+              }}
+            ></Dropdown>
           </div>
         </div>
-      </div>
-    </Card>
-    <Card className="col"
-     style={{
-      width:'100px'
-    }}>
-      <div className="col-2 col-sm-2 col-lg-2 col-xl-2 p-2" key={'product.id'}>
-        <div className="p-4 border-1 surface-border surface-card border-round">
-          <div className="flex flex-column align-items-center gap-3 py-5">
-            <img className="w-9 shadow-2 border-round" src={`https://primefaces.org/cdn/primereact/images/product/${'product.image'}`}
-            alt={'product.name'} />
-            <div className="text-2xl font-bold">{'product.name'}</div>
-            <Rating value={'product.rating'} readOnly cancel={false}></Rating>
-          </div>
-        </div>
-      </div>
-    </Card>
-    <Card className="col"
-     style={{
-      width:'100px'
-    }}>
-      <div
-        style={{
-          width: '300px'
-        }}>
-        <div className="mb-3">
-          <img src={'/buty2.jpg'} alt={'product.name'} style={{
-            width: '300px',
-            height: '350px',
-            cursor: 'pointer',
-            marginTop: '5%'
-          }} 
-          onClick={() => {
-            
-          }}
-          onMouseEnter={() => {
-          //  setHoverStatus({
-          //     status: true,
-          //     id: index
-          //  });
-          }}
-            onMouseLeave={() => {
-              // setHoverStatus({
-              //   status: false,
-              //   id: index
-              // });
-            }}
-          />
-        </div>
-        <div className='container'>
-          <div className='row' style={{ display: 'flex', justifyContent: 'center', marginTop:'10%' }}>
-            {'product.name'}
-          </div>
-          <div className='row' style={{ display: 'flex', justifyContent: 'center',marginTop:'5%', color:'gray'}}>
-            {'product.category'}
-          </div>
-          <div className='row' style={{ display: 'flex', justifyContent: 'center',marginTop:'5%', color:'gray'}}>
-            {'product.price'}
-          </div>
-          {/* <div style={{ display: 'flex', justifyContent: 'center', marginTop:'8%' }}>
-            <Button //icon="pi pi-search"
-             rounded style={{ marginRight: '20px' }} label='Ulubione'/>
-            <Button icon="pi pi-star-fill" rounded label='Dodaj do koszyka'/>
-          </div> */}
-        </div>
-      </div>
-    </Card>
-      </div>
-         <div className="row">
-         {/* <DataView value={products.slice(1,3)} itemTemplate={itemTemplate} layout={layout} header={header()} />
-         <DataView value={products.slice(1,3)} itemTemplate={itemTemplate} layout={layout} header={header()} />
-         <DataView value={products.slice(1,3)} itemTemplate={itemTemplate} layout={layout} header={header()} /> */}
-    (
-     <Card className="col"
-      style={{
-       width:'100px'
-     }}>
-       <div className="col-2 col-sm-2 col-lg-2 col-xl-2 p-2" key={'product.id'}>
-         <div className="p-4 border-1 surface-border surface-card border-round">
-           <div className="flex flex-column align-items-center gap-3 py-5">
-             <img className="w-9 shadow-2 border-round" src={`https://primefaces.org/cdn/primereact/images/product/${'product.image'}`}
-             alt={'product.name'} />
-             <div className="text-2xl font-bold">{'product.name'}</div>
-             <Rating value={'product.rating'} readOnly cancel={false}></Rating>
-           </div>
-         </div>
-       </div>
-     </Card>
-     <Card className="col"
-      style={{
-       width:'100px'
-     }}>
-       <div className="col-2 col-sm-2 col-lg-2 col-xl-2 p-2" key={'product.id'}>
-         <div className="p-4 border-1 surface-border surface-card border-round">
-           <div className="flex flex-column align-items-center gap-3 py-5">
-             <img className="w-9 shadow-2 border-round" src={`https://primefaces.org/cdn/primereact/images/product/${'product.image'}`}
-             alt={'product.name'} />
-             <div className="text-2xl font-bold">{'product.name'}</div>
-             <Rating value={'product.rating'} readOnly cancel={false}></Rating>
-           </div>
-         </div>
-       </div>
-     </Card>
-     <Card className="col"
-      style={{
-       width:'100px'
-     }}>
-       <div
-         style={{
-           width: '300px'
-         }}>
-         <div className="mb-3">
-           <img src={'/buty2.jpg'} alt={'product.name'} style={{
-             width: '300px',
-             height: '350px',
-             cursor: 'pointer',
-             marginTop: '5%'
-           }} 
-           onClick={() => {
-             
-           }}
-           onMouseEnter={() => {
-           //  setHoverStatus({
-           //     status: true,
-           //     id: index
-           //  });
-           }}
-             onMouseLeave={() => {
-               // setHoverStatus({
-               //   status: false,
-               //   id: index
-               // });
-             }}
-           />
-         </div>
-         <div className='container'>
-           <div className='row' style={{ display: 'flex', justifyContent: 'center', marginTop:'10%' }}>
-             {'product.name'}
-           </div>
-           <div className='row' style={{ display: 'flex', justifyContent: 'center',marginTop:'5%', color:'gray'}}>
-             {'product.category'}
-           </div>
-           <div className='row' style={{ display: 'flex', justifyContent: 'center',marginTop:'5%', color:'gray'}}>
-             {'product.price'}
-           </div>
-           {/* <div style={{ display: 'flex', justifyContent: 'center', marginTop:'8%' }}>
-             <Button //icon="pi pi-search"
-              rounded style={{ marginRight: '20px' }} label='Ulubione'/>
-             <Button icon="pi pi-star-fill" rounded label='Dodaj do koszyka'/>
-           </div> */}
-         </div>
-       </div>
-     </Card>
-       </div>
-          <div className="row">
-          {/* <DataView value={products.slice(1,3)} itemTemplate={itemTemplate} layout={layout} header={header()} />
-          <DataView value={products.slice(1,3)} itemTemplate={itemTemplate} layout={layout} header={header()} />
-          <DataView value={products.slice(1,3)} itemTemplate={itemTemplate} layout={layout} header={header()} /> */}
-     (
-      <Card className="col"
-       style={{
-        width:'100px'
-      }}>
-        <div className="col-2 col-sm-2 col-lg-2 col-xl-2 p-2" key={'product.id'}>
-          <div className="p-4 border-1 surface-border surface-card border-round">
-            <div className="flex flex-column align-items-center gap-3 py-5">
-              <img className="w-9 shadow-2 border-round" src={`https://primefaces.org/cdn/primereact/images/product/${'product.image'}`}
-              alt={'product.name'} />
-              <div className="text-2xl font-bold">{'product.name'}</div>
-              <Rating value={'product.rating'} readOnly cancel={false}></Rating>
-            </div>
-          </div>
-        </div>
-      </Card>
-      <Card className="col"
-       style={{
-        width:'100px'
-      }}>
-        <div className="col-2 col-sm-2 col-lg-2 col-xl-2 p-2" key={'product.id'}>
-          <div className="p-4 border-1 surface-border surface-card border-round">
-            <div className="flex flex-column align-items-center gap-3 py-5">
-              <img className="w-9 shadow-2 border-round" src={`https://primefaces.org/cdn/primereact/images/product/${'product.image'}`}
-              alt={'product.name'} />
-              <div className="text-2xl font-bold">{'product.name'}</div>
-              <Rating value={'product.rating'} readOnly cancel={false}></Rating>
-            </div>
-          </div>
-        </div>
-      </Card>
-      <Card className="col"
-       style={{
-        width:'100px'
-      }}>
         <div
           style={{
-            width: '300px'
-          }}>
-          <div className="mb-3">
-            <img src={'/buty2.jpg'} alt={'product.name'} style={{
-              width: '300px',
-              height: '350px',
-              cursor: 'pointer',
-              marginTop: '5%'
-            }} 
-            onClick={() => {
-              
-            }}
-            onMouseEnter={() => {
-            //  setHoverStatus({
-            //     status: true,
-            //     id: index
-            //  });
-            }}
-              onMouseLeave={() => {
-                // setHoverStatus({
-                //   status: false,
-                //   id: index
-                // });
+            marginLeft: "20%",
+            marginRight: "20%",
+          }}
+        >
+          <div className="row">
+            <Card
+              className="col"
+              style={{
+                width: "100px",
               }}
-            />
-          </div>
-          <div className='container'>
-            <div className='row' style={{ display: 'flex', justifyContent: 'center', marginTop:'10%' }}>
-              {'product.name'}
-            </div>
-            <div className='row' style={{ display: 'flex', justifyContent: 'center',marginTop:'5%', color:'gray'}}>
-              {'product.category'}
-            </div>
-            <div className='row' style={{ display: 'flex', justifyContent: 'center',marginTop:'5%', color:'gray'}}>
-              {'product.price'}
-            </div>
-            {/* <div style={{ display: 'flex', justifyContent: 'center', marginTop:'8%' }}>
-              <Button //icon="pi pi-search"
-               rounded style={{ marginRight: '20px' }} label='Ulubione'/>
-              <Button icon="pi pi-star-fill" rounded label='Dodaj do koszyka'/>
-            </div> */}
-          </div>
-        </div>
-      </Card>
-        </div>
-           <div className="row">
-           {/* <DataView value={products.slice(1,3)} itemTemplate={itemTemplate} layout={layout} header={header()} />
-           <DataView value={products.slice(1,3)} itemTemplate={itemTemplate} layout={layout} header={header()} />
-           <DataView value={products.slice(1,3)} itemTemplate={itemTemplate} layout={layout} header={header()} /> */}
-      (
-       <Card className="col"
-        style={{
-         width:'100px'
-       }}>
-         <div className="col-2 col-sm-2 col-lg-2 col-xl-2 p-2" key={'product.id'}>
-           <div className="p-4 border-1 surface-border surface-card border-round">
-             <div className="flex flex-column align-items-center gap-3 py-5">
-               <img className="w-9 shadow-2 border-round" src={`https://primefaces.org/cdn/primereact/images/product/${'product.image'}`}
-               alt={'product.name'} />
-               <div className="text-2xl font-bold">{'product.name'}</div>
-               <Rating value={'product.rating'} readOnly cancel={false}></Rating>
-             </div>
-           </div>
-         </div>
-       </Card>
-       <Card className="col"
-        style={{
-         width:'100px'
-       }}>
-         <div className="col-2 col-sm-2 col-lg-2 col-xl-2 p-2" key={'product.id'}>
-           <div className="p-4 border-1 surface-border surface-card border-round">
-             <div className="flex flex-column align-items-center gap-3 py-5">
-               <img className="w-9 shadow-2 border-round" src={`https://primefaces.org/cdn/primereact/images/product/${'product.image'}`}
-               alt={'product.name'} />
-               <div className="text-2xl font-bold">{'product.name'}</div>
-               <Rating value={'product.rating'} readOnly cancel={false}></Rating>
-             </div>
-           </div>
-         </div>
-       </Card>
-       <Card className="col"
-        style={{
-         width:'100px'
-       }}>
-         <div
-           style={{
-             width: '300px'
-           }}>
-           <div className="mb-3">
-             <img src={'/buty2.jpg'} alt={'product.name'} style={{
-               width: '300px',
-               height: '350px',
-               cursor: 'pointer',
-               marginTop: '5%'
-             }} 
-             onClick={() => {
-               
-             }}
-             onMouseEnter={() => {
-             //  setHoverStatus({
-             //     status: true,
-             //     id: index
-             //  });
-             }}
-               onMouseLeave={() => {
-                 // setHoverStatus({
-                 //   status: false,
-                 //   id: index
-                 // });
-               }}
-             />
-           </div>
-           <div className='container'>
-             <div className='row' style={{ display: 'flex', justifyContent: 'center', marginTop:'10%' }}>
-               {'product.name'}
-             </div>
-             <div className='row' style={{ display: 'flex', justifyContent: 'center',marginTop:'5%', color:'gray'}}>
-               {'product.category'}
-             </div>
-             <div className='row' style={{ display: 'flex', justifyContent: 'center',marginTop:'5%', color:'gray'}}>
-               {'product.price'}
-             </div>
-             {/* <div style={{ display: 'flex', justifyContent: 'center', marginTop:'8%' }}>
-               <Button //icon="pi pi-search"
-                rounded style={{ marginRight: '20px' }} label='Ulubione'/>
-               <Button icon="pi pi-star-fill" rounded label='Dodaj do koszyka'/>
-             </div> */}
-           </div>
-         </div>
-       </Card>
-         </div>
-            <div className="row">
-            {/* <DataView value={products.slice(1,3)} itemTemplate={itemTemplate} layout={layout} header={header()} />
-            <DataView value={products.slice(1,3)} itemTemplate={itemTemplate} layout={layout} header={header()} />
-            <DataView value={products.slice(1,3)} itemTemplate={itemTemplate} layout={layout} header={header()} /> */}
-       (
-        <Card className="col"
-         style={{
-          width:'100px'
-        }}>
-          <div className="col-2 col-sm-2 col-lg-2 col-xl-2 p-2" key={'product.id'}>
-            <div className="p-4 border-1 surface-border surface-card border-round">
-              <div className="flex flex-column align-items-center gap-3 py-5">
-                <img className="w-9 shadow-2 border-round" src={`https://primefaces.org/cdn/primereact/images/product/${'product.image'}`}
-                alt={'product.name'} />
-                <div className="text-2xl font-bold">{'product.name'}</div>
-                <Rating value={'product.rating'} readOnly cancel={false}></Rating>
+            >
+              <div
+                className="col-2 col-sm-2 col-lg-2 col-xl-2 p-2"
+                key={"product.id"}
+              >
+                <div className="p-4 border-1 surface-border surface-card border-round">
+                  <div className="flex flex-column align-items-center gap-3 py-5">
+                    <img
+                      className="w-9 shadow-2 border-round"
+                      src={`https://primefaces.org/cdn/primereact/images/product/${"product.image"}`}
+                      alt={"product.name"}
+                    />
+                    <div className="text-2xl font-bold">{"product.name"}</div>
+                    <Rating
+                      value={"product.rating"}
+                      readOnly
+                      cancel={false}
+                    ></Rating>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-        </Card>
-        <Card className="col"
-         style={{
-          width:'100px'
-        }}>
-          <div className="col-2 col-sm-2 col-lg-2 col-xl-2 p-2" key={'product.id'}>
-            <div className="p-4 border-1 surface-border surface-card border-round">
-              <div className="flex flex-column align-items-center gap-3 py-5">
-                <img className="w-9 shadow-2 border-round" src={`https://primefaces.org/cdn/primereact/images/product/${'product.image'}`}
-                alt={'product.name'} />
-                <div className="text-2xl font-bold">{'product.name'}</div>
-                <Rating value={'product.rating'} readOnly cancel={false}></Rating>
+            </Card>
+            <Card
+              className="col"
+              style={{
+                width: "100px",
+              }}
+            >
+              <div
+                className="col-2 col-sm-2 col-lg-2 col-xl-2 p-2"
+                key={"product.id"}
+              >
+                <div className="p-4 border-1 surface-border surface-card border-round">
+                  <div className="flex flex-column align-items-center gap-3 py-5">
+                    <img
+                      className="w-9 shadow-2 border-round"
+                      src={`https://primefaces.org/cdn/primereact/images/product/${"product.image"}`}
+                      alt={"product.name"}
+                    />
+                    <div className="text-2xl font-bold">{"product.name"}</div>
+                    <Rating
+                      value={"product.rating"}
+                      readOnly
+                      cancel={false}
+                    ></Rating>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-        </Card>
-        <Card className="col"
-         style={{
-          width:'100px'
-        }}>
-          <div
-            style={{
-              width: '300px'
-            }}>
-            <div className="mb-3">
-              <img src={'/buty2.jpg'} alt={'product.name'} style={{
-                width: '300px',
-                height: '350px',
-                cursor: 'pointer',
-                marginTop: '5%'
-              }} 
-              onClick={() => {
-                
+            </Card>
+            <Card
+              className="col"
+              style={{
+                width: "100px",
               }}
-              onMouseEnter={() => {
-              //  setHoverStatus({
-              //     status: true,
-              //     id: index
-              //  });
-              }}
-                onMouseLeave={() => {
-                  // setHoverStatus({
-                  //   status: false,
-                  //   id: index
-                  // });
+            >
+              <div
+                style={{
+                  width: "300px",
                 }}
-              />
-            </div>
-            <div className='container'>
-              <div className='row' style={{ display: 'flex', justifyContent: 'center', marginTop:'10%' }}>
-                {'product.name'}
+              >
+                <div className="mb-3">
+                  <img
+                    src={"/buty2.jpg"}
+                    alt={"product.name"}
+                    style={{
+                      width: "300px",
+                      height: "350px",
+                      cursor: "pointer",
+                      marginTop: "5%",
+                    }}
+                    onClick={() => {}}
+                    onMouseEnter={() => {
+                      //  setHoverStatus({
+                      //     status: true,
+                      //     id: index
+                      //  });
+                    }}
+                    onMouseLeave={() => {
+                      // setHoverStatus({
+                      //   status: false,
+                      //   id: index
+                      // });
+                    }}
+                  />
+                </div>
+                <div className="container">
+                  <div
+                    className="row"
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      marginTop: "10%",
+                    }}
+                  >
+                    {"product.name"}
+                  </div>
+                  <div
+                    className="row"
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      marginTop: "5%",
+                      color: "gray",
+                    }}
+                  >
+                    {"product.category"}
+                  </div>
+                  <div
+                    className="row"
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      marginTop: "5%",
+                      color: "gray",
+                    }}
+                  >
+                    {"product.price"}
+                  </div>
+                 
+                </div>
               </div>
-              <div className='row' style={{ display: 'flex', justifyContent: 'center',marginTop:'5%', color:'gray'}}>
-                {'product.category'}
+            </Card>
+          </div>
+          <div className="row">
+   
+            <Card
+              className="col"
+              style={{
+                width: "100px",
+              }}
+            >
+              <div
+                className="col-2 col-sm-2 col-lg-2 col-xl-2 p-2"
+                key={"product.id"}
+              >
+                <div className="p-4 border-1 surface-border surface-card border-round">
+                  <div className="flex flex-column align-items-center gap-3 py-5">
+                    <img
+                      className="w-9 shadow-2 border-round"
+                      src={`https://primefaces.org/cdn/primereact/images/product/${"product.image"}`}
+                      alt={"product.name"}
+                    />
+                    <div className="text-2xl font-bold">{"product.name"}</div>
+                    <Rating
+                      value={"product.rating"}
+                      readOnly
+                      cancel={false}
+                    ></Rating>
+                  </div>
+                </div>
               </div>
-              <div className='row' style={{ display: 'flex', justifyContent: 'center',marginTop:'5%', color:'gray'}}>
-                {'product.price'}
+            </Card>
+            <Card
+              className="col"
+              style={{
+                width: "100px",
+              }}
+            >
+              <div
+                className="col-2 col-sm-2 col-lg-2 col-xl-2 p-2"
+                key={"product.id"}
+              >
+                <div className="p-4 border-1 surface-border surface-card border-round">
+                  <div className="flex flex-column align-items-center gap-3 py-5">
+                    <img
+                      className="w-9 shadow-2 border-round"
+                      src={`https://primefaces.org/cdn/primereact/images/product/${"product.image"}`}
+                      alt={"product.name"}
+                    />
+                    <div className="text-2xl font-bold">{"product.name"}</div>
+                    <Rating
+                      value={"product.rating"}
+                      readOnly
+                      cancel={false}
+                    ></Rating>
+                  </div>
+                </div>
               </div>
-              {/* <div style={{ display: 'flex', justifyContent: 'center', marginTop:'8%' }}>
+            </Card>
+            <Card
+              className="col"
+              style={{
+                width: "100px",
+              }}
+            >
+              <div
+                style={{
+                  width: "300px",
+                }}
+              >
+                <div className="mb-3">
+                  <img
+                    src={"/buty2.jpg"}
+                    alt={"product.name"}
+                    style={{
+                      width: "300px",
+                      height: "350px",
+                      cursor: "pointer",
+                      marginTop: "5%",
+                    }}
+                    onClick={() => {}}
+                    onMouseEnter={() => {
+                      //  setHoverStatus({
+                      //     status: true,
+                      //     id: index
+                      //  });
+                    }}
+                    onMouseLeave={() => {
+                      // setHoverStatus({
+                      //   status: false,
+                      //   id: index
+                      // });
+                    }}
+                  />
+                </div>
+                <div className="container">
+                  <div
+                    className="row"
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      marginTop: "10%",
+                    }}
+                  >
+                    {"product.name"}
+                  </div>
+                  <div
+                    className="row"
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      marginTop: "5%",
+                      color: "gray",
+                    }}
+                  >
+                    {"product.category"}
+                  </div>
+                  <div
+                    className="row"
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      marginTop: "5%",
+                      color: "gray",
+                    }}
+                  >
+                    {"product.price"}
+                  </div>
+             
+                </div>
+              </div>
+            </Card>
+          </div>
+          <div className="row">
+     
+            <Card
+              className="col"
+              style={{
+                width: "100px",
+              }}
+            >
+              <div
+                className="col-2 col-sm-2 col-lg-2 col-xl-2 p-2"
+                key={"product.id"}
+              >
+                <div className="p-4 border-1 surface-border surface-card border-round">
+                  <div className="flex flex-column align-items-center gap-3 py-5">
+                    <img
+                      className="w-9 shadow-2 border-round"
+                      src={`https://primefaces.org/cdn/primereact/images/product/${"product.image"}`}
+                      alt={"product.name"}
+                    />
+                    <div className="text-2xl font-bold">{"product.name"}</div>
+                    <Rating
+                      value={"product.rating"}
+                      readOnly
+                      cancel={false}
+                    ></Rating>
+                  </div>
+                </div>
+              </div>
+            </Card>
+            <Card
+              className="col"
+              style={{
+                width: "100px",
+              }}
+            >
+              <div
+                className="col-2 col-sm-2 col-lg-2 col-xl-2 p-2"
+                key={"product.id"}
+              >
+                <div className="p-4 border-1 surface-border surface-card border-round">
+                  <div className="flex flex-column align-items-center gap-3 py-5">
+                    <img
+                      className="w-9 shadow-2 border-round"
+                      src={`https://primefaces.org/cdn/primereact/images/product/${"product.image"}`}
+                      alt={"product.name"}
+                    />
+                    <div className="text-2xl font-bold">{"product.name"}</div>
+                    <Rating
+                      value={"product.rating"}
+                      readOnly
+                      cancel={false}
+                    ></Rating>
+                  </div>
+                </div>
+              </div>
+            </Card>
+            <Card
+              className="col"
+              style={{
+                width: "100px",
+              }}
+            >
+              <div
+                style={{
+                  width: "300px",
+                }}
+              >
+                <div className="mb-3">
+                  <img
+                    src={"/buty2.jpg"}
+                    alt={"product.name"}
+                    style={{
+                      width: "300px",
+                      height: "350px",
+                      cursor: "pointer",
+                      marginTop: "5%",
+                    }}
+                    onClick={() => {}}
+                    onMouseEnter={() => {
+                      //  setHoverStatus({
+                      //     status: true,
+                      //     id: index
+                      //  });
+                    }}
+                    onMouseLeave={() => {
+                      // setHoverStatus({
+                      //   status: false,
+                      //   id: index
+                      // });
+                    }}
+                  />
+                </div>
+                <div className="container">
+                  <div
+                    className="row"
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      marginTop: "10%",
+                    }}
+                  >
+                    {"product.name"}
+                  </div>
+                  <div
+                    className="row"
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      marginTop: "5%",
+                      color: "gray",
+                    }}
+                  >
+                    {"product.category"}
+                  </div>
+                  <div
+                    className="row"
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      marginTop: "5%",
+                      color: "gray",
+                    }}
+                  >
+                    {"product.price"}
+                  </div>
+      
+                </div>
+              </div>
+            </Card>
+          </div>
+          <div className="row">
+          
+            <Card
+              className="col"
+              style={{
+                width: "100px",
+              }}
+            >
+              <div
+                className="col-2 col-sm-2 col-lg-2 col-xl-2 p-2"
+                key={"product.id"}
+              >
+                <div className="p-4 border-1 surface-border surface-card border-round">
+                  <div className="flex flex-column align-items-center gap-3 py-5">
+                    <img
+                      className="w-9 shadow-2 border-round"
+                      src={`https://primefaces.org/cdn/primereact/images/product/${"product.image"}`}
+                      alt={"product.name"}
+                    />
+                    <div className="text-2xl font-bold">{"product.name"}</div>
+                    <Rating
+                      value={"product.rating"}
+                      readOnly
+                      cancel={false}
+                    ></Rating>
+                  </div>
+                </div>
+              </div>
+            </Card>
+            <Card
+              className="col"
+              style={{
+                width: "100px",
+              }}
+            >
+              <div
+                className="col-2 col-sm-2 col-lg-2 col-xl-2 p-2"
+                key={"product.id"}
+              >
+                <div className="p-4 border-1 surface-border surface-card border-round">
+                  <div className="flex flex-column align-items-center gap-3 py-5">
+                    <img
+                      className="w-9 shadow-2 border-round"
+                      src={`https://primefaces.org/cdn/primereact/images/product/${"product.image"}`}
+                      alt={"product.name"}
+                    />
+                    <div className="text-2xl font-bold">{"product.name"}</div>
+                    <Rating
+                      value={"product.rating"}
+                      readOnly
+                      cancel={false}
+                    ></Rating>
+                  </div>
+                </div>
+              </div>
+            </Card>
+            <Card
+              className="col"
+              style={{
+                width: "100px",
+              }}
+            >
+              <div
+                style={{
+                  width: "300px",
+                }}
+              >
+                <div className="mb-3">
+                  <img
+                    src={"/buty2.jpg"}
+                    alt={"product.name"}
+                    style={{
+                      width: "300px",
+                      height: "350px",
+                      cursor: "pointer",
+                      marginTop: "5%",
+                    }}
+                    onClick={() => {}}
+                    onMouseEnter={() => {
+                      //  setHoverStatus({
+                      //     status: true,
+                      //     id: index
+                      //  });
+                    }}
+                    onMouseLeave={() => {
+                      // setHoverStatus({
+                      //   status: false,
+                      //   id: index
+                      // });
+                    }}
+                  />
+                </div>
+                <div className="container">
+                  <div
+                    className="row"
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      marginTop: "10%",
+                    }}
+                  >
+                    {"product.name"}
+                  </div>
+                  <div
+                    className="row"
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      marginTop: "5%",
+                      color: "gray",
+                    }}
+                  >
+                    {"product.category"}
+                  </div>
+                  <div
+                    className="row"
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      marginTop: "5%",
+                      color: "gray",
+                    }}
+                  >
+                    {"product.price"}
+                  </div>
+                 
+                </div>
+              </div>
+            </Card>
+          </div>
+          <div className="row">
+          
+            <Card
+              className="col"
+              style={{
+                width: "100px",
+              }}
+            >
+              <div
+                className="col-2 col-sm-2 col-lg-2 col-xl-2 p-2"
+                key={"product.id"}
+              >
+                <div className="p-4 border-1 surface-border surface-card border-round">
+                  <div className="flex flex-column align-items-center gap-3 py-5">
+                    <img
+                      className="w-9 shadow-2 border-round"
+                      src={`https://primefaces.org/cdn/primereact/images/product/${"product.image"}`}
+                      alt={"product.name"}
+                    />
+                    <div className="text-2xl font-bold">{"product.name"}</div>
+                    <Rating
+                      value={"product.rating"}
+                      readOnly
+                      cancel={false}
+                    ></Rating>
+                  </div>
+                </div>
+              </div>
+            </Card>
+            <Card
+              className="col"
+              style={{
+                width: "100px",
+              }}
+            >
+              <div
+                className="col-2 col-sm-2 col-lg-2 col-xl-2 p-2"
+                key={"product.id"}
+              >
+                <div className="p-4 border-1 surface-border surface-card border-round">
+                  <div className="flex flex-column align-items-center gap-3 py-5">
+                    <img
+                      className="w-9 shadow-2 border-round"
+                      src={`https://primefaces.org/cdn/primereact/images/product/${"product.image"}`}
+                      alt={"product.name"}
+                    />
+                    <div className="text-2xl font-bold">{"product.name"}</div>
+                    <Rating
+                      value={"product.rating"}
+                      readOnly
+                      cancel={false}
+                    ></Rating>
+                  </div>
+                </div>
+              </div>
+            </Card>
+            <Card
+              className="col"
+              style={{
+                width: "100px",
+              }}
+            >
+              <div
+                style={{
+                  width: "300px",
+                }}
+              >
+                <div className="mb-3">
+                  <img
+                    src={"/buty2.jpg"}
+                    alt={"product.name"}
+                    style={{
+                      width: "300px",
+                      height: "350px",
+                      cursor: "pointer",
+                      marginTop: "5%",
+                    }}
+                    onClick={() => {}}
+                    onMouseEnter={() => {
+                      //  setHoverStatus({
+                      //     status: true,
+                      //     id: index
+                      //  });
+                    }}
+                    onMouseLeave={() => {
+                      // setHoverStatus({
+                      //   status: false,
+                      //   id: index
+                      // });
+                    }}
+                  />
+                </div>
+                <div className="container">
+                  <div
+                    className="row"
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      marginTop: "10%",
+                    }}
+                  >
+                    {"product.name"}
+                  </div>
+                  <div
+                    className="row"
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      marginTop: "5%",
+                      color: "gray",
+                    }}
+                  >
+                    {"product.category"}
+                  </div>
+                  <div
+                    className="row"
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      marginTop: "5%",
+                      color: "gray",
+                    }}
+                  >
+                    {"product.price"}
+                  </div>
+                  {/* <div style={{ display: 'flex', justifyContent: 'center', marginTop:'8%' }}>
                 <Button //icon="pi pi-search"
                  rounded style={{ marginRight: '20px' }} label='Ulubione'/>
                 <Button icon="pi pi-star-fill" rounded label='Dodaj do koszyka'/>
               </div> */}
-            </div>
+                </div>
+              </div>
+            </Card>
           </div>
-        </Card>
-          </div>
-          </div>
+        </div>
+        <div className="card">
+            <Paginator first={first} rows={rows} totalRecords={120} rowsPerPageOptions={[10, 20, 30]} onPageChange={onPageChange} />
+        </div>
+      </div>
     );
   };
   
