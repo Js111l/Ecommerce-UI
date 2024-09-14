@@ -1,5 +1,5 @@
 
-
+import { jwtDecode } from "jwt-decode";
 
 export default class AuthService{
 
@@ -41,6 +41,12 @@ export default class AuthService{
     }
     setToken(token){
         localStorage.setItem("token",token);
+    }
+    getUserProfile(){
+        return jwtDecode('eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQ1VTVE9NRVIiLCJzdWIiOiJqYWt1YnN3aWVyY3o1QGdtYWlsLmNvbSIsImlhdCI6MTcyNjMzODU4NywiZXhwIjoxNzI2MzQyMTg3fQ.zfFXwTgdK1OTImSECSFW5ZHewWBez3kBrW--izybFEw') //jwtDecode(localStorage.getItem('token'))
+    }
+    getCurrentUserRole(){
+        return this.getUserProfile()?.role;
     }
 
 }

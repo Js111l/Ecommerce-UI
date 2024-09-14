@@ -9,16 +9,19 @@ import { Accordion, AccordionTab } from 'primereact/accordion';
 import { OverlayPanel } from 'primereact/overlaypanel';
 import { Button } from "primereact/button";
 import { act } from "react";
+import AuthService from "../services/AuthService";
 
 const MenuBarContainer = (props) => {
     const navigation = useNavigate();
     const [active,setActive]=useState(false);
+    const authService = new AuthService();
+    const userRole = useState(authService.getCurrentUserRole())
+
+
     const menuBarOnClickFunction = (path) => {
         navigation('/'+path);
       }
-      const op = useRef(null);
-
-      const items = [
+      const regularUserItems = [
         {
           icon: 'pi pi-fw pi-search',
         //   command: () => menuBarOnClickFunction('checkout')
@@ -49,11 +52,13 @@ const MenuBarContainer = (props) => {
         },
       ];
 
-      
-      const items2 = [
-     
+      const adminItems =[
         {
-          //icon: ',
+          icon: 'pi pi-fw pi-search',
+        //   command: () => menuBarOnClickFunction('checkout')
+        },
+        {
+          icon: 'pi pi-fw pi-user',
         //   command: () => menuBarOnClickFunction('checkout'),
           items: [
             {
@@ -68,8 +73,9 @@ const MenuBarContainer = (props) => {
           ],
         },
       ];
-
-      const start = () => {
+      
+      
+      const regularUserStartItems = () => {
         return (
           <div style={{
 
@@ -147,18 +153,72 @@ const MenuBarContainer = (props) => {
           
         );
       }
-  
-    const end = (
-        <div style={{
-          display:'flex',
-          justifyContent:'start'
-        }}>
-          {'ukgkiug'}
-        </div>
-    );
+      const adminStartItems = () => {
+        return (
+          <div style={{}}>
+            <img
+              alt="logo"
+              src="https://primefaces.org/cdn/primereact/images/logo.png"
+              height="40"
+              className="mr-2"
+            />
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
+              <a
+                href=""
+                style={{
+                  marginRight: "20px",
+                }}
+              >
+                <span>Produkty</span>
+              </a>
+              <a
+                href=""
+                style={{
+                  marginRight: "20px",
+                }}
+              >
+                <span>Sprzedaż</span>
+              </a>
+              <a
+                href=""
+                style={{
+                  marginRight: "20px",
+                }}
+              >
+                <span>Promocje</span>
+              </a>
+              <a
+                href=""
+                style={{
+                  marginRight: "20px",
+                }}
+              >
+                <span>Klienci</span>
+              </a>
+              <a
+                href=""
+                style={{
+                  marginRight: "20px",
+                }}
+              >
+                <span>Konfiguracja</span>
+              </a>
+            </div>
+          </div>
+        );
+      };
 
+
+
+    const items = userRole === "ADMIN" ? adminItems : regularUserItems;
+    const startItems = userRole === "ADMIN" ? adminStartItems : regularUserStartItems;
     return (
-  <Menubar model={items} start={start} className="custom-menubar"/>
+      <Menubar model={items} start={startItems} className="custom-menubar" />
     );
   };
   

@@ -6,11 +6,14 @@ import { Tag } from 'primereact/tag';
 import { classNames } from 'primereact/utils';
 import ProductService from "../services/ProductService";
 import {Card } from 'primereact/card'
+import { jwtDecode } from "jwt-decode";
+import AuthService from "../services/AuthService";
+
+
 const CategoryListContainer = (props) => {
     const [loading, setLoading] = useState(true);
     const [layout, setLayout] = useState('grid');
     const [products, setProducts] = useState([]);
-
     const service = new ProductService();
 
     useEffect(() => {
@@ -119,10 +122,7 @@ const CategoryListContainer = (props) => {
     return (
       <div>
       <div className="row">
-        {/* <DataView value={products.slice(1,3)} itemTemplate={itemTemplate} layout={layout} header={header()} />
-        <DataView value={products.slice(1,3)} itemTemplate={itemTemplate} layout={layout} header={header()} />
-        <DataView value={products.slice(1,3)} itemTemplate={itemTemplate} layout={layout} header={header()} /> */}
-   (
+
     <Card className="col"
      style={{
       width:'100px'

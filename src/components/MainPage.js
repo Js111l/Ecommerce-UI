@@ -11,15 +11,10 @@ import ProductsShowcaseComponent from './ProductsShowcaseComponent';
 
 const MainPage = (props) => {
   const navigation = useNavigate();
-  // const [products, setProducts] = useState();
-  // const [allProducts, setItems] = useState([]);
-  // const [suggestionList, setSuggestions] = useState([]);
-  // const [toggle, setToggle] = useState(false);
   return (
     <div className="row">
 
       <div className='column-md-12'>
-        {/* BESTSELLERS/ NEW PRODUCTS */}
         <ProductsShowcaseComponent
           loading={props.loading}
           setLoading={props.setLoading}        
