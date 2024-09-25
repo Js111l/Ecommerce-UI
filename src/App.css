@@ -154,9 +154,9 @@
     margin-bottom: 1rem;
 }
 
-.p-card{
+/* .p-card{
   box-shadow: none;
-}
+} */
 .p-card .p-component col{
   width: 100px;
 }

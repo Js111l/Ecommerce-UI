@@ -11,7 +11,8 @@ import LoaderContainer from './containers/LoaderContainer';
 import { Toast } from 'primereact/toast';
 import CategoryContainer from './containers/CategoryContainer';
 import AuthService from './services/AuthService';
-import AdminPanelContainer from './containers/AdminPanelContainer';
+import AdminPanelContainer from './containers/admin-panel/AdminPanelContainer';
+import AdminProductsList from './containers/admin-panel/AdminProductsList';
 
 
 
@@ -52,6 +53,16 @@ function App() {
                 path="/"
                 element={
                   <AdminPanelContainer
+                    loading={loading}
+                    setLoading={setLoading}
+                    showMessage={showMessage}
+                  />
+                }
+              />
+              <Route
+                path="/products/list"
+                element={
+                  <AdminProductsList
                     loading={loading}
                     setLoading={setLoading}
                     showMessage={showMessage}

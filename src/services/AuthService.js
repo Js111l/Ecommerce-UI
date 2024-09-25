@@ -43,7 +43,7 @@ export default class AuthService{
         localStorage.setItem("token",token);
     }
     getUserProfile(){
-        return jwtDecode('eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQ1VTVE9NRVIiLCJzdWIiOiJqYWt1YnN3aWVyY3o1QGdtYWlsLmNvbSIsImlhdCI6MTcyNjMzODU4NywiZXhwIjoxNzI2MzQyMTg3fQ.zfFXwTgdK1OTImSECSFW5ZHewWBez3kBrW--izybFEw') //jwtDecode(localStorage.getItem('token'))
+        return jwtDecode('eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJqYWt1YnN3aWVyY3o1QGdtYWlsLmNvbSIsImlhdCI6MTcyNjU5NTE4OSwiZXhwIjoxNzI2NTk4Nzg5fQ.PhiYJVtPlAjCBSHYHhhz26CikD0weS9Xl1FY2pzVR4g') //jwtDecode(localStorage.getItem('token'))
     }
     getCurrentUserRole(){
         return this.getUserProfile()?.role;

@@ -153,6 +153,57 @@ const MenuBarContainer = (props) => {
           
         );
       }
+
+      const showProductsMenu = () => {
+        return active ? (
+          <div
+            style={{
+              position: "absolute",
+              paddingTop: "8px",
+              width: "100vw",
+              left: 0,
+              zIndex: 10,
+            }}
+          >
+            <div
+              onMouseLeave={(e) => {
+                setActive(false);
+              }}
+              style={{
+                margin: 0,
+                padding: 0,
+                listStyleType: "none",
+                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                backgroundColor: "white",
+              }}
+            >
+              <div className="row">
+                <div className="col">
+                  <li style={{ padding: "8px 12px" }}>Sukienki</li>
+                  <li style={{ padding: "8px 12px" }}>Kurtki i plaszcze</li>
+                  <li style={{ padding: "8px 12px" }}>T-shirty</li>
+                </div>
+                <div className="col">
+                  <li style={{ padding: "8px 12px" }}>Spodnie</li>
+                  <li style={{ padding: "8px 12px" }}>Szorty</li>
+                  <li style={{ padding: "8px 12px" }}>Buty</li>
+                </div>
+                <div className="col">
+                  <li style={{ padding: "8px 12px" }}>Marynarki</li>
+                  <li style={{ padding: "8px 12px" }}>Czapki</li>
+                  <li style={{ padding: "8px 12px" }}>Kapelusze</li>
+                </div>
+                <div className="col">
+                  <li style={{ padding: "8px 12px" }}>Stroje kapielowe</li>
+                  <li style={{ padding: "8px 12px" }}>Koszule</li>
+                  <li style={{ padding: "8px 12px" }}>Swetry</li>
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : null;
+      };
+
       const adminStartItems = () => {
         return (
           <div style={{}}>
@@ -174,7 +225,9 @@ const MenuBarContainer = (props) => {
                   marginRight: "20px",
                 }}
               >
-                <span>Produkty</span>
+                <span onClick={(e)=>{
+                navigation('/products/list')
+                }} >Produkty</span>
               </a>
               <a
                 href=""
@@ -215,8 +268,8 @@ const MenuBarContainer = (props) => {
 
 
 
-    const items = userRole === "ADMIN" ? adminItems : regularUserItems;
-    const startItems = userRole === "ADMIN" ? adminStartItems : regularUserStartItems;
+    const items = userRole && userRole[0] === "ADMIN" ? adminItems : regularUserItems;
+    const startItems = userRole && userRole[0] === "ADMIN" ? adminStartItems : regularUserStartItems;
     return (
       <Menubar model={items} start={startItems} className="custom-menubar" />
     );
