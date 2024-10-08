@@ -9,7 +9,8 @@ import { Messages } from 'primereact/messages';
 import { BlockUI } from 'primereact/blockui';
 import LoaderContainer from './containers/LoaderContainer';
 import { Toast } from 'primereact/toast';
-import CategoryContainer from './containers/CategoryContainer';
+import CartContainer from './containers/CartContainer';
+import PaymentContainer from './containers/PaymentContainer';
 
 
 
@@ -42,7 +43,7 @@ function App() {
           />
           <Route path='/category/list'
             element={
-              <CategoryContainer
+              <PaymentContainer
                 loading={loading}
                 setLoading={setLoading}
                 showMessage={showMessage}
@@ -51,6 +52,22 @@ function App() {
             <Route path='/'
             element={
               <MainPage
+                loading={loading}
+                setLoading={setLoading}
+                showMessage={showMessage}
+              />}
+          />
+              <Route path='/cart'
+            element={
+              <CartContainer
+                loading={loading}
+                setLoading={setLoading}MainPage
+                showMessage={showMessage}
+              />}
+          />
+              <Route path='/payment'
+            element={
+              <PaymentContainer
                 loading={loading}
                 setLoading={setLoading}
                 showMessage={showMessage}
