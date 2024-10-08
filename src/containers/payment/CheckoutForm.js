@@ -38,7 +38,6 @@ const CheckoutForm = () => {
     <form onSubmit={handleSubmit} style={{ maxWidth: '400px', margin: '0 auto', padding: '20px', borderRadius: '10px', boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)' }}
     >
       <PaymentElement
-       
       />
       <button type="submit" disabled={!stripe} style={{ marginTop: '20px', padding: '12px', width: '100%', backgroundColor: '#6772e5', color: '#fff', borderRadius: '6px', cursor: 'pointer' }}>
         Zapłać
