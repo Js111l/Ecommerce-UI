@@ -5,7 +5,6 @@ import MainPage from './components/MainPage';
 import LoginContainer from './containers/LoginContainer';
 import MenuBarContainer from './containers/MenuBarContainer';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Messages } from 'primereact/messages';
 import { BlockUI } from 'primereact/blockui';
 import LoaderContainer from './containers/LoaderContainer';
 import { Toast } from 'primereact/toast';
@@ -13,9 +12,9 @@ import CategoryContainer from './containers/CategoryContainer';
 import ProductDetailsContainer from './containers/ProductDetailsContainer';
 
 
-
 function App() {
   const [loading, setLoading] = useState(false);
+  const [renderMenuBar, setMenuBar] = useState(true);
   const toast = useRef(null);
 
   const showMessage = (type, message, summary, sticky) => {
@@ -27,8 +26,10 @@ function App() {
       <BlockUI blocked={loading}
         fullScreen={true}
       >
-        <MenuBarContainer>
-        </MenuBarContainer>
+        {renderMenuBar ?
+          <MenuBarContainer>
+          </MenuBarContainer>
+          : null}
         <div>
           <Toast ref={toast} position={'top-center'} />
         </div>
@@ -65,6 +66,7 @@ function App() {
                 showMessage={showMessage}
               />}
           />
+         
 
         </Routes>
         {loading && (

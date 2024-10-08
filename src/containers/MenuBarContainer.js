@@ -44,7 +44,7 @@ const MenuBarContainer = (props) => {
     },
     {
       icon: "pi pi-fw pi-shopping-cart",
-      command: () => menuBarOnClickFunction("checkout"),
+      command: () => menuBarOnClickFunction("cart"),
     },
   ];
 

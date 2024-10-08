@@ -1,6 +1,3 @@
-
-
-
 export default class AuthService{
 
     constructor() {
@@ -42,5 +39,16 @@ export default class AuthService{
     setToken(token){
         localStorage.setItem("token",token);
     }
-
+    getCurrentUser(){
+        return fetch(this.url + '/auth/context/current-user', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+            },
+        })
+        .then(response => {
+            return response;
+        });
+    }
 }

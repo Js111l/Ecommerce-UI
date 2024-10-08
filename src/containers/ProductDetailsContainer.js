@@ -2,17 +2,24 @@ import { useEffect, useState } from "react";
 import { Galleria } from 'primereact/galleria';
 import { Button } from "primereact/button";
 import { Dropdown } from "primereact/dropdown";
-import { Card } from "primereact/card";
+import CheckoutService from "../services/CheckoutService";
+import { useParams } from "react-router-dom";
+import AuthService from "../services/AuthService";
 
 const ProductDetailsContainer = (props) => {
   const [register, setRegister] = useState(false);
+  const authService = new AuthService();
+  const checkoutService = new CheckoutService()
+  const { id } = useParams();
+
   useEffect(() => {
-    const fetchProducts = async () => {};
+    const fetchProducts = async () => { };
     fetchProducts();
   }, []);
 
   const [images, setImages] = useState(null);
   const [position, setPosition] = useState("bottom");
+
   const positionOptions = [
     {
       label: "Bottom",
@@ -249,6 +256,12 @@ const ProductDetailsContainer = (props) => {
                   width: "220px",
                 }}
                 label={"Dodaj do koszyka"}
+                onClick={(e) => {
+                  checkoutService.addProduct({
+                    productId: id,
+                    userId: ''//authService.getCurrentUser()
+                  });
+                }}
               />
               <Button
                 icon={"pi pi-heart"}
