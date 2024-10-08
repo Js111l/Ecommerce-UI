@@ -4,7 +4,7 @@
 export default class ProductService{
 
     constructor() {
-        this.url = "http://localhost:8080"
+        this.url = "http://localhost:8081"
     }
 
     getDashboard(data, bestseller){
