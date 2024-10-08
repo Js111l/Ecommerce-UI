@@ -131,6 +131,9 @@ const CartContainer = (props) => {
                                 width:'100%',
                                 justifyContent:'center',
                             }}
+                            onClick={(e)=>{
+                                navigate('/checkout')
+                            }}
                             >Przejdź do kasy</Button>
                         </div>
                     </div>

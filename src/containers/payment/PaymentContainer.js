@@ -1,11 +1,11 @@
 import React, { useEffect, useReducer, useState } from 'react';
 import CheckoutForm from './CheckoutForm';
-import FinancialTransactionsService from '../services/FinancialTransactionsService';
+import FinancialTransactionsService from '../../services/FinancialTransactionsService';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
 
 
-const stripePromise = loadStripe('mock_key');
+const stripePromise = loadStripe('');
 
 const PaymentContainer = (props) => {
   const service = new FinancialTransactionsService();
