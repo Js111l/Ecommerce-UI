@@ -13,8 +13,23 @@ export default class ProductService{
             headers: {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*',
-            },
-            body: JSON.stringify(data)
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response;
+        });
+    }
+
+    getProductDetails(id){
+        return fetch(this.url + `/products/${id}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+            }
         })
         .then(response => {
             if (!response.ok) {
