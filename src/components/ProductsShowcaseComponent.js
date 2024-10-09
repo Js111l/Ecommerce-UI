@@ -53,74 +53,46 @@ const ProductsShowcaseComponent = (props) => {
   ];
 
 
-  const arr=['/buty.jpg','/buty2.jpg'];
   const [hoverStatus,setHoverStatus]=useState({});
   const productTemplate = (product,index) => {
-    
     return (
       <div
         style={{
-          width: "300px",
-        }}
-      >
+          width: '300px'
+        }}>
         <div className="mb-3">
-          <img
-            src={
-              hoverStatus?.status && hoverStatus?.id === index ? arr[1] : arr[0]
-            }
-            alt={product.name}
-            style={{
-              width: "300px",
-              height: "350px",
-              cursor: "pointer",
-              marginTop: "5%",
-            }}
-            onClick={() => {}}
-            onMouseEnter={() => {
-              setHoverStatus({
-                status: true,
-                id: index,
-              });
-            }}
+          <img src={hoverStatus?.status && hoverStatus?.id === index 
+          ? product.detailUrl : product.imageUrl} alt={product.name} style={{
+            width: '300px',
+            height: '350px',
+            cursor: 'pointer',
+            marginTop: '5%'
+          }} 
+          onClick={() => {
+            navigation(`/product/details/${product.id}`)
+          }}
+          onMouseEnter={() => {
+           setHoverStatus({
+              status: true,
+              id: index
+           });
+          }}
             onMouseLeave={() => {
               setHoverStatus({
                 status: false,
-                id: index,
+                id: index
               });
             }}
           />
         </div>
-        <div className="container">
-          <div
-            className="row"
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              marginTop: "10%",
-            }}
-          >
+        <div className='container'>
+          <div className='row' style={{ display: 'flex', justifyContent: 'center', marginTop:'10%' }}>
             {product.name}
           </div>
-          <div
-            className="row"
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              marginTop: "5%",
-              color: "gray",
-            }}
-          >
+          <div className='row' style={{ display: 'flex', justifyContent: 'center',marginTop:'5%', color:'gray'}}>
             {product.category}
           </div>
-          <div
-            className="row"
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              marginTop: "5%",
-              color: "gray",
-            }}
-          >
+          <div className='row' style={{ display: 'flex', justifyContent: 'center',marginTop:'5%', color:'gray'}}>
             {product.price}
           </div>
         </div>
@@ -137,7 +109,7 @@ const ProductsShowcaseComponent = (props) => {
           display:'flex',
           justifyContent:'flex-start',
           marginLeft:'100px',
-          marginTop:'5%',
+          marginTop:'5%'
           }}
         >
           <span style={{ marginRight: '20px' }}>Bestsellery</span>
@@ -149,7 +121,7 @@ const ProductsShowcaseComponent = (props) => {
             }} />
           <span style={{ marginLeft: '20px' }}>Nowości</span>
         </div>
-      <Carousel style={{maxWidth:'90%'}} value={allProducts} numVisible={4} numScroll={3} responsiveOptions={responsiveOptions} itemTemplate={(x) => productTemplate(x, x.id)} />
+      <Carousel value={allProducts} numVisible={4} numScroll={3} responsiveOptions={responsiveOptions} itemTemplate={(x) => productTemplate(x, x.id)} />
     </div>
   );
 };
