@@ -14,10 +14,7 @@ export default class CheckoutService{
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*',
             },
-            body: JSON.stringify({
-                userId: '12',
-                productId: '1'
-            })
+            body: JSON.stringify(data)
         }).then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
