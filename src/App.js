@@ -9,9 +9,10 @@ import { BlockUI } from 'primereact/blockui';
 import LoaderContainer from './containers/LoaderContainer';
 import { Toast } from 'primereact/toast';
 import CartContainer from './containers/CartContainer';
-import PaymentContainer from './containers/CartContainer';
+import PaymentContainer from './containers/payment/PaymentContainer';
 import CheckoutContainer from './containers/CheckoutContainer';
 import ProductDetailsContainer from './containers/ProductDetailsContainer';
+import CategoryContainer from './containers/CategoryContainer'
 
 function App() {
   const [loading, setLoading] = useState(false);
@@ -54,7 +55,7 @@ function App() {
           />
           <Route path='/category/list'
             element={
-              <PaymentContainer
+              <CategoryContainer
                 loading={loading}
                 setLoading={setLoading}
                 showMessage={showMessage}

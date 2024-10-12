@@ -4,6 +4,7 @@ import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { useNavigate } from 'react-router-dom/dist/umd/react-router-dom.development';
 import ProductCardContainer from './ProductCardContainer';
+import ProductService from '../services/ProductService';
 
 const CheckoutContainer = (props) => {
     const service = new FinancialTransactionsService();
@@ -19,18 +20,33 @@ const CheckoutContainer = (props) => {
         phone: ''
     });
     const navigate = useNavigate();
+    const productService = new ProductService();
+    const [cart, setCart] = useState(undefined)
+
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
     };
-
     useEffect(() => {
         const fetchData = async () => {
-            //TODO: fetch data here
+         //TODO 
+         props.setLoading(true);
+         try {
+             const response = await productService.getCheckoutProducts();
+             const json = await response.json();
+             setCart(json);
+             props.setLoading(false);
+         } catch (error) {
+             console.log(error);
+         }
         };
         fetchData();
     }, []);
+
+    const formatMoney=(value)=>{
+        return (value / 100).toFixed(2);
+    }
 
     return (
         <div className="checkout-container card flex justify-content-center"
@@ -128,24 +144,28 @@ const CheckoutContainer = (props) => {
                 </div>
                 <div className="col-md-3">
                     <span style={{ fontWeight: 'bold', fontSize: '26px' }}>Podsumowanie</span>
-                    <ProductCardContainer
-                        element={{
-                            name: 'Product Name',
-                            brand: 'Brand Name',
-                            color: 'Color',
-                            price: '100.00',
-                            quantity: '1',
-                            size: 'M'
-                        }}>
-                    </ProductCardContainer>
-                    <ProductCardContainer />
+                    {cart?.products.map((x) => {
+                        return (
+                            <ProductCardContainer
+                                // selectedAll={selectedAll}
+                                element={{
+                                    id: x.product.id,
+                                    name: x.product.name,
+                                    brand: x.product?.brand,
+                                    color: '',
+                                    price: x.product?.price,
+                                    quantity: x.quantity,
+                                    size: ''
+                                }} />
+                        )
+                    })}
                 </div>
 
                 <div className="col-md-2" style={{ backgroundColor: '#e8e8e8', padding: '20px' }}>
                     <div style={{ marginBottom: '20px' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
                             <span>Wartość produktów</span>
-                            <span>300,00 zł</span>
+                            <span>{formatMoney(cart?.totalPrice)}</span>
                         </div>
                         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
                             <span>Dostawa</span>
@@ -153,7 +173,7 @@ const CheckoutContainer = (props) => {
                         </div>
                         <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 'bold', fontSize: '20px' }}>
                             <span>Do zapłaty</span>
-                            <span>318,00 zł</span>
+                            <span>{formatMoney(cart?.totalPrice)}</span>
                         </div>
                     </div>
                     <Button
