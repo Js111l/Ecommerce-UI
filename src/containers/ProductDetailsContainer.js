@@ -16,6 +16,7 @@ const ProductDetailsContainer = (props) => {
     const checkoutService = new CheckoutService()
     const service = new ProductService()
     const { id } = useParams();
+    const [quantity, setQuantity] = useState(1)
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -161,7 +162,8 @@ const ProductDetailsContainer = (props) => {
                                 onClick={(e) => {
                                     checkoutService.addProduct({
                                         product: {id: id},
-                                        userId: authService.getUserIdFromToken()
+                                        userId: authService.getUserIdFromToken(),
+                                        quantity: quantity
                                     });
                                 }}
                             />

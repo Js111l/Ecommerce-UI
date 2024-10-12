@@ -53,4 +53,20 @@ export default class ProductService{
             return response;
         });
     }
+    getCheckoutProducts(){
+        
+        return fetch(this.url + `/products/user-checkout/products`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response;
+        });
+    }
 }
