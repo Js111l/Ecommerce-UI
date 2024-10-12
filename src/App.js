@@ -27,7 +27,8 @@ function App() {
         fullScreen={true}
       >
         {renderMenuBar ?
-          <MenuBarContainer>
+          <MenuBarContainer
+          setLoading={setLoading}>
           </MenuBarContainer>
           : null}
         <div>

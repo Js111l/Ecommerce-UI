@@ -1,27 +1,70 @@
-import { style } from "@mui/system";
 import { Menubar } from "primereact/menubar";
 import { useNavigate } from "react-router-dom/dist/umd/react-router-dom.development";
-import { Inplace, InplaceDisplay, InplaceContent } from 'primereact/inplace';
-import { useRef, useState } from "react";
-import { Panel } from 'primereact/panel';
-import { PanelMenu } from 'primereact/panelmenu';
-import { Accordion, AccordionTab } from 'primereact/accordion';
-import { OverlayPanel } from 'primereact/overlaypanel';
-import { Button } from "primereact/button";
-import { act } from "react";
+import { useEffect, useRef, useState } from "react";
+import { Badge } from 'primereact/badge'
+import ProductService from "../services/ProductService";
+import AuthService from "../services/AuthService";
 
 const MenuBarContainer = (props) => {
   const navigation = useNavigate();
   const [active, setActive] = useState(false);
+  const [checkoutCount, setCheckoutCount] = useState(0);
+  const service = new ProductService()
+  const authService = new AuthService()
+  const productService = new ProductService()
+
+  const fetchCheckoutCount = async () => {
+    props.setLoading(true);
+    try {
+      const userId = authService.getUserFromToken().iss
+      const response = await service.getCheckoutCount(userId);
+      const json = await response.json();
+      setCheckoutCount(json);
+      props.setLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCheckoutCount();
+  }, []);
+
+
   const menuBarOnClickFunction = (path) => {
     navigation("/" + path);
   };
   const op = useRef(null);
 
+
+  const updateCount = async () => {
+    try {
+      const userId = authService.getUserFromToken().iss
+      const response = await service.getCheckoutCount(userId);
+      const json = await response.json();
+      setCheckoutCount(json);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   const items = [
     {
-      icon: "pi pi-fw pi-search",
-      //   command: () => menuBarOnClickFunction('checkout')
+      command: () => menuBarOnClickFunction("cart"),
+      className: 'cart',
+      template: (item, options) => (
+        <div
+          className={options.className}
+          onMouseEnter={() => {
+            updateCount()
+          }
+          }
+        >
+          <> <i className="pi pi-fw pi-shopping-cart" />
+            <Badge value={checkoutCount} severity="warning" />
+          </>
+        </div>
+      )
     },
     {
       icon: "pi pi-fw pi-heart",
@@ -42,10 +85,7 @@ const MenuBarContainer = (props) => {
         },
       ],
     },
-    {
-      icon: "pi pi-fw pi-shopping-cart",
-      command: () => menuBarOnClickFunction("cart"),
-    },
+
   ];
 
   const items2 = [
@@ -65,6 +105,7 @@ const MenuBarContainer = (props) => {
       ],
     },
   ];
+
 
   const start = () => {
     return (
@@ -172,5 +213,5 @@ const MenuBarContainer = (props) => {
     />
   );
 };
-  
-  export default MenuBarContainer;
+
+export default MenuBarContainer;

@@ -25,11 +25,12 @@ const ProductDetailsContainer = (props) => {
                 const json = await response.json();
                 setProduct(json);
                 //TODO
+                console.log(json)
                 const images = json.images.map((imageModel) => ({
-                    itemImageSrc: imageModel?.imageUrl,
-                    thumbnailImageSrc: imageModel?.imageUrl,
-                    alt: imageModel?.description,
-                    title: imageModel?.title,
+                    itemImageSrc: imageModel.url,
+                    thumbnailImageSrc: imageModel.url,
+                    alt: imageModel.description,
+                    title: imageModel.title,
                 }));
                 
                 setImages(images)
@@ -159,8 +160,8 @@ const ProductDetailsContainer = (props) => {
                                 label={"Dodaj do koszyka"}
                                 onClick={(e) => {
                                     checkoutService.addProduct({
-                                        productId: id,
-                                        userId: ''//authService.getCurrentUser()
+                                        product: {id: id},
+                                        userId: authService.getUserIdFromToken()
                                     });
                                 }}
                             />
