@@ -12,7 +12,14 @@ const PaymentContainer = (props) => {
   const [secret, setSecret] = useState(undefined);
 
 
-  useEffect(() => {
+  useEffect(() => {  
+    const handleBeforeUnload = (event) => {
+      event.preventDefault();
+      event.returnValue = '';
+    };
+    window.onbeforeunload = handleBeforeUnload
+
+    
     const fetchData = async () => {
       props.setMenuBar(false);
       props.setLoading(true)
@@ -25,7 +32,14 @@ const PaymentContainer = (props) => {
       }
     };
     fetchData();
+
+    return () => {
+      window.onbeforeunload = null;
+    };
   }, []);
+
+
+
 
   const options = {
     clientSecret: secret,
