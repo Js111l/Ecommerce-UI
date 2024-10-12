@@ -53,10 +53,8 @@ const ProductsShowcaseComponent = (props) => {
   ];
 
 
-  const arr=['/buty.jpg','/buty2.jpg'];
   const [hoverStatus,setHoverStatus]=useState({});
   const productTemplate = (product,index) => {
-    
     return (
       <div
         style={{
@@ -64,14 +62,14 @@ const ProductsShowcaseComponent = (props) => {
         }}>
         <div className="mb-3">
           <img src={hoverStatus?.status && hoverStatus?.id === index 
-          ? arr[1] : arr[0]} alt={product.name} style={{
+          ? product.detailUrl : product.imageUrl} alt={product.name} style={{
             width: '300px',
             height: '350px',
             cursor: 'pointer',
             marginTop: '5%'
           }} 
           onClick={() => {
-            
+            navigation(`/product/details/${product.id}`)
           }}
           onMouseEnter={() => {
            setHoverStatus({
@@ -97,11 +95,6 @@ const ProductsShowcaseComponent = (props) => {
           <div className='row' style={{ display: 'flex', justifyContent: 'center',marginTop:'5%', color:'gray'}}>
             {product.price}
           </div>
-          {/* <div style={{ display: 'flex', justifyContent: 'center', marginTop:'8%' }}>
-            <Button //icon="pi pi-search"
-             rounded style={{ marginRight: '20px' }} label='Ulubione'/>
-            <Button icon="pi pi-star-fill" rounded label='Dodaj do koszyka'/>
-          </div> */}
         </div>
       </div>
     );
@@ -128,10 +121,6 @@ const ProductsShowcaseComponent = (props) => {
             }} />
           <span style={{ marginLeft: '20px' }}>Nowości</span>
         </div>
-      {/* <Carousel value={allProducts} numVisible={4} numScroll={3} responsiveOptions={responsiveOptions} itemTemplate={(x) => {
-        console.log(x);
-        productTemplate(x, x.id)
-}} /> */}
       <Carousel value={allProducts} numVisible={4} numScroll={3} responsiveOptions={responsiveOptions} itemTemplate={(x) => productTemplate(x, x.id)} />
     </div>
   );

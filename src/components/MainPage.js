@@ -16,13 +16,12 @@ const MainPage = (props) => {
   // const [suggestionList, setSuggestions] = useState([]);
   // const [toggle, setToggle] = useState(false);
   return (
-    <div className="row">
-
-      <div className='column-md-12'>
+    <div className="row" style={{ maxWidth: "100%" }}>
+      <div className="column-md-12">
         {/* BESTSELLERS/ NEW PRODUCTS */}
         <ProductsShowcaseComponent
           loading={props.loading}
-          setLoading={props.setLoading}        
+          setLoading={props.setLoading}
         />
       </div>
     </div>

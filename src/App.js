@@ -5,19 +5,17 @@ import MainPage from './components/MainPage';
 import LoginContainer from './containers/LoginContainer';
 import MenuBarContainer from './containers/MenuBarContainer';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Messages } from 'primereact/messages';
 import { BlockUI } from 'primereact/blockui';
 import LoaderContainer from './containers/LoaderContainer';
 import { Toast } from 'primereact/toast';
 import CartContainer from './containers/CartContainer';
-import PaymentContainer from './containers/payment/PaymentContainer';
+import PaymentContainer from './containers/CartContainer';
 import CheckoutContainer from './containers/CheckoutContainer';
-
-
+import ProductDetailsContainer from './containers/ProductDetailsContainer';
 
 function App() {
   const [loading, setLoading] = useState(false);
-  const [rendered, setMenuBar] = useState(true);
+  const [renderMenuBar, setMenuBar] = useState(true);
   const toast = useRef(null);
 
   const showMessage = (type, message, summary, sticky) => {
@@ -29,10 +27,11 @@ function App() {
       <BlockUI blocked={loading}
         fullScreen={true}
       >
-        {rendered ?
-        <MenuBarContainer>
-        </MenuBarContainer>
-        : null}
+        {renderMenuBar ?
+          <MenuBarContainer
+          setLoading={setLoading}>
+          </MenuBarContainer>
+          : null}
         <div>
           <Toast ref={toast} position={'top-center'} />
         </div>
@@ -40,6 +39,14 @@ function App() {
           <Route path='/login'
             element={
               <LoginContainer
+                loading={loading}
+                setLoading={setLoading}
+                showMessage={showMessage}
+              />}
+          />
+          <Route path='/product/details/:id'
+            element={
+              <ProductDetailsContainer
                 loading={loading}
                 setLoading={setLoading}
                 showMessage={showMessage}

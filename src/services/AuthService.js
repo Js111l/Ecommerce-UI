@@ -1,5 +1,4 @@
-
-
+import { jwtDecode } from "jwt-decode";
 
 export default class AuthService{
 
@@ -42,5 +41,28 @@ export default class AuthService{
     setToken(token){
         localStorage.setItem("token",token);
     }
+    getCurrentUser(){
+        return fetch(this.url + '/auth/context/current-user', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+            },
+        })
+            .then(response => {
+                return response;
+            });
+    }
 
+    getUserIdFromToken() {
+        const token = localStorage.getItem("token")
+        const mockToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqYWt1YnNAd3AucGwiLCJpYXQiOjE3Mjg1MDQ5MzIsImV4cCI6MTcyODUwODUzMiwiaXNzIjoiMSJ9.zO9mPyk2noDPIFIffLcpD2l0CgpzooqNrM0dMjP0S-k";
+        return jwtDecode(mockToken).iss
+    }
+    
+    getUserFromToken() {
+        const token = localStorage.getItem("token")
+        const mockToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqYWt1YnNAd3AucGwiLCJpYXQiOjE3Mjg1MDQ5MzIsImV4cCI6MTcyODUwODUzMiwiaXNzIjoiMSJ9.zO9mPyk2noDPIFIffLcpD2l0CgpzooqNrM0dMjP0S-k";
+        return jwtDecode(mockToken)
+    }
 }
