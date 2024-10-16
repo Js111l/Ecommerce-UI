@@ -8,9 +8,11 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { BlockUI } from 'primereact/blockui';
 import LoaderContainer from './containers/LoaderContainer';
 import { Toast } from 'primereact/toast';
-import CategoryContainer from './containers/CategoryContainer';
+import CartContainer from './containers/CartContainer';
+import PaymentContainer from './containers/payment/PaymentContainer';
+import CheckoutContainer from './containers/CheckoutContainer';
 import ProductDetailsContainer from './containers/ProductDetailsContainer';
-
+import CategoryContainer from './containers/CategoryContainer'
 
 function App() {
   const [loading, setLoading] = useState(false);
@@ -18,7 +20,7 @@ function App() {
   const toast = useRef(null);
 
   const showMessage = (type, message, summary, sticky) => {
-    toast.current.show({ severity: type, summary: summary, detail: message, life: 3000, sticky: sticky});
+    toast.current.show({ severity: type, summary: summary, detail: message, life: 3000, sticky: sticky });
   }
 
   return (
@@ -59,7 +61,7 @@ function App() {
                 showMessage={showMessage}
               />}
           />
-            <Route path='/'
+          <Route path='/'
             element={
               <MainPage
                 loading={loading}
@@ -67,7 +69,31 @@ function App() {
                 showMessage={showMessage}
               />}
           />
-         
+          <Route path='/cart'
+            element={
+              <CartContainer
+                loading={loading}
+                setLoading={setLoading} MainPage
+                showMessage={showMessage}
+              />}
+          />
+          <Route path='/checkout'
+            element={
+              <CheckoutContainer
+                loading={loading}
+                setLoading={setLoading} MainPage
+                showMessage={showMessage}
+              />}
+          />
+          <Route path='/payment'
+            element={
+              <PaymentContainer
+                loading={loading}
+                setLoading={setLoading}
+                showMessage={showMessage}
+                setMenuBar={setMenuBar}
+              />}
+          />
 
         </Routes>
         {loading && (
