@@ -1,863 +1,268 @@
 import { useEffect, useState } from "react";
-import { Button } from 'primereact/button';
-import { DataView, DataViewLayoutOptions } from 'primereact/dataview';
+import { DataViewLayoutOptions } from 'primereact/dataview';
 import { Rating } from 'primereact/rating';
-import { Tag } from 'primereact/tag';
-import { classNames } from 'primereact/utils';
 import ProductService from "../services/ProductService";
-import {Card } from 'primereact/card'
+import { Card } from 'primereact/card'
 import { Dropdown } from "primereact/dropdown";
 import { Paginator } from 'primereact/paginator';
+import ProductListElementContainer from "./ProductListElementContainer";
+import { useNavigate } from "react-router-dom/dist/umd/react-router-dom.development";
 
 const CategoryListContainer = (props) => {
-    const [loading, setLoading] = useState(true);
-    const [layout, setLayout] = useState('grid');
-    const [products, setProducts] = useState([]);
-    const [first, setFirst] = useState(0);
-    const [rows, setRows] = useState(10);
+  const [loading, setLoading] = useState(true);
+  const [layout, setLayout] = useState('grid');
+  const [products, setProducts] = useState([]);
+  const [first, setFirst] = useState(0);
+  const [rows, setRows] = useState(10);
+  const [totalRecords, setTotalRecords] = useState(undefined)
+  const [mapped, setMappedProducts] = useState([])
+  const navigation = useNavigate()
+  const [criteria, setCriteria] = useState({
+    page: first,
+    size: rows,
+    sortAsc: true,
+    sortField: 'id',
+    category: ''
+  });
+  const [hoverStatus,setHoverStatus]=useState({});
 
-    const service = new ProductService();
+  const service = new ProductService();
 
-    useEffect(() => {
-      const fetchData = async () => {
-        props.setLoading(true)
-        try {
-          const response = await service.getDashboard();
-          const json = await response.json();
-          setProducts(json);
-          props.setLoading(false);
-        } catch (error) {
-          console.log("error", error);
-        }
-      };
-      fetchData();
-    }, []);
-  
+  const fetchData = async (criteria) => {
+    props.setLoading(true)
+    try {
+      const response = await service.getList(criteria);
+      const json = await response.json();
+      setProducts(json.content);
+      setTotalRecords(json.totalElements)
+      setRows(json.pageable.pageSize)
+      setFirst(json.pageable.offset)
+      props.setLoading(false);
+    } catch (error) {
+      console.log("error", error);
+    }
+  }
 
-    const getSeverity = (product) => {
-        switch (product.inventoryStatus) {
-            case 'INSTOCK':
-                return 'success';
 
-            case 'LOWSTOCK':
-                return 'warning';
 
-            case 'OUTOFSTOCK':
-                return 'danger';
+  useEffect(() => {
+    const queryParameters = new URLSearchParams(window.location.search)
+    const category = queryParameters.get("category")
+    criteria.category = category;
+    setCriteria(criteria)
+    fetchData(criteria);
+  }, []);
 
-            default:
-                return null;
-        }
-    };
 
-    const listItem = (product, index) => {
-        return (
-            <div className="col" key={product.id}>
-              {product.name}
-                {/* <div className={classNames('flex flex-column xl:flex-row xl:align-items-start p-4 gap-4', { 'border-top-1 surface-border': index !== 0 })}>
-                    <img className="w-9 sm:w-16rem xl:w-10rem shadow-2 block xl:block mx-auto border-round" src={`https://primefaces.org/cdn/primereact/images/product/${product.image}`} alt={product.name} />
-                    <div className="flex flex-column sm:flex-row justify-content-between align-items-center xl:align-items-start flex-1 gap-4">
-                        <div className="flex flex-column align-items-center sm:align-items-start gap-3">
-                            <div className="text-2xl font-bold text-900">{product.name}</div>
-                            <Rating value={product.rating} readOnly cancel={false}></Rating>
-                            <div className="flex align-items-center gap-3">
-                                <span className="flex align-items-center gap-2">
-                                    <i className="pi pi-tag"></i>
-                                    <span className="font-semibold">{product.category}</span>
-                                </span>
-                                <Tag value={product.inventoryStatus} severity={getSeverity(product)}></Tag>
-                            </div>
-                        </div>
-                        <div className="flex sm:flex-column align-items-center sm:align-items-end gap-3 sm:gap-2">
-                            <span className="text-2xl font-semibold">${product.price}</span>
-                            <Button icon="pi pi-shopping-cart" className="p-button-rounded" disabled={product.inventoryStatus === 'OUTOFSTOCK'}></Button>
-                        </div>
-                    </div>
-                </div> */}
-            </div>
-        );
-    };
 
-  const gridItem = (product) => {
+  const getSeverity = (product) => {
+    switch (product.inventoryStatus) {
+      case 'INSTOCK':
+        return 'success';
+
+      case 'LOWSTOCK':
+        return 'warning';
+
+      case 'OUTOFSTOCK':
+        return 'danger';
+
+      default:
+        return null;
+    }
+  };
+
+
+  const renderFilters = () => {
     return (
-    <Card className="col"
-    style={{
-      width:'100px'
-    }}>
-      <div className="col-2 col-sm-2 col-lg-2 col-xl-2 p-2" key={product.id}>
-        <div className="p-4 border-1 surface-border surface-card border-round">
-          <div className="flex flex-column align-items-center gap-3 py-5">
-            <img className="w-9 shadow-2 border-round" src={`https://primefaces.org/cdn/primereact/images/product/${product.image}`} alt={product.name} />
-            <div className="text-2xl font-bold">{product.name}</div>
-            <Rating value={product.rating} readOnly cancel={false}></Rating>
-          </div>
+      <>
+        <div
+          className="row"
+          style={{ marginLeft: "35%", marginTop: "5%", maxWidth: "100%" }}
+        >
+          <Dropdown
+            placeholder="Sortuj"
+            style={{
+              width: "13%",
+              marginRight: "20px",
+            }}
+          ></Dropdown>
+          <Dropdown
+            placeholder="Kategoria"
+            style={{
+              width: "13%",
+              marginRight: "20px",
+            }}
+          ></Dropdown>
+          <Dropdown
+            placeholder="Marka"
+            style={{
+              width: "13%",
+              marginRight: "20px",
+            }}
+          ></Dropdown>
+          <Dropdown
+            placeholder="Kolor"
+            style={{
+              width: "13%",
+              marginRight: "20px",
+            }}
+          ></Dropdown>
         </div>
-      </div>
-    </Card>
-    );
+        <div className="row" style={{ marginLeft: "35%", marginTop: "1%" }}>
+          <Dropdown
+            placeholder="Faktura"
+            style={{
+              width: "13%",
+              marginRight: "20px",
+            }}
+          ></Dropdown>
+          <Dropdown
+            placeholder="Cena"
+            style={{
+              width: "13%",
+              marginRight: "20px",
+            }}
+          ></Dropdown>
+          <Dropdown
+            placeholder="Długość rękawa"
+            style={{
+              width: "13%",
+              marginRight: "20px",
+            }}
+          ></Dropdown>
+          <Dropdown
+            placeholder="Fason"
+            style={{
+              width: "13%",
+              marginRight: "20px",
+            }}
+          ></Dropdown>
+        </div>
+      </>
+    )
+  }
+
+  const onPageChange = (event) => {
+    criteria.page = event.first
+    criteria.size = event.rows
+    setCriteria(criteria)
+    fetchData(criteria)
   };
-  
 
-    const itemTemplate = (product, layout, index) => {
-        if (!product) {
-            return;
-        }
+  const getMappedProducts = (products) => {
+    console.log(products)
+    let result = []
+    for (let i = 0; i < products.length; i += 3) {
+      const index = i;
+      result.push(
+        <div className="row">
+          {products.slice(i, i + 3).map((product) => {
+            return (
+              <Card
+                className="col-md-4"
+                style={{
+                  //width: "600px",
+                }}
+                onClick={(e) => {
+                  navigation(`/product/details/${product?.id}`)
+                }}
+              >
+                <div
+                  style={{
+                    //width: "400px",
+                  }}
+                >
+                  <div>
+                    <img
+                      src={hoverStatus.status && product.id === hoverStatus.id ? product?.detailUrl : product?.imageUrl}
+                      alt={product?.name}
+                      style={{
+                        width: "100%",
+                        height: "650px",
+                        cursor: "pointer",
+                        marginTop: "5%",
+                      }}
+                      onClick={() => { }}
+                      onMouseEnter={() => {
+                        setHoverStatus({
+                           status: true,
+                           id: product.id
+                        });
+                       }}
+                         onMouseLeave={() => {
+                           setHoverStatus({
+                             status: false,
+                             id: product.id
+                           });
+                         }}
+                    />
+                  </div>
+                  <div className="container">
+                    <div
+                      className="row"
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        marginTop: "10%",
+                      }}
+                    >
+                      {product?.name + product?.id}
+                    </div>
+                    <div
+                      className="row"
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        marginTop: "5%",
+                        color: "gray",
+                      }}
+                    >
+                      {product?.category}
+                    </div>
+                    <div
+                      className="row"
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        marginTop: "5%",
+                        color: "gray",
+                      }}
+                    >
+                      {product?.price}
+                    </div>
 
-        if (layout === 'list') return listItem(product, index);
-        else if (layout === 'grid') return gridItem(product);
-    };
+                  </div>
+                </div>
+              </Card>
+            )
+          })}
+        </div>
+      )
+    }
+    return result
+  }
 
-    const listTemplate = (products, layout) => {
-        return <div className="row">
-          {products.map((product, index) => itemTemplate(product, layout, index))}
-          </div>;
-    };
 
-    const header = () => {
-        return (
-            <div className="flex justify-content-end">
-                <DataViewLayoutOptions layout={layout} onChange={(e) => setLayout(e.value)} />
-            </div>
-        );
-    };
-
-    const onPageChange = (event) => {
-      setFirst(event.first);
-      setRows(event.rows);
-  };
-
-    return (
+  return (
+    (
       <div>
-        <div style={{maxWidth:'90%'}}>
-          <div
-            className="row"
-            style={{ marginLeft: "35%", marginTop: "5%", maxWidth: "100%" }}
-          >
-            <Dropdown
-              placeholder="Sortuj"
-              style={{
-                width: "13%",
-                marginRight: "20px",
-              }}
-            ></Dropdown>
-            <Dropdown
-              placeholder="Kategoria"
-              style={{
-                width: "13%",
-                marginRight: "20px",
-              }}
-            ></Dropdown>
-            <Dropdown
-              placeholder="Marka"
-              style={{
-                width: "13%",
-                marginRight: "20px",
-              }}
-            ></Dropdown>
-            <Dropdown
-              placeholder="Kolor"
-              style={{
-                width: "13%",
-                marginRight: "20px",
-              }}
-            ></Dropdown>
-          </div>
-          <div className="row" style={{ marginLeft: "35%", marginTop: "1%" }}>
-            <Dropdown
-              placeholder="Faktura"
-              style={{
-                width: "13%",
-                marginRight: "20px",
-              }}
-            ></Dropdown>
-            <Dropdown
-              placeholder="Cena"
-              style={{
-                width: "13%",
-                marginRight: "20px",
-              }}
-            ></Dropdown>
-            <Dropdown
-              placeholder="Długość rękawa"
-              style={{
-                width: "13%",
-                marginRight: "20px",
-              }}
-            ></Dropdown>
-            <Dropdown
-              placeholder="Fason"
-              style={{
-                width: "13%",
-                marginRight: "20px",
-              }}
-            ></Dropdown>
-          </div>
+        <div style={{ maxWidth: '90%' }}>
+          {renderFilters}
         </div>
         <div
           style={{
-            marginLeft: "20%",
-            marginRight: "20%",
+            //marginLeft: "5%",
+            //marginRight: "5%",
           }}
         >
-          <div className="row">
-            <Card
-              className="col"
-              style={{
-                width: "100px",
-              }}
-            >
-              <div
-                className="col-2 col-sm-2 col-lg-2 col-xl-2 p-2"
-                key={"product.id"}
-              >
-                <div className="p-4 border-1 surface-border surface-card border-round">
-                  <div className="flex flex-column align-items-center gap-3 py-5">
-                    <img
-                      className="w-9 shadow-2 border-round"
-                      src={`https://primefaces.org/cdn/primereact/images/product/${"product.image"}`}
-                      alt={"product.name"}
-                    />
-                    <div className="text-2xl font-bold">{"product.name"}</div>
-                    <Rating
-                      value={"product.rating"}
-                      readOnly
-                      cancel={false}
-                    ></Rating>
-                  </div>
-                </div>
-              </div>
-            </Card>
-            <Card
-              className="col"
-              style={{
-                width: "100px",
-              }}
-            >
-              <div
-                className="col-2 col-sm-2 col-lg-2 col-xl-2 p-2"
-                key={"product.id"}
-              >
-                <div className="p-4 border-1 surface-border surface-card border-round">
-                  <div className="flex flex-column align-items-center gap-3 py-5">
-                    <img
-                      className="w-9 shadow-2 border-round"
-                      src={`https://primefaces.org/cdn/primereact/images/product/${"product.image"}`}
-                      alt={"product.name"}
-                    />
-                    <div className="text-2xl font-bold">{"product.name"}</div>
-                    <Rating
-                      value={"product.rating"}
-                      readOnly
-                      cancel={false}
-                    ></Rating>
-                  </div>
-                </div>
-              </div>
-            </Card>
-            <Card
-              className="col"
-              style={{
-                width: "100px",
-              }}
-            >
-              <div
-                style={{
-                  width: "300px",
-                }}
-              >
-                <div className="mb-3">
-                  <img
-                    src={"/buty2.jpg"}
-                    alt={"product.name"}
-                    style={{
-                      width: "300px",
-                      height: "350px",
-                      cursor: "pointer",
-                      marginTop: "5%",
-                    }}
-                    onClick={() => {}}
-                    onMouseEnter={() => {
-                      //  setHoverStatus({
-                      //     status: true,
-                      //     id: index
-                      //  });
-                    }}
-                    onMouseLeave={() => {
-                      // setHoverStatus({
-                      //   status: false,
-                      //   id: index
-                      // });
-                    }}
-                  />
-                </div>
-                <div className="container">
-                  <div
-                    className="row"
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      marginTop: "10%",
-                    }}
-                  >
-                    {"product.name"}
-                  </div>
-                  <div
-                    className="row"
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      marginTop: "5%",
-                      color: "gray",
-                    }}
-                  >
-                    {"product.category"}
-                  </div>
-                  <div
-                    className="row"
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      marginTop: "5%",
-                      color: "gray",
-                    }}
-                  >
-                    {"product.price"}
-                  </div>
-                 
-                </div>
-              </div>
-            </Card>
-          </div>
-          <div className="row">
-   
-            <Card
-              className="col"
-              style={{
-                width: "100px",
-              }}
-            >
-              <div
-                className="col-2 col-sm-2 col-lg-2 col-xl-2 p-2"
-                key={"product.id"}
-              >
-                <div className="p-4 border-1 surface-border surface-card border-round">
-                  <div className="flex flex-column align-items-center gap-3 py-5">
-                    <img
-                      className="w-9 shadow-2 border-round"
-                      src={`https://primefaces.org/cdn/primereact/images/product/${"product.image"}`}
-                      alt={"product.name"}
-                    />
-                    <div className="text-2xl font-bold">{"product.name"}</div>
-                    <Rating
-                      value={"product.rating"}
-                      readOnly
-                      cancel={false}
-                    ></Rating>
-                  </div>
-                </div>
-              </div>
-            </Card>
-            <Card
-              className="col"
-              style={{
-                width: "100px",
-              }}
-            >
-              <div
-                className="col-2 col-sm-2 col-lg-2 col-xl-2 p-2"
-                key={"product.id"}
-              >
-                <div className="p-4 border-1 surface-border surface-card border-round">
-                  <div className="flex flex-column align-items-center gap-3 py-5">
-                    <img
-                      className="w-9 shadow-2 border-round"
-                      src={`https://primefaces.org/cdn/primereact/images/product/${"product.image"}`}
-                      alt={"product.name"}
-                    />
-                    <div className="text-2xl font-bold">{"product.name"}</div>
-                    <Rating
-                      value={"product.rating"}
-                      readOnly
-                      cancel={false}
-                    ></Rating>
-                  </div>
-                </div>
-              </div>
-            </Card>
-            <Card
-              className="col"
-              style={{
-                width: "100px",
-              }}
-            >
-              <div
-                style={{
-                  width: "300px",
-                }}
-              >
-                <div className="mb-3">
-                  <img
-                    src={"/buty2.jpg"}
-                    alt={"product.name"}
-                    style={{
-                      width: "300px",
-                      height: "350px",
-                      cursor: "pointer",
-                      marginTop: "5%",
-                    }}
-                    onClick={() => {}}
-                    onMouseEnter={() => {
-                      //  setHoverStatus({
-                      //     status: true,
-                      //     id: index
-                      //  });
-                    }}
-                    onMouseLeave={() => {
-                      // setHoverStatus({
-                      //   status: false,
-                      //   id: index
-                      // });
-                    }}
-                  />
-                </div>
-                <div className="container">
-                  <div
-                    className="row"
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      marginTop: "10%",
-                    }}
-                  >
-                    {"product.name"}
-                  </div>
-                  <div
-                    className="row"
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      marginTop: "5%",
-                      color: "gray",
-                    }}
-                  >
-                    {"product.category"}
-                  </div>
-                  <div
-                    className="row"
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      marginTop: "5%",
-                      color: "gray",
-                    }}
-                  >
-                    {"product.price"}
-                  </div>
-             
-                </div>
-              </div>
-            </Card>
-          </div>
-          <div className="row">
-     
-            <Card
-              className="col"
-              style={{
-                width: "100px",
-              }}
-            >
-              <div
-                className="col-2 col-sm-2 col-lg-2 col-xl-2 p-2"
-                key={"product.id"}
-              >
-                <div className="p-4 border-1 surface-border surface-card border-round">
-                  <div className="flex flex-column align-items-center gap-3 py-5">
-                    <img
-                      className="w-9 shadow-2 border-round"
-                      src={`https://primefaces.org/cdn/primereact/images/product/${"product.image"}`}
-                      alt={"product.name"}
-                    />
-                    <div className="text-2xl font-bold">{"product.name"}</div>
-                    <Rating
-                      value={"product.rating"}
-                      readOnly
-                      cancel={false}
-                    ></Rating>
-                  </div>
-                </div>
-              </div>
-            </Card>
-            <Card
-              className="col"
-              style={{
-                width: "100px",
-              }}
-            >
-              <div
-                className="col-2 col-sm-2 col-lg-2 col-xl-2 p-2"
-                key={"product.id"}
-              >
-                <div className="p-4 border-1 surface-border surface-card border-round">
-                  <div className="flex flex-column align-items-center gap-3 py-5">
-                    <img
-                      className="w-9 shadow-2 border-round"
-                      src={`https://primefaces.org/cdn/primereact/images/product/${"product.image"}`}
-                      alt={"product.name"}
-                    />
-                    <div className="text-2xl font-bold">{"product.name"}</div>
-                    <Rating
-                      value={"product.rating"}
-                      readOnly
-                      cancel={false}
-                    ></Rating>
-                  </div>
-                </div>
-              </div>
-            </Card>
-            <Card
-              className="col"
-              style={{
-                width: "100px",
-              }}
-            >
-              <div
-                style={{
-                  width: "300px",
-                }}
-              >
-                <div className="mb-3">
-                  <img
-                    src={"/buty2.jpg"}
-                    alt={"product.name"}
-                    style={{
-                      width: "300px",
-                      height: "350px",
-                      cursor: "pointer",
-                      marginTop: "5%",
-                    }}
-                    onClick={() => {}}
-                    onMouseEnter={() => {
-                      //  setHoverStatus({
-                      //     status: true,
-                      //     id: index
-                      //  });
-                    }}
-                    onMouseLeave={() => {
-                      // setHoverStatus({
-                      //   status: false,
-                      //   id: index
-                      // });
-                    }}
-                  />
-                </div>
-                <div className="container">
-                  <div
-                    className="row"
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      marginTop: "10%",
-                    }}
-                  >
-                    {"product.name"}
-                  </div>
-                  <div
-                    className="row"
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      marginTop: "5%",
-                      color: "gray",
-                    }}
-                  >
-                    {"product.category"}
-                  </div>
-                  <div
-                    className="row"
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      marginTop: "5%",
-                      color: "gray",
-                    }}
-                  >
-                    {"product.price"}
-                  </div>
-      
-                </div>
-              </div>
-            </Card>
-          </div>
-          <div className="row">
-          
-            <Card
-              className="col"
-              style={{
-                width: "100px",
-              }}
-            >
-              <div
-                className="col-2 col-sm-2 col-lg-2 col-xl-2 p-2"
-                key={"product.id"}
-              >
-                <div className="p-4 border-1 surface-border surface-card border-round">
-                  <div className="flex flex-column align-items-center gap-3 py-5">
-                    <img
-                      className="w-9 shadow-2 border-round"
-                      src={`https://primefaces.org/cdn/primereact/images/product/${"product.image"}`}
-                      alt={"product.name"}
-                    />
-                    <div className="text-2xl font-bold">{"product.name"}</div>
-                    <Rating
-                      value={"product.rating"}
-                      readOnly
-                      cancel={false}
-                    ></Rating>
-                  </div>
-                </div>
-              </div>
-            </Card>
-            <Card
-              className="col"
-              style={{
-                width: "100px",
-              }}
-            >
-              <div
-                className="col-2 col-sm-2 col-lg-2 col-xl-2 p-2"
-                key={"product.id"}
-              >
-                <div className="p-4 border-1 surface-border surface-card border-round">
-                  <div className="flex flex-column align-items-center gap-3 py-5">
-                    <img
-                      className="w-9 shadow-2 border-round"
-                      src={`https://primefaces.org/cdn/primereact/images/product/${"product.image"}`}
-                      alt={"product.name"}
-                    />
-                    <div className="text-2xl font-bold">{"product.name"}</div>
-                    <Rating
-                      value={"product.rating"}
-                      readOnly
-                      cancel={false}
-                    ></Rating>
-                  </div>
-                </div>
-              </div>
-            </Card>
-            <Card
-              className="col"
-              style={{
-                width: "100px",
-              }}
-            >
-              <div
-                style={{
-                  width: "300px",
-                }}
-              >
-                <div className="mb-3">
-                  <img
-                    src={"/buty2.jpg"}
-                    alt={"product.name"}
-                    style={{
-                      width: "300px",
-                      height: "350px",
-                      cursor: "pointer",
-                      marginTop: "5%",
-                    }}
-                    onClick={() => {}}
-                    onMouseEnter={() => {
-                      //  setHoverStatus({
-                      //     status: true,
-                      //     id: index
-                      //  });
-                    }}
-                    onMouseLeave={() => {
-                      // setHoverStatus({
-                      //   status: false,
-                      //   id: index
-                      // });
-                    }}
-                  />
-                </div>
-                <div className="container">
-                  <div
-                    className="row"
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      marginTop: "10%",
-                    }}
-                  >
-                    {"product.name"}
-                  </div>
-                  <div
-                    className="row"
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      marginTop: "5%",
-                      color: "gray",
-                    }}
-                  >
-                    {"product.category"}
-                  </div>
-                  <div
-                    className="row"
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      marginTop: "5%",
-                      color: "gray",
-                    }}
-                  >
-                    {"product.price"}
-                  </div>
-                 
-                </div>
-              </div>
-            </Card>
-          </div>
-          <div className="row">
-          
-            <Card
-              className="col"
-              style={{
-                width: "100px",
-              }}
-            >
-              <div
-                className="col-2 col-sm-2 col-lg-2 col-xl-2 p-2"
-                key={"product.id"}
-              >
-                <div className="p-4 border-1 surface-border surface-card border-round">
-                  <div className="flex flex-column align-items-center gap-3 py-5">
-                    <img
-                      className="w-9 shadow-2 border-round"
-                      src={`https://primefaces.org/cdn/primereact/images/product/${"product.image"}`}
-                      alt={"product.name"}
-                    />
-                    <div className="text-2xl font-bold">{"product.name"}</div>
-                    <Rating
-                      value={"product.rating"}
-                      readOnly
-                      cancel={false}
-                    ></Rating>
-                  </div>
-                </div>
-              </div>
-            </Card>
-            <Card
-              className="col"
-              style={{
-                width: "100px",
-              }}
-            >
-              <div
-                className="col-2 col-sm-2 col-lg-2 col-xl-2 p-2"
-                key={"product.id"}
-              >
-                <div className="p-4 border-1 surface-border surface-card border-round">
-                  <div className="flex flex-column align-items-center gap-3 py-5">
-                    <img
-                      className="w-9 shadow-2 border-round"
-                      src={`https://primefaces.org/cdn/primereact/images/product/${"product.image"}`}
-                      alt={"product.name"}
-                    />
-                    <div className="text-2xl font-bold">{"product.name"}</div>
-                    <Rating
-                      value={"product.rating"}
-                      readOnly
-                      cancel={false}
-                    ></Rating>
-                  </div>
-                </div>
-              </div>
-            </Card>
-            <Card
-              className="col"
-              style={{
-                width: "100px",
-              }}
-            >
-              <div
-                style={{
-                  width: "300px",
-                }}
-              >
-                <div className="mb-3">
-                  <img
-                    src={"/buty2.jpg"}
-                    alt={"product.name"}
-                    style={{
-                      width: "300px",
-                      height: "350px",
-                      cursor: "pointer",
-                      marginTop: "5%",
-                    }}
-                    onClick={() => {}}
-                    onMouseEnter={() => {
-                      //  setHoverStatus({
-                      //     status: true,
-                      //     id: index
-                      //  });
-                    }}
-                    onMouseLeave={() => {
-                      // setHoverStatus({
-                      //   status: false,
-                      //   id: index
-                      // });
-                    }}
-                  />
-                </div>
-                <div className="container">
-                  <div
-                    className="row"
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      marginTop: "10%",
-                    }}
-                  >
-                    {"product.name"}
-                  </div>
-                  <div
-                    className="row"
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      marginTop: "5%",
-                      color: "gray",
-                    }}
-                  >
-                    {"product.category"}
-                  </div>
-                  <div
-                    className="row"
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      marginTop: "5%",
-                      color: "gray",
-                    }}
-                  >
-                    {"product.price"}
-                  </div>
-                  {/* <div style={{ display: 'flex', justifyContent: 'center', marginTop:'8%' }}>
-                <Button //icon="pi pi-search"
-                 rounded style={{ marginRight: '20px' }} label='Ulubione'/>
-                <Button icon="pi pi-star-fill" rounded label='Dodaj do koszyka'/>
-              </div> */}
-                </div>
-              </div>
-            </Card>
-          </div>
+          {getMappedProducts(products)}
         </div>
         <div className="card">
-            <Paginator first={first} rows={rows} totalRecords={120} rowsPerPageOptions={[10, 20, 30]} onPageChange={onPageChange} />
+          <Paginator first={first} rows={rows} totalRecords={totalRecords} rowsPerPageOptions={[5, 10, 20, 50]} onPageChange={onPageChange} />
         </div>
       </div>
-    );
-  };
-  
-  export default CategoryListContainer;
+    )
+  )
+};
+
+export default CategoryListContainer;

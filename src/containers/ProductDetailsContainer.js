@@ -26,7 +26,7 @@ const ProductDetailsContainer = (props) => {
                 setProduct(json);
                 //TODO
                 console.log(json)
-                const images = json.images.map((imageModel) => ({
+                const images = json.images?.map((imageModel) => ({
                     itemImageSrc: imageModel.url,
                     thumbnailImageSrc: imageModel.url,
                     alt: imageModel.description,
@@ -138,7 +138,7 @@ const ProductDetailsContainer = (props) => {
                             className="col"
                             style={{ display: "flex", justifyContent: "start" }}
                         >
-                            {product?.colorImgUrls.map((x) => {
+                            {product?.colorImgUrls?.map((x) => {
                                 <img
                                     src="https://primefaces.org/cdn/primereact/images/galleria/galleria14.jpg"
                                     style={{

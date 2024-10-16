@@ -1,8 +1,10 @@
 import { jwtDecode } from "jwt-decode";
+import BaseService from "./BaseService";
 
-export default class AuthService{
+export default class AuthService extends BaseService {
 
     constructor() {
+        super()
         this.url = "http://localhost:8080"
     }
 
