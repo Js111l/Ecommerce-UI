@@ -1,9 +1,9 @@
+import BaseService from "./BaseService";
 
-
-
-export default class ProductService{
+export default class ProductService extends BaseService{
 
     constructor() {
+        super()
         this.url = "http://localhost:8081"
     }
 
@@ -53,4 +53,56 @@ export default class ProductService{
             return response;
         });
     }
+<<<<<<< Updated upstream
+=======
+    getCheckoutProducts(){
+        
+        return fetch(this.url + `/products/user-checkout/products`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response;
+        });
+    }
+
+    getParentCategories(){
+        return fetch(this.url + `/products/categories/menubar`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response;
+        });
+    }
+
+    getList(criterias){
+        const params = this.getParamsFromCriteriaObject(criterias);
+        return fetch(this.url + `/products/list?${params}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response;
+        });
+    }
+>>>>>>> Stashed changes
 }

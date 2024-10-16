@@ -9,6 +9,8 @@ const MenuBarContainer = (props) => {
   const navigation = useNavigate();
   const [active, setActive] = useState(false);
   const [checkoutCount, setCheckoutCount] = useState(0);
+  const [parentCategories, setCategories] = useState([])
+
   const service = new ProductService()
   const authService = new AuthService()
   const productService = new ProductService()
@@ -17,9 +19,14 @@ const MenuBarContainer = (props) => {
     props.setLoading(true);
     try {
       const userId = authService.getUserFromToken().iss
-      const response = await service.getCheckoutCount(userId);
-      const json = await response.json();
-      setCheckoutCount(json);
+      //const response = await service.getCheckoutCount(userId);
+     // const json = await response.json();
+      //setCheckoutCount(json);
+
+      const categories = await productService.getParentCategories();
+      const categoriesJson = await categories.json();
+
+      setCategories(categoriesJson)
       props.setLoading(false);
     } catch (error) {
       console.log(error);
@@ -122,20 +129,22 @@ const MenuBarContainer = (props) => {
             justifyContent: "center",
           }}
         >
-          <a
-            href=""
-            style={{
-              marginRight: "20px",
-            }}
-          >
-            <span
-              onMouseEnter={(e) => {
-                setActive(true);
-              }}
-            >
-              Odziez
-            </span>
-            {active ? (
+          {parentCategories.map((parent) => {
+            return (
+              <a
+                href=""
+                style={{
+                  marginRight: "20px",
+                }}
+              >
+                <span
+                  onMouseEnter={(e) => {
+                    setActive(true);
+                  }}
+                >
+                  {parent.label}
+                </span>
+               {active ? (
               <div
                 style={{
                   position: "absolute",
@@ -157,48 +166,31 @@ const MenuBarContainer = (props) => {
                     backgroundColor: "white",
                   }}
                 >
-                  <div className="row">
-                    <div className="col">
-                      <li style={{ padding: "8px 12px" }}>Sukienki</li>
-                      <li style={{ padding: "8px 12px" }}>Kurtki i plaszcze</li>
-                      <li style={{ padding: "8px 12px" }}>T-shirty</li>
+                      <div className="row">
+                        {Array.from({ length: Math.ceil(parent.firstLevelChildren.length / 3) }).map((_, colIndex) => (
+                          <div className="col" key={colIndex}>
+                            <ul>
+                              {parent.firstLevelChildren.slice(colIndex * 3, colIndex * 3 + 3).map((x, index) => (
+                                <li 
+                                  key={index} 
+                                  style={{ padding: "8px 12px" }}
+                                  onClick={(e)=>{
+                                    navigation(`/category/list?category=${x.path}`)
+                                  }}
+                                  >
+                                  {x.label}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                    <div className="col">
-                      <li style={{ padding: "8px 12px" }}>Spodnie</li>
-                      <li style={{ padding: "8px 12px" }}>Szorty</li>
-                      <li style={{ padding: "8px 12px" }}>Buty</li>
-                    </div>
-                    <div className="col">
-                      <li style={{ padding: "8px 12px" }}>Marynarki</li>
-                      <li style={{ padding: "8px 12px" }}>Czapki</li>
-                      <li style={{ padding: "8px 12px" }}>Kapelusze</li>
-                    </div>
-                    <div className="col">
-                      <li style={{ padding: "8px 12px" }}>Stroje kapielowe</li>
-                      <li style={{ padding: "8px 12px" }}>Koszule</li>
-                      <li style={{ padding: "8px 12px" }}>Swetry</li>
-                    </div>
-                  </div>
-                </div>
               </div>
-            ) : null}
-          </a>
-          <a
-            href=""
-            style={{
-              marginRight: "20px",
-            }}
-          >
-            <span>Akcesoria</span>
-          </a>
-          <a
-            href=""
-            style={{
-              marginRight: "20px",
-            }}
-          >
-            <span>Wyprzedaz</span>
-          </a>
+                ) : null}   
+              </a>
+            )
+          })}         
         </div>
       </div>
     );
