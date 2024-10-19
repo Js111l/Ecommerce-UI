@@ -1,7 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
-import FinancialTransactionsService from '../services/FinancialTransactionsService';
+import React, { useEffect, useState } from 'react';
 import { Button } from 'primereact/button';
-import { InputText } from 'primereact/inputtext';
 import { useNavigate } from 'react-router-dom/dist/umd/react-router-dom.development';
 import ProductCardContainer from './ProductCardContainer';
 import ProductService from '../services/ProductService';
@@ -10,14 +8,10 @@ import { Dropdown } from 'primereact/dropdown';
 
 
 const CartContainer = (props) => {
-    const service = new FinancialTransactionsService();
-    const stepperRef = useRef(null);
-    const [element,setElement] = useState(undefined);
     const navigate = useNavigate()
     const productService = new ProductService();
     const [cart, setCart] = useState(undefined)
-    const [checked, setChecked] = useState(false);
-    const [selectedAll, setSelectedAll] = useState(false);
+    const [selectedAll, setSelectedAll] = useState(true);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -91,19 +85,23 @@ const CartContainer = (props) => {
                         }}>Cały koszyk</span>                 
                     <Dropdown placeholder='USUŃ' style={{marginLeft:'auto'}}></Dropdown>       
                     </div>
-                    {cart?.products?.map((x) => {
+                    {cart?.products?.map((x,index) => {
                         return (
-                            <ProductCardContainer
-                                selectedAll={selectedAll}
-                                element={{
-                                    id: x.product.id,
-                                    name: x.product.name,
-                                    brand: x.product?.brand,
-                                    color: '',
-                                    price: x.product?.price,
-                                    quantity: x.quantity,
-                                    size: ''
-                                }} />
+                            <div style={{
+                                marginTop: index===0 ? '0px' : '12px'
+                            }}>
+                                <ProductCardContainer
+                                    selectedAll={selectedAll}
+                                    element={{
+                                        id: x.product.id,
+                                        name: x.product.name,
+                                        brand: x.product?.brand,
+                                        color: '',
+                                        price: x.product?.price,
+                                        quantity: x.quantity,
+                                        size: ''
+                                    }} /></div>
+
                         )
                     })}
                     </div>

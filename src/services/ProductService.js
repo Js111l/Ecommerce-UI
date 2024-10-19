@@ -53,8 +53,6 @@ export default class ProductService extends BaseService{
             return response;
         });
     }
-<<<<<<< Updated upstream
-=======
     getCheckoutProducts(){
         
         return fetch(this.url + `/products/user-checkout/products`, {
@@ -104,5 +102,4 @@ export default class ProductService extends BaseService{
             return response;
         });
     }
->>>>>>> Stashed changes
 }

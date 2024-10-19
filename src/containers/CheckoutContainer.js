@@ -144,8 +144,11 @@ const CheckoutContainer = (props) => {
                 </div>
                 <div className="col-md-3">
                     <span style={{ fontWeight: 'bold', fontSize: '26px' }}>Podsumowanie</span>
-                    {cart?.products?.map((x) => {
+                    {cart?.products?.map((x,index) => {
                         return (
+                            <div style={{
+                                marginTop: index===0 ? '0px' : '12px'
+                            }}>
                             <ProductCardContainer
                                 // selectedAll={selectedAll}
                                 element={{
@@ -157,6 +160,7 @@ const CheckoutContainer = (props) => {
                                     quantity: x.quantity,
                                     size: ''
                                 }} />
+                             </div>
                         )
                     })}
                 </div>
