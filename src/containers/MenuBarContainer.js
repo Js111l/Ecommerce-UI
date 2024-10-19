@@ -10,7 +10,7 @@ const MenuBarContainer = (props) => {
   const [active, setActive] = useState(false);
   const [checkoutCount, setCheckoutCount] = useState(0);
   const [parentCategories, setCategories] = useState([])
-
+  const [hovered,setHovered]=useState({})
   const service = new ProductService()
   const authService = new AuthService()
   const productService = new ProductService()
@@ -19,14 +19,15 @@ const MenuBarContainer = (props) => {
     props.setLoading(true);
     try {
       const userId = authService.getUserFromToken().iss
-      //const response = await service.getCheckoutCount(userId);
-     // const json = await response.json();
-      //setCheckoutCount(json);
-
       const categories = await productService.getParentCategories();
       const categoriesJson = await categories.json();
 
       setCategories(categoriesJson)
+
+      const response = await service.getCheckoutCount(userId);
+      const json = await response.json();
+
+      setCheckoutCount(json);
       props.setLoading(false);
     } catch (error) {
       console.log(error);
@@ -79,38 +80,16 @@ const MenuBarContainer = (props) => {
     },
     {
       icon: "pi pi-fw pi-user",
-      //   command: () => menuBarOnClickFunction('checkout'),
+      
       items: [
         {
           label: "Zaloguj sie", //TODO -> tlumaczenia
           className: "reddy",
           command: () => menuBarOnClickFunction("login"),
         },
-        {
-          label: "Zarejestruj sie",
-          command: () => menuBarOnClickFunction("register"),
-        },
       ],
     },
 
-  ];
-
-  const items2 = [
-    {
-      //icon: ',
-      //   command: () => menuBarOnClickFunction('checkout'),
-      items: [
-        {
-          label: "Zaloguj sie", //TODO -> tlumaczenia
-          className: "reddy",
-          command: () => menuBarOnClickFunction("login"),
-        },
-        {
-          label: "Zarejestruj sie",
-          command: () => menuBarOnClickFunction("register"),
-        },
-      ],
-    },
   ];
 
 
@@ -141,6 +120,10 @@ const MenuBarContainer = (props) => {
                   onMouseEnter={(e) => {
                     setActive(true);
                   }}
+                  style={{
+                    color:'black',
+
+                  }}
                 >
                   {parent.label}
                 </span>
@@ -159,8 +142,6 @@ const MenuBarContainer = (props) => {
                     setActive(false);
                   }}
                   style={{
-                    margin: 0,
-                    padding: 0,
                     listStyleType: "none",
                     boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
                     backgroundColor: "white",
@@ -171,15 +152,41 @@ const MenuBarContainer = (props) => {
                           <div className="col" key={colIndex}>
                             <ul>
                               {parent.firstLevelChildren.slice(colIndex * 3, colIndex * 3 + 3).map((x, index) => (
-                                <li 
-                                  key={index} 
-                                  style={{ padding: "8px 12px" }}
-                                  onClick={(e)=>{
-                                    navigation(`/category/list?category=${x.path}`)
-                                  }}
+                                <div style={{
+                                  display: 'flex',
+                                  justifyContent: 'start',
+                                  alignItems: 'center',
+                                }}>
+                                  <i className="pi pi-angle-right" style={{ color: 'slateblue' }}></i>
+                                  <li
+                                    key={index}
+                                    style={{ 
+                                      padding: "8px 12px", 
+                                      color: 'black',
+                                      textDecoration: hovered.id === index && hovered.status
+                                      && hovered.colIndex === colIndex  ? 'underline' : 'none'
+                                    }}
+                                    onMouseEnter={(e)=>{
+                                      setHovered({
+                                        id: index,
+                                        colIndex: colIndex,
+                                        status: true
+                                      })
+                                    }}
+                                    onMouseLeave={(e)=>{
+                                      setHovered({
+                                        id: index,
+                                        colIndex: colIndex,
+                                        status: false
+                                      })
+                                    }}
+                                    onClick={(e) => {
+                                      navigation(`/category/list?category=${x.path}`)
+                                    }}
                                   >
-                                  {x.label}
-                                </li>
+                                    {x.label}
+                                  </li>
+                                </div>
                               ))}
                             </ul>
                           </div>

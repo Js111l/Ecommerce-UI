@@ -1,32 +1,33 @@
 import { useEffect, useState } from "react";
-import { DataViewLayoutOptions } from 'primereact/dataview';
-import { Rating } from 'primereact/rating';
 import ProductService from "../services/ProductService";
 import { Card } from 'primereact/card'
 import { Dropdown } from "primereact/dropdown";
 import { Paginator } from 'primereact/paginator';
-import ProductListElementContainer from "./ProductListElementContainer";
 import { useNavigate } from "react-router-dom/dist/umd/react-router-dom.development";
+import EnumService from "../services/EnumService";
+import { Button } from "primereact/button";
 
 const CategoryListContainer = (props) => {
   const [loading, setLoading] = useState(true);
-  const [layout, setLayout] = useState('grid');
   const [products, setProducts] = useState([]);
   const [first, setFirst] = useState(0);
   const [rows, setRows] = useState(10);
   const [totalRecords, setTotalRecords] = useState(undefined)
-  const [mapped, setMappedProducts] = useState([])
   const navigation = useNavigate()
+  const [hoveredLikeButton,setHoveredLikeButton]=useState({})
   const [criteria, setCriteria] = useState({
     page: first,
     size: rows,
     sortAsc: true,
     sortField: 'id',
-    category: ''
+    category: '',
+    sortType: ''
   });
   const [hoverStatus,setHoverStatus]=useState({});
 
   const service = new ProductService();
+  const enumService = new EnumService();
+  const [sortTypeOptions,setSortTypeOptions]=useState([])
 
   const fetchData = async (criteria) => {
     props.setLoading(true)
@@ -37,8 +38,14 @@ const CategoryListContainer = (props) => {
       setTotalRecords(json.totalElements)
       setRows(json.pageable.pageSize)
       setFirst(json.pageable.offset)
+
+      const enumServiceResponse = await enumService.getValuesByClassName('SortType');
+      const enumJson = await enumServiceResponse.json()
+      setSortTypeOptions(enumJson);
+
       props.setLoading(false);
     } catch (error) {
+      props.setLoading(false);
       console.log("error", error);
     }
   }
@@ -77,63 +84,70 @@ const CategoryListContainer = (props) => {
       <>
         <div
           className="row"
-          style={{ marginLeft: "35%", marginTop: "5%", maxWidth: "100%" }}
+          style={{ marginLeft: "15%", marginTop: "5%", maxWidth: "100%" }}
         >
           <Dropdown
             placeholder="Sortuj"
+            value={criteria.sortType}
+            options={sortTypeOptions}
+            onChange={(e) => {
+              criteria.sortType = e.target.value
+              setCriteria(criteria)
+              fetchData(criteria)
+            }}
             style={{
-              width: "13%",
+              width: "20%",
               marginRight: "20px",
             }}
           ></Dropdown>
           <Dropdown
             placeholder="Kategoria"
             style={{
-              width: "13%",
+              width: "20%",
               marginRight: "20px",
             }}
           ></Dropdown>
           <Dropdown
             placeholder="Marka"
             style={{
-              width: "13%",
+              width: "20%",
               marginRight: "20px",
             }}
           ></Dropdown>
           <Dropdown
             placeholder="Kolor"
             style={{
-              width: "13%",
+              width: "20%",
               marginRight: "20px",
             }}
           ></Dropdown>
         </div>
-        <div className="row" style={{ marginLeft: "35%", marginTop: "1%" }}>
+        <div className="row" style={{ marginLeft: "15%", marginTop: "1%" }}>
           <Dropdown
             placeholder="Faktura"
             style={{
-              width: "13%",
+              width: "20%",
               marginRight: "20px",
             }}
           ></Dropdown>
           <Dropdown
             placeholder="Cena"
             style={{
-              width: "13%",
+              width: "20%",
               marginRight: "20px",
             }}
           ></Dropdown>
           <Dropdown
             placeholder="Długość rękawa"
             style={{
-              width: "13%",
+              width: "20%",
               marginRight: "20px",
             }}
           ></Dropdown>
           <Dropdown
             placeholder="Fason"
             style={{
-              width: "13%",
+              width: "20%",
               marginRight: "20px",
             }}
           ></Dropdown>
@@ -157,8 +171,8 @@ const CategoryListContainer = (props) => {
       result.push(
         <div className="row">
           {products.slice(i, i + 3).map((product) => {
-            return (
-              <Card
+          return (
+            <Card
                 className="col-md-4"
                 style={{
                   //width: "600px",
@@ -169,72 +183,100 @@ const CategoryListContainer = (props) => {
               >
                 <div
                   style={{
-                    //width: "400px",
+                    minHeight: '500px',   // Set the minimum height
+                    height: '100%'     
                   }}
                 >
                   <div>
-                    <img
-                      src={hoverStatus.status && product.id === hoverStatus.id ? product?.detailUrl : product?.imageUrl}
-                      alt={product?.name}
+                  <div style={{
+                    display:'flex',
+                    justifyContent:'start',
+                    position:'absolute',
+                    marginTop:'25px'
+                  }}>
+                    
+                    <Button
+                      icon={"pi pi-heart"}
                       style={{
+                        background:'white',
+                        border:'none',
+                        color: hoveredLikeButton?.status && hoveredLikeButton?.id === product.id 
+                        ? 'red' : 'black'
+                      }}
+                      onMouseEnter={() => setHoveredLikeButton({
+                        id: product.id,
+                        status: true
+                      })}
+                      onMouseLeave={() => setHoveredLikeButton({
+                        id: product.id,
+                        status: false
+                      })}
+                    >
+                      
+                    </Button>
+                    </div>
+                  <img
+                    src={hoverStatus.status && product.id === hoverStatus.id ? product?.detailUrl : product?.imageUrl}
+                    alt={product?.name}
+                    style={{
                         width: "100%",
-                        height: "650px",
+                        height: "100%",
                         cursor: "pointer",
                         marginTop: "5%",
                       }}
                       onClick={() => { }}
-                      onMouseEnter={() => {
-                        setHoverStatus({
-                           status: true,
-                           id: product.id
-                        });
-                       }}
-                         onMouseLeave={() => {
-                           setHoverStatus({
-                             status: false,
-                             id: product.id
-                           });
-                         }}
-                    />
+                    onMouseEnter={() => {
+                      setHoverStatus({
+                        status: true,
+                        id: product.id,
+                      });
+                    }}
+                    onMouseLeave={() => {
+                      setHoverStatus({
+                        status: false,
+                        id: product.id,
+                      });
+                    }}
+                  />
+                </div>
+          
+                <div className="container">
+                  <div
+                    className="row"
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      marginTop: '10%',
+                    }}
+                  >
+                    {product?.name + product?.id}
                   </div>
-                  <div className="container">
-                    <div
-                      className="row"
-                      style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        marginTop: "10%",
-                      }}
-                    >
-                      {product?.name + product?.id}
-                    </div>
-                    <div
-                      className="row"
-                      style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        marginTop: "5%",
-                        color: "gray",
-                      }}
-                    >
-                      {product?.category}
-                    </div>
-                    <div
-                      className="row"
-                      style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        marginTop: "5%",
-                        color: "gray",
-                      }}
-                    >
-                      {product?.price}
-                    </div>
-
+                  <div
+                    className="row"
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      marginTop: '5%',
+                      color: 'gray',
+                    }}
+                  >
+                    {product?.category}
+                  </div>
+                  <div
+                    className="row"
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      marginTop: '5%',
+                      color: 'gray',
+                    }}
+                  >
+                    {product?.price}
                   </div>
                 </div>
-              </Card>
-            )
+              </div>
+            </Card>
+          );
           })}
         </div>
       )
@@ -245,9 +287,12 @@ const CategoryListContainer = (props) => {
 
   return (
     (
-      <div>
-        <div style={{ maxWidth: '90%' }}>
-          {renderFilters}
+      <div style={{
+        marginLeft:'5%',
+        marginRight: '5%'
+      }}>
+        <div style={{ maxWidth: '100%' }}>
+          {renderFilters()}
         </div>
         <div
           style={{

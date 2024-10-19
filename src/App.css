@@ -75,6 +75,7 @@
   
   .p-menubar .p-menuitem .p-submenu-list {
     width: fit-content;
+    padding-left: 0rem;
   }
   
   .column {
@@ -160,4 +161,6 @@
 .p-card .p-component col{
   width: 100px;
 }
+
+
 
