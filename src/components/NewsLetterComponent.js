@@ -57,8 +57,6 @@ const NewsLetterComponent = (props) => {
         <Card
             style={{
                 maxWidth: '600px',
-                
-                //borderRadius: "8px", 
                 backgroundColor: "#f9f9f9",
             }}
         >

@@ -189,3 +189,12 @@
   left: 50%;
   transform: translate(-50%, -50%);
 }
+
+.p-panel-content{
+  height: fit-content;
+}
+
+hr.rounded {
+  border-top: 8px solid #bbb;
+  border-radius: 5px;
+}
