@@ -198,3 +198,7 @@ hr.rounded {
   border-top: 8px solid #bbb;
   border-radius: 5px;
 }
+
+.p-treenode-children ul{
+  padding-left: 0rem;
+}

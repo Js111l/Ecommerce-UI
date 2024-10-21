@@ -181,7 +181,7 @@ const MenuBarContainer = (props) => {
                                       })
                                     }}
                                     onClick={(e) => {
-                                      navigation(`/category/list?category=${x.path}`)
+                                      navigation(`/category/list?categories=${x.id}`)
                                     }}
                                   >
                                     {x.label}

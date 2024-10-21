@@ -102,4 +102,36 @@ export default class ProductService extends BaseService{
             return response;
         });
     }
+
+    getChildren(parentPath, isFirstLevel){
+        return fetch(this.url + `/products/categories/children?parentPath=${parentPath}&firstLevel=${isFirstLevel}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response;
+        }); 
+    }
+    getAllCategories(){
+        return fetch(this.url +  `/products/categories/parents/options`,//`/products/categories/parents/options?checkedPath=${path}`,
+             {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response;
+        }); 
+    }
 }
