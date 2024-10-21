@@ -5,10 +5,7 @@ import { Button } from "primereact/button";
 const LoginContainer = (props) => {
   const [register, setRegister] = useState(false);
   useEffect(() => {
-    const fetchProducts = async () => {
-
-    };
-    fetchProducts();
+    props.setShowNewsletter(false);              
   }, []);
 
     const renderNewClientRegister = () => {

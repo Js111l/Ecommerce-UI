@@ -19,7 +19,6 @@ const ProductsShowcaseComponent = (props) => {
   const [mainBanerItems, setMainBanerItems] = useState([])
   const service = new ProductService();
   const [hovered, setHovered] = useState({})
-  const [footerHoover, setFooterHoover] = useState([])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -144,37 +143,6 @@ const ProductsShowcaseComponent = (props) => {
       </div>
     );
   };
-  const divider = (
-    (
-      <hr style={{
-        marginTop: '3%',
-        marginBottom: '3%'
-      }} class="solid">
-      </hr>
-    )
-  )
-  const items = [
-    "Wymiana i zwroty",
-    "Metody płatności",
-    "Reklamacje",
-    "Karta podarunkowa",
-    "Konto klienta",
-    "Lista życzeń"
-  ];
-  const items2 = [
-    "Regulamin",
-    "Polityka prywatności",
-    "Pliki cookies",
-    "FAQ"
-  ];
-
-  const genderItems = [
-    "Kobieta",
-    "Mężczyzna",
-    "Dziewczynka",
-    "Chłopiec"
-  ];
-
 
   return (
     <div>
@@ -266,170 +234,7 @@ const ProductsShowcaseComponent = (props) => {
             }} />
 
         </div>
-      </div>
-      {divider}
-      <div className='row' style={{
-        display: 'flex',
-        justifyContent: 'center',
-        maxHeight: "300px",
-        marginLeft: '15%',
-        marginRight: '15%',
-      }}>
-        <div className="col"
-          style={{
-            backgroundColor: "#f9f9f9",
-          }}>
-          <div className='row' style={{
-            // border: '1px solid',
-            // borderColor: 'black'
-          }}>
-            <span style={{
-              fontWeight: 'bold',
-              marginBottom: '1%'
-            }}>O nas</span>
-          </div>
-          <div className='row' style={{
-            // border:'1px solid',
-            // borderColor: 'black',
-            // borderTop:'none'
-          }}>
-            <p className="m-0">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-              Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-
-            </p>
-          </div>
-        </div>
-        <div className="col">
-          <NewsLetterComponent
-            setLoading={props.setLoading}
-            showMessage={props.showMessage}
-          />
-        </div>
-      </div>
-      {divider}
-      <div style={{
-        marginLeft: '15%',
-        marginRight: '15%',
-      }}>
-        <div className='row'>
-          <div className='col-md-3'>
-            <ul>
-              <span>Obsługa klienta</span>
-              {items.map((x, index) => {
-                return (
-                  <div
-                    onMouseEnter={(e) => {
-                      setFooterHoover({
-                        id: index,
-                        colIndex: 0,
-                        status: true
-                      })
-                    }}
-                    onMouseLeave={(e) => {
-                      setFooterHoover({
-                        id: index,
-                        colIndex: 0,
-                        status: false
-                      })
-                    }}
-                  >
-                    <li>
-                      <span style={{
-                        textDecoration: footerHoover.id === index &&
-                          footerHoover.colIndex === 0 &&
-                          footerHoover.status
-                          ? 'underline' : '',
-                        cursor: 'pointer'
-                      }}
-                      >
-                        {x}
-                      </span>
-                    </li>
-                  </div>
-                )
-              })}
-            </ul>
-          </div>
-          <div className='col-md-3'>
-            <ul>
-              <span>Informacje</span>
-              {items2.map((x, index) => {
-                return (
-                  <div
-                    onMouseEnter={(e) => {
-                      setFooterHoover({
-                        id: index,
-                        colIndex: 1,
-                        status: true
-                      })
-                    }}
-                    onMouseLeave={(e) => {
-                      setFooterHoover({
-                        id: index,
-                        colIndex: 1,
-                        status: false
-                      })
-                    }}
-                  >
-                    <li>
-                      <span style={{
-                        textDecoration: footerHoover.id === index &&
-                          footerHoover.colIndex === 1 &&
-                          footerHoover.status
-                          ? 'underline' : '',
-                        cursor: 'pointer'
-                      }}
-                      >
-                        {x}
-                      </span>
-                    </li>
-                  </div>
-                )
-              })}
-            </ul>
-          </div>
-          <div className='col-md-3'>
-            <ul>
-              <span>Kupuj</span>
-              {genderItems.map((x, index) => {
-                return (
-                  <div
-                    onMouseEnter={(e) => {
-                      setFooterHoover({
-                        id: index,
-                        colIndex: 2,
-                        status: true
-                      })
-                    }}
-                    onMouseLeave={(e) => {
-                      setFooterHoover({
-                        id: index,
-                        colIndex: 2,
-                        status: false
-                      })
-                    }}
-                  >
-                    <li>
-                      <span style={{
-                        textDecoration: footerHoover.id === index &&
-                          footerHoover.colIndex === 2 &&
-                          footerHoover.status
-                          ? 'underline' : '',
-                        cursor: 'pointer'
-                      }}
-                      >
-                        {x}
-                      </span>
-                    </li>
-                  </div>
-                )
-              })}
-            </ul>
-          </div>
-        </div>
-
-      </div>
+      </div>   
     </div>
   );
 };

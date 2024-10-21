@@ -11,10 +11,7 @@ import ProductsShowcaseComponent from './ProductsShowcaseComponent';
 
 const MainPage = (props) => {
   const navigation = useNavigate();
-  // const [products, setProducts] = useState();
-  // const [allProducts, setItems] = useState([]);
-  // const [suggestionList, setSuggestions] = useState([]);
-  // const [toggle, setToggle] = useState(false);
+  
   return (
     <div className="row" style={{ maxWidth: "100%" }}>
       <div className="column-md-12">
