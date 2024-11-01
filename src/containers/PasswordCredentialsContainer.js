@@ -5,24 +5,32 @@ import { Button } from "primereact/button";
 import AuthService from "../services/AuthService";
 import { useNavigate } from "react-router-dom";
 import { ProgressSpinner } from 'primereact/progressspinner';
+import { useAuth } from "./auth/AuthContext";
 
 const PasswordCredentialsContainer = (props) => {
-  const [password, setPassword] = useState(undefined);
-  const [login, setLogin] = useState(undefined);
+  const [password, setPassword] = useState('');
+  const [userLogin, setLogin] = useState('');
+  const { login } = useAuth();
 
   const service = new AuthService();
   const navigate=useNavigate();
 
  const loginUser = () => {
-  props.setLoading(true);
+  // props.setLoading(true);
+ 
     service
       .login({
-        email: login,
+        email: userLogin,
         password: password
       }).then((response) => {
           service.setToken(response);
           props.setLoading(false);
           props.showMessage('success','Pomyślnie zalogowano')
+
+          login()
+
+          props.setLoading(false);
+
           navigate('/');
       }).catch((err) => {
         props.setLoading(false);
@@ -32,15 +40,24 @@ const PasswordCredentialsContainer = (props) => {
       })
   }
   const registerUser = () => {
-    console.log(props)
 
-    props.setLoading(true);
+    // props.setLoading(true);
     service
+    .register()
+    .then((xx)=>{
+      props.setLoading(false)
+
+    }).catch((Err)=>{
+      props.setLoading(false)
+      console.log(Err)
+    })
       .register({
-        email: login,
+        email: userLogin,
         password: password
       }).then((response) => {
-        service.setToken(response);
+
+        //service.setToken(response);
+
         props.setLoading(false);
         props.setRegister(false);
         props.showMessage('success', 'Aby dokończyć proces rejestracji prosimy o kliknięcie w link aktywacyjny wysłany na podany adres e-mail', null, true)
@@ -56,7 +73,7 @@ const PasswordCredentialsContainer = (props) => {
     <div className="column">
       <label>E-mail</label>
       <InputText
-        value={login}
+        value={userLogin}
         onChange={(e) => {
           setLogin(e.target.value)
         }}

@@ -10,13 +10,11 @@ const ProductCardContainer = (props) => {
     const [quantity, setQuantity]=useState(props.element.quantity);
     const [, forceUpdate] = useState(0);
     const [checked, setChecked] = useState(props.selectedAll ? true : false);
-    console.log(props.selectedAll)
 
     useEffect(() => {
         setChecked(props.selectedAll)
         
         return () => {
-          console.log('Cleaning up after propValue change');
         };
       }, [props.selectedAll]); 
 
