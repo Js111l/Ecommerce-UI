@@ -1,25 +1,29 @@
+import { popoverClasses } from '@mui/material';
 import {useStripe, useElements, PaymentElement} from '@stripe/react-stripe-js';
+import { useEffect } from 'react';
+import FinancialTransactionsService from '../../services/FinancialTransactionsService';
 
-const CheckoutForm = () => {
+const CheckoutForm = (props) => {
   const stripe = useStripe();
   const elements = useElements();
+  const service = new FinancialTransactionsService();
 
   const handleSubmit = async (event) => {
     // We don't want to let default form submission happen here,
     // which would refresh the page.
     event.preventDefault();
 
+
     if (!stripe || !elements) {
       // Stripe.js hasn't yet loaded.
       // Make sure to disable form submission until Stripe.js has loaded.
       return;
     }
-
     const result = await stripe.confirmPayment({
       //`Elements` instance that was used to create the Payment Element
       elements,
       confirmParams: {
-        return_url: "https://google.com/",
+        return_url: `http://localhost:3000/confirm/${props.orderId}?token=${props.uuid}?payment_intent=f4f4`,
       },
     });
 

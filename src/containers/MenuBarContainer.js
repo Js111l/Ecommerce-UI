@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Badge } from 'primereact/badge'
 import ProductService from "../services/ProductService";
 import AuthService from "../services/AuthService";
+import { useAuth } from "./auth/AuthContext";
 
 const MenuBarContainer = (props) => {
   const navigation = useNavigate();
@@ -14,20 +15,41 @@ const MenuBarContainer = (props) => {
   const service = new ProductService()
   const authService = new AuthService()
   const productService = new ProductService()
-
+    const { isLoggedIn } = useAuth();
+    const { login } = useAuth();
+    const { logout } = useAuth()
+  
   const fetchCheckoutCount = async () => {
-    props.setLoading(true);
+
+    const verifySession = async () => {
+      try {
+        const resp = await authService.isLoggedIn()
+        const json = await resp.json()
+
+        if (json.loggedIn) { //jesli user zalogowany
+          login() //ustaw w context ze jest zalogowany
+        } else {
+          logout() //ustaw w context ze nie jest zalogowany
+        }
+      } catch (err) {
+        logout()
+      }
+    }
+
     try {
-      const userId = authService.getUserFromToken().iss
+      //const userId = authService.getUserFromToken().iss
       const categories = await productService.getParentCategories();
       const categoriesJson = await categories.json();
 
       setCategories(categoriesJson)
 
-      const response = await service.getCheckoutCount(userId);
+      const response = await service.getCheckoutCount(1);
       const json = await response.json();
 
+      props.setLoading(true);
+      verifySession()
       setCheckoutCount(json);
+
       props.setLoading(false);
     } catch (error) {
       console.log(error);
@@ -81,13 +103,40 @@ const MenuBarContainer = (props) => {
     {
       icon: "pi pi-fw pi-user",
       
-      items: [
+      items: isLoggedIn ? 
+      [
+        {
+          label: "Moje konto", //TODO -> tlumaczenia
+          className: "reddy",
+          command: () => menuBarOnClickFunction("user/account"),
+        },
+        {
+          label: "Zamówienia", //TODO -> tlumaczenia
+          className: "reddy",
+          command: () => menuBarOnClickFunction("user/orders"),
+        },
+        {
+          label: "Adresy", //TODO -> tlumaczenia
+          //className: "reddy",
+          command: () => menuBarOnClickFunction("user/addresses"),
+        },
+        {
+          label: "Wyloguj sie", //TODO -> tlumaczenia
+          //className: "reddy",
+          command: () => {
+            authService.logout()
+          },
+        },
+
+      ]
+      :
+      [
         {
           label: "Zaloguj sie", //TODO -> tlumaczenia
-          className: "reddy",
+          //className: "reddy",
           command: () => menuBarOnClickFunction("login"),
         },
-      ],
+      ]
     },
 
   ];

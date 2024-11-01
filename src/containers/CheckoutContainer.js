@@ -5,6 +5,8 @@ import { InputText } from 'primereact/inputtext';
 import { useNavigate } from 'react-router-dom/dist/umd/react-router-dom.development';
 import ProductCardContainer from './ProductCardContainer';
 import ProductService from '../services/ProductService';
+import AuthService from '../services/AuthService';
+import { v4 as uuidv4 } from 'uuid';
 
 const CheckoutContainer = (props) => {
     const service = new FinancialTransactionsService();
@@ -19,15 +21,67 @@ const CheckoutContainer = (props) => {
         email: '',
         phone: ''
     });
+    const authService=new AuthService()
+    const [user, setUser] = useState(authService.getUserFromToken())
+
     const navigate = useNavigate();
     const productService = new ProductService();
     const [cart, setCart] = useState(undefined)
-
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
     };
+
+
+    const [intentModel, setIntentModel] = useState({
+        client: {},
+        amount: '',
+        localCurrency: 'eur',
+        products: []
+      })
+
+      
+    const fetchSecret = async (token) => {
+
+        intentModel.products = cart.products.map((x) => ({
+            id: x.id,
+            quantity: 0
+        }));
+
+        intentModel.amount = cart.totalPrice;
+        intentModel.client = {
+            id: Number(user.iss),
+            name: '',
+            email: user.sub,
+            phone: ''
+        };
+        const response = await service.getClientSecret(intentModel, token);
+        return response
+    }
+
+
+    const handleGoToPayment = async (event) => {
+        event.preventDefault(); // Prevents default actions
+       
+        props.setLoading(true);
+        try {
+            
+            const tokenResp = await fetchSecret(uuidv4()) //zapisz zamowienie, utworz payment intent, zapisz w bazie klucz: uuid wartosc: client secret
+            const uuid = uuidv4()
+            sessionStorage.setItem(uuid, tokenResp.intentId) //intent id to klucz do client secret z bazy 
+            
+            const response = await authService.getPaymentToken(uuid)
+            await response
+
+            navigate(`/payment/${uuid}`); // w payment container secret bedzie wyslany z backendu, kluczem jest ten intentId. Autoryzacja operacji tym 1-razowym tokenem.
+        } catch (error) {
+            props.setLoading(false);
+            console.log(error);
+        }
+    };
+    
+
     useEffect(() => {
         const fetchData = async () => {
          //TODO 
@@ -35,14 +89,16 @@ const CheckoutContainer = (props) => {
          try {
              const response = await productService.getCheckoutProducts();
              const json = await response.json();
+
              setCart(json);
              props.setLoading(false);
          } catch (error) {
+            props.setLoading(false)
              console.log(error);
          }
         };
         fetchData();
-    }, []);
+    }, [])
 
     const formatMoney=(value)=>{
         return (value / 100).toFixed(2);
@@ -182,7 +238,7 @@ const CheckoutContainer = (props) => {
                     </div>
                     <Button
                         style={{ width: '100%' }}
-                        onClick={() => navigate('/payment')}
+                        onClick={handleGoToPayment}
                     >Kupuje i płacę</Button>
                     <div
                         style={{

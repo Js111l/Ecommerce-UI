@@ -7,18 +7,19 @@ export default class FinancialTransactionsService extends BaseService{
 
     constructor() {
         super()
-        this.url = "http://localhost:8082/payments"
+        this.url = "http://localhost:8081/payments"
     }
 
-    getClientSecret(){
+    getClientSecret(data, token){
         return fetch(this.url + '/intent', {
-            method: 'GET',
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
             },
+            body: JSON.stringify(data)
         })
         .then(response => {
+            
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
@@ -26,5 +27,21 @@ export default class FinancialTransactionsService extends BaseService{
         });
     }
 
+    getClientSecretByUUID(uuid){
+        return fetch(this.url + `/intent?uuid=${uuid}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+          //  body: JSON.stringify(data)
+        })
+        .then(response => {
+            
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        });
+    }
  
 }

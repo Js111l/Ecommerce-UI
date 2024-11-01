@@ -4,15 +4,15 @@ export default class ProductService extends BaseService{
 
     constructor() {
         super()
-        this.url = "http://localhost:8081"
+        this.url = "http://localhost:8081/products"
     }
 
     getDashboard(data, bestseller){
-        return fetch(this.url + `/products/dashboard?bestseller=${true}`, {
+        return fetch(this.url + `/dashboard`, {//?bestseller=${true}`, {
             method: 'GET',
+            credentials:"include",
             headers: {
                 'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
             }
         })
         .then(response => {
@@ -24,11 +24,11 @@ export default class ProductService extends BaseService{
     }
 
     getProductDetails(id){
-        return fetch(this.url + `/products/${id}`, {
+        return fetch(this.url + `/${id}`, {
             method: 'GET',
+            credentials:"include",
             headers: {
                 'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
             }
         })
         .then(response => {
@@ -39,11 +39,11 @@ export default class ProductService extends BaseService{
         });
     }
     getCheckoutCount(userId){
-        return fetch(this.url + `/products/user-checkout/${userId}`, {
+        return fetch(this.url + `/user-checkout/${userId}`, {
             method: 'GET',
+            credentials:"include",
             headers: {
                 'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
             }
         })
         .then(response => {
@@ -55,11 +55,11 @@ export default class ProductService extends BaseService{
     }
     getCheckoutProducts(){
         
-        return fetch(this.url + `/products/user-checkout/products`, {
+        return fetch(this.url + `/user-checkout/products`, {
             method: 'GET',
+            credentials:"include",
             headers: {
                 'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
             }
         })
         .then(response => {
@@ -71,11 +71,11 @@ export default class ProductService extends BaseService{
     }
 
     getParentCategories(){
-        return fetch(this.url + `/products/categories/menubar`, {
+        return fetch(this.url + `/categories/menubar`, {
             method: 'GET',
+            credentials:"include",
             headers: {
                 'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
             }
         })
         .then(response => {
@@ -88,11 +88,11 @@ export default class ProductService extends BaseService{
 
     getList(criterias){
         const params = this.getParamsFromCriteriaObject(criterias);
-        return fetch(this.url + `/products/list?${params}`, {
+        return fetch(this.url + `/list?${params}`, {
             method: 'GET',
+            credentials:"include",
             headers: {
                 'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
             }
         })
         .then(response => {

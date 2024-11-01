@@ -26,7 +26,6 @@ const ProductDetailsContainer = (props) => {
                 const json = await response.json();
                 setProduct(json);
                 //TODO
-                console.log(json)
                 const images = json.images?.map((imageModel) => ({
                     itemImageSrc: imageModel.url,
                     thumbnailImageSrc: imageModel.url,

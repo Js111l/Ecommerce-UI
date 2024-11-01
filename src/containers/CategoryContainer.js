@@ -51,7 +51,6 @@ const CategoryListContainer = (props) => {
   }
 
 
-
   useEffect(() => {
     const queryParameters = new URLSearchParams(window.location.search)
     const category = queryParameters.get("category")
@@ -163,8 +162,8 @@ const CategoryListContainer = (props) => {
     fetchData(criteria)
   };
 
+  
   const getMappedProducts = (products) => {
-    console.log(products)
     let result = []
     for (let i = 0; i < products.length; i += 3) {
       const index = i;
