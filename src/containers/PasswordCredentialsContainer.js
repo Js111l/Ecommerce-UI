@@ -23,7 +23,6 @@ const PasswordCredentialsContainer = (props) => {
         email: userLogin,
         password: password
       }).then((response) => {
-          service.setToken(response);
           props.setLoading(false);
           props.showMessage('success','Pomyślnie zalogowano')
 

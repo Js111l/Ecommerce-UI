@@ -28,13 +28,46 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [renderMenuBar, setMenuBar] = useState(true);
   const toast = useRef(null);
+  const authService = new AuthService()
+ 
 
   const showMessage = (type, message, summary, sticky) => {
     toast.current.show({ severity: type, summary: summary, detail: message, life: 3000, sticky: sticky });
   }
+  const [sessionChecked, setSessionChecked] = useState(false)
+  const hasFetchedData = useRef(false)
+
+
+  useEffect(() => {
+    if (hasFetchedData.current) return;
+    hasFetchedData.current = true;
+
+    const verifySession = async () => {
+      setLoading(true)
+      try {
+        const resp = await authService.isLoggedIn()
+        const json = await resp.json()
+
+        if (json.loggedIn) { //jesli user zalogowany
+          setLoading(false)
+          setSessionChecked(true)
+        } else {
+          setLoading(false)
+          setSessionChecked(true)
+        }
+      } catch (err) {
+        setLoading(false)
+      }
+    }
+    verifySession()
+  }, [])
+
 
   return (
-    <AuthProvider>
+    // sessionChecked ?
+    <AuthProvider
+    sessionChecked={sessionChecked}
+    >
       <Router>
         <BlockUI blocked={loading}
           fullScreen={true}
@@ -204,6 +237,7 @@ function App() {
         </BlockUI>
       </Router>
     </AuthProvider>
+    // : null
   );
 }
 

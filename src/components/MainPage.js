@@ -7,24 +7,27 @@ import '../App.css'
 import Toggle from 'react-toggle';
 import "react-toggle/style.css" // for ES6 modules
 import ProductsShowcaseComponent from './ProductsShowcaseComponent';
+import AuthService from '../services/AuthService';
+import { useAuth } from '../containers/auth/AuthContext';
 
 
 const MainPage = (props) => {
-  const navigation = useNavigate();
-  // const [products, setProducts] = useState();
-  // const [allProducts, setItems] = useState([]);
-  // const [suggestionList, setSuggestions] = useState([]);
-  // const [toggle, setToggle] = useState(false);
+  const authService = new AuthService()
+  const { login } = useAuth();
+  const { logout } = useAuth()
+
   return (
-    <div className="row" style={{ maxWidth: "100%" }}>
-      <div className="column-md-12">
-        {/* BESTSELLERS/ NEW PRODUCTS */}
-        <ProductsShowcaseComponent
-          loading={props.loading}
-          setLoading={props.setLoading}
-        />
+    //sessionChecked ?
+      <div className="row" style={{ maxWidth: "100%" }}>
+        <div className="column-md-12">
+          {/* BESTSELLERS/ NEW PRODUCTS */}
+          <ProductsShowcaseComponent
+            loading={props.loading}
+            setLoading={props.setLoading}
+          />
+        </div>
       </div>
-    </div>
+    //  : null
   );
 };
 

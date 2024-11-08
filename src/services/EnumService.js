@@ -12,6 +12,7 @@ export default class EnumService extends BaseService {
     getValuesByClassName(simpleClassName){
         return fetch(this.url + `${simpleClassName}/values`, {
             method: 'GET',
+            credentials:'include',
             headers: {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*',

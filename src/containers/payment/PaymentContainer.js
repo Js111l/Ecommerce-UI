@@ -17,16 +17,12 @@ const PaymentContainer = (props) => {
  
   const service = new FinancialTransactionsService();
   const [secret, setSecret] = useState('');
-  const navigate = useNavigate()
   const { id } = useParams();
 
-  const productService = new ProductService()
   const authService = new AuthService()
-  const [user, setUser] = useState(authService.getUserFromToken())
-  const [token,setToken]=useState('')
   const [orderId, setOrderId] = useState(undefined)
   const [UUID,setUUID] = useState(undefined)
-  const hasFetchedData = useRef(false); // Track if data has been fetched
+  const hasFetchedData = useRef(false); 
 
   const [intentModel, setIntentModel] = useState({
     client: {},
@@ -38,7 +34,7 @@ const PaymentContainer = (props) => {
 
   useEffect(() => {
   
-    if (hasFetchedData.current) return; // Skip if already fetched
+    if (hasFetchedData.current) return;
     hasFetchedData.current = true;
   
     const handleBeforeUnload = (event) => {
@@ -48,7 +44,7 @@ const PaymentContainer = (props) => {
   
     const fetchData = async () => {
       try {
-        const intentId = sessionStorage.getItem(id) // id -> uuid
+        const uuid = sessionStorage.getItem(id) // id -> uuid
 
         const verifyResult = await authService.verifyPayToken();
         await verifyResult;
@@ -57,12 +53,9 @@ const PaymentContainer = (props) => {
         props.setMenuBar(false);
   
         if (!secret) {
-          const response = await service.getClientSecretByUUID(intentId);
+          const response = await service.getClientSecretByUUID(uuid);
           setSecret(response.token);
-          setOrderId(response.orderId);
-
-          const uuid = uuidv4()
-         
+          setOrderId(response.orderId);         
           setUUID(uuid);
         }
 

@@ -13,28 +13,32 @@ import { Tag } from 'primereact/tag';
 import { InputText } from 'primereact/inputtext';
 import { Card } from 'primereact/card';
 import ProductCardContainer from '../containers/ProductCardContainer';
+import { useAuth } from '../containers/auth/AuthContext';
 
 
 const ProductsShowcaseComponent = (props) => {
   const navigation = useNavigate();
   const [allProducts, setItems] = useState([]);
   const [toggle, setToggle] = useState(false);
-
+  const [loadData, setLoadData] = useState(false);
+  const {isLoggedIn} = useAuth();
   const service = new ProductService();
 
   useEffect(() => {
     const fetchData = async () => {
-      props.setLoading(false)
+      props.setLoading(true)
       try {
         const response = await service.getDashboard();
         const json = await response.json();
         setItems(json);
-        //props.setLoading(false);
+        props.setLoading(false);
       } catch (error) {
+        props.setLoading(false);
         console.log("error", error);
       }
     };
-    fetchData();
+      fetchData();
+    
   }, []);
 
   const responsiveOptions = [

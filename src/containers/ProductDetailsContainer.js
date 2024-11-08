@@ -161,7 +161,7 @@ const ProductDetailsContainer = (props) => {
                                 onClick={(e) => {
                                     checkoutService.addProduct({
                                         product: {id: id},
-                                        userId: authService.getUserIdFromToken(),
+                                        //authService.getUserIdFromToken(),
                                         quantity: quantity
                                     });
                                 }}
