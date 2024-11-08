@@ -2,6 +2,7 @@ import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom/dist/umd/react-router-dom.development';
+import AuthService from '../../services/AuthService';
 
 
 
@@ -9,11 +10,19 @@ const UserDetailsContainer = (props) => {
 
     const [hover, setHover] = useState({})
     const navigation = useNavigate()
+    const [userData, setUserData] = useState({})
+    const authService = new AuthService()
     useEffect(() => {
 
-        const fetchData = async () => { }
+        const fetchData = async () => {
+            const resp = await authService.getUserData()
+            const json = resp.json()
+            setUserData(json)
+        }
 
-    })
+        fetchData()
+
+    }, [])
 
     const sidebar = (
         <div className='col-md-2'>
@@ -135,14 +144,14 @@ const UserDetailsContainer = (props) => {
                 <div className='col-md-4'>
                     <div className='row'>
                         <label>Imie i nazwisko</label>
-                        <span>Jakub Ś</span>
+                        <span>{userData.firstName + ' ' + userData.lastName}</span>
                     </div>
 
                 </div>
                 <div className='col-md-4'>
                     <div className='row'>
                         <label>Numer telefonu</label>
-                        <span>730163500</span>
+                        <span>{userData.phoneNumber}</span>
                     </div>
                 </div>
                 <Button style={{
@@ -160,14 +169,14 @@ const UserDetailsContainer = (props) => {
                 <div className='col-md-4'>
                     <div className='row'>
                         <label>Imie i nazwisko</label>
-                        <span>Jakub Ś</span>
+                        <span>{userData.firstName + ' ' + userData.lastName}</span>
                     </div>
 
                 </div>
                 <div className='col-md-4'>
                     <div className='row'>
                         <label>Numer telefonu</label>
-                        <span>730163500</span>
+                        <span>{userData.phoneNumber}</span>
                     </div>
                 </div>
 
@@ -182,7 +191,7 @@ const UserDetailsContainer = (props) => {
                 <div className='col-md-4'>
                     <div className='row'>
                         <label>Email</label>
-                        <span>jjakubs@wp.pl</span>
+                        <span>{userData.email}</span>
                     </div>
                 </div>
                 <Button style={{

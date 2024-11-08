@@ -7,36 +7,14 @@ import { useNavigate } from 'react-router-dom/dist/umd/react-router-dom.developm
 
 const PaymentConfirmedContainer = (props) => {
     const [secret, setSecret] = useState(undefined);
-    const params = useParams()
-    const queryParams = new URLSearchParams(window.location.search);
-
-    const token = queryParams.get('token');
-   // const token = sessionStorage.getItem('token')
-    const payment_intent_client_secret = queryParams.get('payment_intent_client_secret');
 
     const { orderId } = useParams()
     const navigate = useNavigate()
 
     const [hover, setHover] = useState(false)
      
-    const authService = new AuthService()
+    
     useEffect(() => {
-        const handleBeforeUnload = (event) => {
-            event.preventDefault();
-            event.returnValue = '';
-        };
-
-        const fetchData = async () => {
-            try {
-                authService.verifyOneTimeToken(token, payment_intent_client_secret)
-            } catch (error) {
-                console.log("error", error);
-                navigate('/wtf')
-            }
-        };
-
-        fetchData()
-
         return () => {
             window.onbeforeunload = null;
         };

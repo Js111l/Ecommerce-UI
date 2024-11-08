@@ -15,9 +15,7 @@ export default class AuthService extends BaseService {
             headers: {
                 'Content-Type': 'application/json',
             },
-            // body: JSON.stringify(data)
-        })
-            .then(response => {
+        }).then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
@@ -39,7 +37,6 @@ export default class AuthService extends BaseService {
                 }
                 return response;
             });
-
     }
 
     login(data) {
@@ -62,6 +59,7 @@ export default class AuthService extends BaseService {
     register(data){
         return fetch(this.url + '/register', {
             method: 'POST',
+            credentials:'include',
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -79,13 +77,11 @@ export default class AuthService extends BaseService {
     //     return token !== undefined && token !== null && moment().isBefore(moment.unix(decodedUser.exp))
     // }
 
-    setToken(token){
-        localStorage.setItem("token",token);
-    }
 
     getCurrentUser(){
         return fetch(this.url + '/auth/context/current-user', {
             method: 'GET',
+            credentials:'include',
             headers: {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*',
@@ -96,22 +92,10 @@ export default class AuthService extends BaseService {
             });
     }
 
-    getUserIdFromToken() {
-        const token = localStorage.getItem("token")
-        const mockToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqYWt1YnNAd3AucGwiLCJpYXQiOjE3Mjg1MDQ5MzIsImV4cCI6MTcyODUwODUzMiwiaXNzIjoiMSJ9.zO9mPyk2noDPIFIffLcpD2l0CgpzooqNrM0dMjP0S-k";
-        return jwtDecode(mockToken).iss
-    }
-    
-    getUserFromToken() {
-        const token = localStorage.getItem("token")
-        const mockToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqYWt1YnNAd3AucGwiLCJpYXQiOjE3Mjg1MDQ5MzIsImV4cCI6MTcyODUwODUzMiwiaXNzIjoiMSJ9.zO9mPyk2noDPIFIffLcpD2l0CgpzooqNrM0dMjP0S-k";
-        return jwtDecode(mockToken)
-    }
-
-
     verifyToken(token){
         return fetch(this.url + `/auth/payment-token?token=${token}`, {
             method: 'POST',
+            credentials:'include',
             headers: {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*',
@@ -126,7 +110,7 @@ export default class AuthService extends BaseService {
     }
 
     getPaymentToken(uuid){ 
-        return fetch(this.url + `/payment-token?intentId=${uuid}`, {
+        return fetch(this.url + `/payment-token?uuid=${uuid}`, {
             method: 'GET',
             credentials:"include",
             headers: {
@@ -144,6 +128,21 @@ export default class AuthService extends BaseService {
     verifyPayToken(token){
         return fetch(this.url + `/payment-token`, {
             method: 'POST',
+            credentials:"include",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response;
+        });
+    }
+    getUserData(){
+        return fetch(this.url + `/session/user`, {
+            method: 'GET',
             credentials:"include",
             headers: {
                 'Content-Type': 'application/json',

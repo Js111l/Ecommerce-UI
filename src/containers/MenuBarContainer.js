@@ -15,7 +15,8 @@ const MenuBarContainer = (props) => {
   const service = new ProductService()
   const authService = new AuthService()
   const productService = new ProductService()
-    const { isLoggedIn } = useAuth();
+  const [loadData, setLoadData] = useState(true);
+  const { isLoggedIn } = useAuth();
     const { login } = useAuth();
     const { logout } = useAuth()
   
@@ -35,9 +36,8 @@ const MenuBarContainer = (props) => {
         logout()
       }
     }
-
+  
     try {
-      //const userId = authService.getUserFromToken().iss
       const categories = await productService.getParentCategories();
       const categoriesJson = await categories.json();
 
@@ -69,8 +69,7 @@ const MenuBarContainer = (props) => {
 
   const updateCount = async () => {
     try {
-      const userId = authService.getUserFromToken().iss
-      const response = await service.getCheckoutCount(userId);
+      const response = await service.getCheckoutCount(1);
       const json = await response.json();
       setCheckoutCount(json);
     } catch (error) {
@@ -125,6 +124,7 @@ const MenuBarContainer = (props) => {
           //className: "reddy",
           command: () => {
             authService.logout()
+            navigation("/");
           },
         },
 

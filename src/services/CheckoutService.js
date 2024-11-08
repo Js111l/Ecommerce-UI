@@ -12,6 +12,7 @@ export default class CheckoutService extends BaseService {
     addProduct(data){
         return fetch(this.url + '/user-checkout', {
             method: 'POST',
+            credentials:'include',
             headers: {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*',
@@ -29,6 +30,7 @@ export default class CheckoutService extends BaseService {
 
         return fetch(this.url + `/user-checkout/products?productId=${productId}&&quantity=${quantity}`, {
             method: 'POST',
+            credentials:'include',
             headers: {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*',
