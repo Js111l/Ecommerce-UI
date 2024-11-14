@@ -7,11 +7,11 @@ export default class FinancialTransactionsService extends BaseService{
 
     constructor() {
         super()
-        this.url = "http://localhost:8081/payments"
+        this.url = "http://localhost:8081"
     }
 
     getClientSecret(data){
-        return fetch(this.url + '/intent', {
+        return fetch(this.url + '/payments/intent', {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -29,7 +29,7 @@ export default class FinancialTransactionsService extends BaseService{
     }
 
     getClientSecretByUUID(uuid){
-        return fetch(this.url + `/intent?uuid=${uuid}`, {
+        return fetch(this.url + `/payments/intent?uuid=${uuid}`, {
             method: 'GET',
             credentials: 'include',
             headers: {

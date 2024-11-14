@@ -38,8 +38,8 @@ export default class ProductService extends BaseService{
             return response;
         });
     }
-    getCheckoutCount(userId){
-        return fetch(this.url + `/user-checkout/${userId}`, {
+    getCheckoutCount(){
+        return fetch(this.url + `/user-checkout`, {
             method: 'GET',
             credentials:"include",
             headers: {
@@ -89,6 +89,44 @@ export default class ProductService extends BaseService{
     getList(criterias){
         const params = this.getParamsFromCriteriaObject(criterias);
         return fetch(this.url + `/list?${params}`, {
+            method: 'GET',
+            credentials:"include",
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response;
+        });
+    }
+
+
+    addToFavorite(id){
+        return fetch(this.url + `/user-favorite`, {
+            method: 'POST',
+            credentials:"include",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                productId: id
+            })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response;
+        });
+    }
+
+
+    getUserFavoriteProducts(criterias){
+        const params = this.getParamsFromCriteriaObject(criterias);
+        return fetch(this.url + `/list/user-favorite?${params}`, {
             method: 'GET',
             credentials:"include",
             headers: {

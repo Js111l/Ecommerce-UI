@@ -10,13 +10,14 @@ const UserDetailsContainer = (props) => {
 
     const [hover, setHover] = useState({})
     const navigation = useNavigate()
-    const [userData, setUserData] = useState({})
+    const [userData, setUserData] = useState(undefined)
     const authService = new AuthService()
     useEffect(() => {
 
         const fetchData = async () => {
             const resp = await authService.getUserData()
-            const json = resp.json()
+            const json = await resp.json()
+    
             setUserData(json)
         }
 
@@ -41,7 +42,7 @@ const UserDetailsContainer = (props) => {
             >
                 <span>Moje dane</span>
             </div>
-            <div
+            {/* <div
                 className='row'
                 style={{
                     marginTop: '5%',
@@ -71,7 +72,7 @@ const UserDetailsContainer = (props) => {
             >
 
                 <span>Wykonaj zwrot</span>
-            </div>
+            </div> */}
             <div
                 className='row'
                 style={{
@@ -88,7 +89,7 @@ const UserDetailsContainer = (props) => {
 
                 <span>Zamówienia</span>
             </div>
-            <div
+            {/* <div
                 className='row'
                 style={{
                     marginTop: '5%',
@@ -103,7 +104,7 @@ const UserDetailsContainer = (props) => {
             >
 
                 <span>Adresy</span>
-            </div>
+            </div> */}
             <div
                 className='row'
                 style={{
@@ -133,8 +134,9 @@ const UserDetailsContainer = (props) => {
         )
     )
 
-    const content = (
+    const content =(
         <>
+            
             <div className=''
                 style={{
                     marginTop: '5%',
@@ -144,39 +146,14 @@ const UserDetailsContainer = (props) => {
                 <div className='col-md-4'>
                     <div className='row'>
                         <label>Imie i nazwisko</label>
-                        <span>{userData.firstName + ' ' + userData.lastName}</span>
+                        <span>{userData?.firstName + ' ' + userData?.lastName}</span>
                     </div>
 
                 </div>
                 <div className='col-md-4'>
                     <div className='row'>
                         <label>Numer telefonu</label>
-                        <span>{userData.phoneNumber}</span>
-                    </div>
-                </div>
-                <Button style={{
-                    marginLeft: 'auto'
-                }}>
-                    Edytuj
-                </Button>
-            </div>
-            <div className=''
-                style={{
-                    marginTop: '5%',
-                    display: 'flex',
-                    justifyContent: 'start'
-                }}>
-                <div className='col-md-4'>
-                    <div className='row'>
-                        <label>Imie i nazwisko</label>
-                        <span>{userData.firstName + ' ' + userData.lastName}</span>
-                    </div>
-
-                </div>
-                <div className='col-md-4'>
-                    <div className='row'>
-                        <label>Numer telefonu</label>
-                        <span>{userData.phoneNumber}</span>
+                        <span>{userData?.phoneNumber}</span>
                     </div>
                 </div>
 
@@ -191,7 +168,7 @@ const UserDetailsContainer = (props) => {
                 <div className='col-md-4'>
                     <div className='row'>
                         <label>Email</label>
-                        <span>{userData.email}</span>
+                        <span>{userData?.email}</span>
                     </div>
                 </div>
                 <Button style={{
