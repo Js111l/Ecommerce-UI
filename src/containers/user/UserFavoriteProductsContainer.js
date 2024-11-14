@@ -2,234 +2,314 @@ import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom/dist/umd/react-router-dom.development';
+import ProductService from '../../services/ProductService';
+import { Paginator } from 'primereact/paginator';
+import { Card } from 'primereact/card';
+import FinancialTransactionsService from '../../services/FinancialTransactionsService';
+
+
+const UserOrdersList = (props) => {
+
+  const [hover, setHover] = useState({})
+  const navigation = useNavigate()
+  const service = new ProductService();
+  const [products, setProducts] = useState([]);
+  const [first, setFirst] = useState(0);
+  const [rows, setRows] = useState(10);
+  const [totalRecords, setTotalRecords] = useState(undefined)
+  const [hoverStatus, setHoverStatus] = useState({});
+
+  const [criteria, setCriteria] = useState({
+    page: first,
+    size: rows,
+    sortAsc: true,
+    sortField: 'id',
+    category: '',
+    sortType: ''
+  });
 
 
 
-const UserFavoriteProductsContainer = (props) => {
+  const fetchData = async (criteria) => {
+    props.setLoading(true)
+    try {
+      const response = await service.getUserFavoriteProducts(criteria);
+      const json = await response.json();
+      
+      setProducts(json.content);
+      setTotalRecords(json.totalElements)
+      setRows(json.pageable.pageSize)
+      setFirst(json.pageable.offset)
 
-    const [hover, setHover] = useState({})
-    const navigation = useNavigate()
-    useEffect(() => {
+     // const enumServiceResponse = await enumService.getValuesByClassName('SortType');
+     // const enumJson = await enumServiceResponse.json()
+     // setSortTypeOptions(enumJson);
 
-        const fetchData = async () => { }
+      props.setLoading(false);
+    } catch (error) {
+      props.setLoading(false);
+      console.log("error", error);
+    }
+  }
 
-    })
+  useEffect(() => {
+    setCriteria(criteria)
+    fetchData(criteria);
+  }, []);
 
-    const sidebar = (
-        <div className='col-md-2'>
-            <div
-                className='row'
+  const getMappedProducts = (products) => {
+    let result = []
+    for (let i = 0; i < products.length; i += 3) {
+      const index = i;
+      result.push(
+        <div className="row">
+          {products.slice(i, i + 3).map((product) => {
+            return (
+              <Card
+                className="col-md-4"
                 style={{
-                    marginTop: '5%',
-                    cursor: 'pointer',
-                    textDecoration: hover.id === 0 && hover.status ? 'underline' : ''
+                  //width: "600px",
                 }}
-                onMouseEnter={() => setHover({ id: 0, status: true })}
-                onMouseLeave={() => setHover({ id: 0, status: false })}
                 onClick={(e) => {
-                    navigation('/user/account')
+                  navigation(`/product/details/${product?.id}`)
                 }}
-            >
-                <span>Moje dane</span>
-            </div>
-            <div
-                className='row'
-                style={{
-                    marginTop: '5%',
-                    cursor: 'pointer',
-                    textDecoration: hover.id === 1 && hover.status ? 'underline' : ''
-                }}
-                onMouseEnter={() => setHover({ id: 1, status: true })}
-                onMouseLeave={() => setHover({ id: 1, status: false })}
-                onClick={(e) => {
-                    navigation('/user/returns')
-                }}
-            >
-                <span>Zwroty</span>
-            </div>
-            <div
-                className='row'
-                style={{
-                    marginTop: '5%',
-                    cursor: 'pointer',
-                    textDecoration: hover.id === 2 && hover.status ? 'underline' : ''
-                }}
-                onMouseEnter={() => setHover({ id: 2, status: true })}
-                onMouseLeave={() => setHover({ id: 2, status: false })}
-                onClick={(e) => {
-                    navigation('/user/return-form')
-                }}
-            >
+              >
+                <div
+                  style={{
+                    height: '100%'
+                  }}
+                >
+                  <div>
+                    <div style={{
+                      display: 'flex',
+                      justifyContent: 'start',
+                      position: 'absolute',
+                      marginTop: '25px'
+                    }}>
 
-                <span>Wykonaj zwrot</span>
-            </div>
-            <div
-                className='row'
-                style={{
-                    marginTop: '5%',
-                    cursor: 'pointer',
-                    textDecoration: hover.id === 3 && hover.status ? 'underline' : ''
-                }}
-                onMouseEnter={() => setHover({ id: 3, status: true })}
-                onMouseLeave={() => setHover({ id: 3, status: false })}
-                onClick={(e) => {
-                    navigation('/user/orders')
-                }}
-            >
+                      {/* <Button
+                          icon={"pi pi-heart"}
+                          style={{
+                            background:'white',
+                            border:'none',
+                            color: hoveredLikeButton?.status && hoveredLikeButton?.id === product.id 
+                            ? 'red' : 'black'
+                          }}
+                          onMouseEnter={() => setHoveredLikeButton({
+                            id: product.id,
+                            status: true
+                          })}
+                          onMouseLeave={() => setHoveredLikeButton({
+                            id: product.id,
+                            status: false
+                          })}
+                        >
+                          
+                        </Button> */}
+                    </div>
+                    <img
+                      src={hoverStatus.status && product.id === hoverStatus.id ? product?.detailUrl : product?.imageUrl}
+                      alt={product?.name}
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        cursor: "pointer",
+                      }}
+                      onClick={() => { }}
+                      onMouseEnter={() => {
+                        setHoverStatus({
+                          status: true,
+                          id: product.id,
+                        });
+                      }}
+                      onMouseLeave={() => {
+                        setHoverStatus({
+                          status: false,
+                          id: product.id,
+                        });
+                      }}
+                    />
+                  </div>
 
-                <span>Zamówienia</span>
-            </div>
-            <div
-                className='row'
-                style={{
-                    marginTop: '5%',
-                    cursor: 'pointer',
-                    textDecoration: hover.id === 4 && hover.status ? 'underline' : ''
-                }}
-                onMouseEnter={() => setHover({ id: 4, status: true })}
-                onMouseLeave={() => setHover({ id: 4, status: false })}
-                onClick={(e) => {
-                    navigation('/user/addresses')
-                }}
-            >
-
-                <span>Adresy</span>
-            </div>
-            <div
-                className='row'
-                style={{
-                    marginTop: '5%',
-                    cursor: 'pointer',
-                    textDecoration: hover.id === 5 && hover.status ? 'underline' : ''
-                }}
-                onMouseEnter={() => setHover({ id: 5, status: true })}
-                onMouseLeave={() => setHover({ id: 5, status: false })}
-                onClick={(e) => {
-                    navigation('/user/favorites')
-                }}
-            >
-                <span>Lista życzeń</span>
-            </div>
+                  <div className="container">
+                    <div
+                      className="row"
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        marginTop: '10%',
+                      }}
+                    >
+                      {product?.name + product?.id}
+                    </div>
+                    <div
+                      className="row"
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        marginTop: '5%',
+                        color: 'gray',
+                      }}
+                    >
+                      {product?.category}
+                    </div>
+                    <div
+                      className="row"
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        marginTop: '5%',
+                        color: 'gray',
+                      }}
+                    >
+                      {product?.price}
+                    </div>
+                  </div>
+                </div>
+              </Card>
+            );
+          })}
         </div>
+      )
+    }
+    return result
+  }
+
+
+  const onPageChange = (event) => {
+    criteria.page = event.first
+    criteria.size = event.rows
+    setCriteria(criteria)
+    fetchData(criteria)
+  };
+
+
+  const sidebar = (
+    <div className='col-md-2'>
+      <div
+        className='row'
+        style={{
+          marginTop: '5%',
+          cursor: 'pointer',
+          textDecoration: hover.id === 0 && hover.status ? 'underline' : ''
+        }}
+        onMouseEnter={() => setHover({ id: 0, status: true })}
+        onMouseLeave={() => setHover({ id: 0, status: false })}
+        onClick={(e) => {
+          navigation('/user/account')
+        }}
+      >
+        <span>Moje dane</span>
+      </div>
+      {/* <div
+        className='row'
+        style={{
+          marginTop: '5%',
+          cursor: 'pointer',
+          textDecoration: hover.id === 1 && hover.status ? 'underline' : ''
+        }}
+        onMouseEnter={() => setHover({ id: 1, status: true })}
+        onMouseLeave={() => setHover({ id: 1, status: false })}
+        onClick={(e) => {
+          navigation('/user/returns')
+        }}
+      >
+        <span>Zwroty</span>
+      </div>
+      <div
+        className='row'
+        style={{
+          marginTop: '5%',
+          cursor: 'pointer',
+          textDecoration: hover.id === 2 && hover.status ? 'underline' : ''
+        }}
+        onMouseEnter={() => setHover({ id: 2, status: true })}
+        onMouseLeave={() => setHover({ id: 2, status: false })}
+        onClick={(e) => {
+          navigation('/user/return-form')
+        }}
+      >
+
+        <span>Wykonaj zwrot</span>
+      </div> */}
+      <div
+        className='row'
+        style={{
+          marginTop: '5%',
+          cursor: 'pointer',
+          textDecoration: hover.id === 3 && hover.status ? 'underline' : ''
+        }}
+        onMouseEnter={() => setHover({ id: 3, status: true })}
+        onMouseLeave={() => setHover({ id: 3, status: false })}
+        onClick={(e) => {
+          navigation('/user/orders')
+        }}
+      >
+
+        <span>Zamówienia</span>
+      </div>
+      {/* <div
+        className='row'
+        style={{
+          marginTop: '5%',
+          cursor: 'pointer',
+          textDecoration: hover.id === 4 && hover.status ? 'underline' : ''
+        }}
+        onMouseEnter={() => setHover({ id: 4, status: true })}
+        onMouseLeave={() => setHover({ id: 4, status: false })}
+        onClick={(e) => {
+          navigation('/user/addresses')
+        }}
+      >
+
+        <span>Adresy</span>
+      </div> */}
+      <div
+        className='row'
+        style={{
+          marginTop: '5%',
+          cursor: 'pointer',
+          textDecoration: hover.id === 5 && hover.status ? 'underline' : ''
+        }}
+        onMouseEnter={() => setHover({ id: 5, status: true })}
+        onMouseLeave={() => setHover({ id: 5, status: false })}
+        onClick={(e) => {
+          navigation('/user/favorites')
+        }}
+      >
+        <span>Lista życzeń</span>
+      </div>
+    </div>
+  )
+
+  const divider = (
+    (
+      <hr style={{
+        marginTop: '3%',
+        marginBottom: '3%'
+      }} class="solid">
+      </hr>
     )
+  )
 
-
-    const divider = (
-        (
-            <hr style={{
-                marginTop: '3%',
-                marginBottom: '3%'
-            }} class="solid">
-            </hr>
-        )
-    )
-
-    const content = (
-        <>
-            <div className=''
-                style={{
-                    marginTop: '5%',
-                    display: 'flex',
-                    justifyContent: 'start'
-                }}>
-                <div className='col-md-4'>
-                    <div className='row'>
-                        <label>Imie i nazwisko</label>
-                        <span>Jakub Ś</span>
-                    </div>
-
-                </div>
-                <div className='col-md-4'>
-                    <div className='row'>
-                        <label>Numer telefonu</label>
-                        <span>730163500</span>
-                    </div>
-                </div>
-                <Button style={{
-                    marginLeft: 'auto'
-                }}>
-                    Edytuj
-                </Button>
-            </div>
-            <div className=''
-                style={{
-                    marginTop: '5%',
-                    display: 'flex',
-                    justifyContent: 'start'
-                }}>
-                <div className='col-md-4'>
-                    <div className='row'>
-                        <label>Imie i nazwisko</label>
-                        <span>Jakub Ś</span>
-                    </div>
-
-                </div>
-                <div className='col-md-4'>
-                    <div className='row'>
-                        <label>Numer telefonu</label>
-                        <span>730163500</span>
-                    </div>
-                </div>
-
-            </div>
-
-            {divider}
-            <div className='' style={{ //tu zmien na row kiedy okienko jest mniejsze, a usun kiedy wiesze wtedy button sie dobrze uklada
-                marginTop: '5%',
-                display: 'flex',
-                justifyContent: 'start'
-            }}>
-                <div className='col-md-4'>
-                    <div className='row'>
-                        <label>Email</label>
-                        <span>jjakubs@wp.pl</span>
-                    </div>
-                </div>
-                <Button style={{
-                    marginLeft: 'auto'
-                }}>
-                    Edytuj
-                </Button>
-            </div>
-            {divider}
-            <div className='' style={{
-                marginTop: '5%',
-                display: 'flex',
-                justifyContent: 'start'
-            }}>
-                <div className='col-md-4'>
-                    <div className='row'>
-                        <label>Hasło</label>
-                        <span>********</span>
-                    </div>
-                </div>
-                <Button style={{
-                    marginLeft: 'auto'
-                }}>
-                    Edytuj
-                </Button>
-            </div>
-            {divider}
-        </>
-    )
-
-
-    return (
-        <div className='row'
-            style={{
-                marginLeft: '20%',
-                marginRight: '20%',
-                marginTop: '5%'
-            }}>
-            {sidebar}
-            <div className='col-md-6' style={{
-                marginLeft: "12%"
-            }}>
-                {content}
-            </div>
-
-        </div>
-    )
+  return (
+    <div className='row'
+      style={{
+        marginLeft: '20%',
+        marginRight: '20%',
+        marginTop: '5%'
+      }}>
+      {sidebar}
+      <div style={{
+        marginLeft: "12%"
+      }}>
+        {getMappedProducts(products)}
+      </div>
+      <div className="card">
+        <Paginator first={first} rows={rows} totalRecords={totalRecords} rowsPerPageOptions={[5, 10, 20, 50]} onPageChange={onPageChange} />
+      </div>
+    </div>
+  )
 }
 
-export default UserFavoriteProductsContainer;
+export default UserOrdersList;

@@ -7,14 +7,12 @@ import { Paginator } from 'primereact/paginator';
 import { Card } from 'primereact/card';
 import FinancialTransactionsService from '../../services/FinancialTransactionsService';
 
-
-
 const UserOrdersList = (props) => {
 
   const [hover, setHover] = useState({})
   const navigation = useNavigate()
   const service = new FinancialTransactionsService();
-  const [returns, setReturns] = useState([])
+  const [orders, setOrders] = useState([])
   const [first, setFirst] = useState(0);
   const [rows, setRows] = useState(10);
   const [totalRecords, setTotalRecords] = useState(undefined)
@@ -33,24 +31,21 @@ const UserOrdersList = (props) => {
 
   const fetchData = async (criteria) => {
     const response = await service.getUserOrders(criteria);
-    const json = await response.json();
-    setReturns(json.content);
-
-
-
+    const json = await response
+    setOrders(json);
     props.setLoading(false)
   }
 
   useEffect(() => {
     props.setLoading(true)
-
-    fetchData()
+    fetchData(criteria)
   }, [])
 
 
 
   const getMappedProducts = (products) => {
     let result = []
+    console.log(products)
     for (let i = 0; i < products.length; i += 3) {
       const index = i;
       result.push(
@@ -68,7 +63,7 @@ const UserOrdersList = (props) => {
               >
                 <div
                   style={{
-                    minHeight: '500px',   // Set the minimum height
+                    //minHeight: '500px',   // Set the minimum height
                     height: '100%'
                   }}
                 >
@@ -79,26 +74,6 @@ const UserOrdersList = (props) => {
                       position: 'absolute',
                       marginTop: '25px'
                     }}>
-
-                      {/* <Button
-                          icon={"pi pi-heart"}
-                          style={{
-                            background:'white',
-                            border:'none',
-                            color: hoveredLikeButton?.status && hoveredLikeButton?.id === product.id 
-                            ? 'red' : 'black'
-                          }}
-                          onMouseEnter={() => setHoveredLikeButton({
-                            id: product.id,
-                            status: true
-                          })}
-                          onMouseLeave={() => setHoveredLikeButton({
-                            id: product.id,
-                            status: false
-                          })}
-                        >
-                          
-                        </Button> */}
                     </div>
                     <img
                       src={hoverStatus.status && product.id === hoverStatus.id ? product?.detailUrl : product?.imageUrl}
@@ -111,16 +86,10 @@ const UserOrdersList = (props) => {
                       }}
                       onClick={() => { }}
                       onMouseEnter={() => {
-                        setHoverStatus({
-                          status: true,
-                          id: product.id,
-                        });
+                  
                       }}
                       onMouseLeave={() => {
-                        setHoverStatus({
-                          status: false,
-                          id: product.id,
-                        });
+                   
                       }}
                     />
                   </div>
@@ -195,7 +164,7 @@ const UserOrdersList = (props) => {
       >
         <span>Moje dane</span>
       </div>
-      <div
+      {/* <div
         className='row'
         style={{
           marginTop: '5%',
@@ -225,7 +194,7 @@ const UserOrdersList = (props) => {
       >
 
         <span>Wykonaj zwrot</span>
-      </div>
+      </div> */}
       <div
         className='row'
         style={{
@@ -242,7 +211,7 @@ const UserOrdersList = (props) => {
 
         <span>Zamówienia</span>
       </div>
-      <div
+      {/* <div
         className='row'
         style={{
           marginTop: '5%',
@@ -257,7 +226,7 @@ const UserOrdersList = (props) => {
       >
 
         <span>Adresy</span>
-      </div>
+      </div> */}
       <div
         className='row'
         style={{
@@ -286,8 +255,7 @@ const UserOrdersList = (props) => {
       </hr>
     )
   )
-
-
+           {/* {order.orderedProducts ? this.getMappedProducts(order.orderedProducts) : []} */}
   return (
     <div className='row'
       style={{
@@ -299,7 +267,27 @@ const UserOrdersList = (props) => {
       <div className='col-md-6' style={{
         marginLeft: "12%"
       }}>
-        {getMappedProducts}
+        {orders?.map(order => {
+          return (
+            <Card
+            className='order-component'
+            title={
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span>{`Order ID - ${order?.orderId}`}</span>
+                <Button label="Zobacz zamowenie" className="p-button-text" style={{
+                  color:'black', fontSize:'20px'
+                }}/>
+              </div>
+            }
+            subTitle={order?.createDate}
+            style={{ marginBottom: '20px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.5)', height:'fit-content'}}
+            >
+            <div style={{ display: 'flex', justifyContent: 'start', gap: '25px' }}>
+              {getMappedProducts(order?.orderedProducts)}
+            </div>
+          </Card>
+          )
+        })}
       </div>
       <div className="card">
         <Paginator first={first} rows={rows} totalRecords={totalRecords} rowsPerPageOptions={[5, 10, 20, 50]} onPageChange={onPageChange} />

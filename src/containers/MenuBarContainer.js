@@ -9,8 +9,10 @@ import { useAuth } from "./auth/AuthContext";
 const MenuBarContainer = (props) => {
   const navigation = useNavigate();
   const [active, setActive] = useState(false);
+
   const [checkoutCount, setCheckoutCount] = useState(0);
   const [parentCategories, setCategories] = useState([])
+
   const [hovered,setHovered]=useState({})
   const service = new ProductService()
   const authService = new AuthService()
@@ -43,12 +45,12 @@ const MenuBarContainer = (props) => {
 
       setCategories(categoriesJson)
 
-      const response = await service.getCheckoutCount(1);
-      const json = await response.json();
+      const response = await service.getCheckoutCount();
+      const json = await response.json()
 
       props.setLoading(true);
       verifySession()
-      setCheckoutCount(json);
+      setCheckoutCount(json.quantity);
 
       props.setLoading(false);
     } catch (error) {
@@ -69,9 +71,9 @@ const MenuBarContainer = (props) => {
 
   const updateCount = async () => {
     try {
-      const response = await service.getCheckoutCount(1);
-      const json = await response.json();
-      setCheckoutCount(json);
+      const response = await service.getCheckoutCount();
+      const json = await response.json()
+      setCheckoutCount(json.quantity);
     } catch (error) {
       console.log(error);
     }
@@ -97,7 +99,7 @@ const MenuBarContainer = (props) => {
     },
     {
       icon: "pi pi-fw pi-heart",
-      //   command: () => menuBarOnClickFunction('checkout')
+       command: () => menuBarOnClickFunction('user/favorites')
     },
     {
       icon: "pi pi-fw pi-user",
@@ -114,11 +116,11 @@ const MenuBarContainer = (props) => {
           className: "reddy",
           command: () => menuBarOnClickFunction("user/orders"),
         },
-        {
-          label: "Adresy", //TODO -> tlumaczenia
-          //className: "reddy",
-          command: () => menuBarOnClickFunction("user/addresses"),
-        },
+        // {
+        //   label: "Adresy", //TODO -> tlumaczenia
+        //   //className: "reddy",
+        //   command: () => menuBarOnClickFunction("user/addresses"),
+        // },
         {
           label: "Wyloguj sie", //TODO -> tlumaczenia
           //className: "reddy",
