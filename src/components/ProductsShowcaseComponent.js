@@ -8,11 +8,8 @@ import '../App.css'
 import Toggle from 'react-toggle';
 import "react-toggle/style.css" // for ES6 modules
 import ProductService from '../services/ProductService';
-import { Button } from 'primereact/button';
-import { Tag } from 'primereact/tag';
-import { InputText } from 'primereact/inputtext';
 import { Card } from 'primereact/card';
-import ProductCardContainer from '../containers/ProductCardContainer';
+import NewsLetterComponent from './NewsLetterComponent';
 import { useAuth } from '../containers/auth/AuthContext';
 
 
@@ -21,8 +18,9 @@ const ProductsShowcaseComponent = (props) => {
   const [allProducts, setItems] = useState([]);
   const [toggle, setToggle] = useState(false);
   const [loadData, setLoadData] = useState(false);
-  const {isLoggedIn} = useAuth();
+  const {isLoggedIn} = useAuth();  const [mainBanerItems, setMainBanerItems] = useState([])
   const service = new ProductService();
+  const [hovered, setHovered] = useState({})
 
   useEffect(() => {
     const fetchData = async () => {
@@ -61,6 +59,7 @@ const ProductsShowcaseComponent = (props) => {
 
 
   const [hoverStatus, setHoverStatus] = useState({});
+
   const productTemplate = (product, index) => {
     return (
       <div
@@ -108,171 +107,84 @@ const ProductsShowcaseComponent = (props) => {
   };
 
 
+  const responsiveOptions2 = [
+
+  ];
+
+  const itemTemplate = (product, index) => {
+    return (
+      <div
+        style={{
+          //width: '100%'
+        }}>
+        <div className="mb-3">
+          <img src={hoverStatus?.status && hoverStatus?.id === index
+            ? product.detailUrl : product.imageUrl} alt={product.name} style={{
+              width: '100%',
+              height: '600px',
+              cursor: 'pointer',
+              marginTop: '5%'
+            }}
+            onClick={() => {
+              //navigation(`/product/details/${product.id}`)
+            }}
+            onMouseEnter={() => {
+              // setHoverStatus({
+              //   status: true,
+              //   id: index
+              // });
+            }}
+            onMouseLeave={() => {
+              // setHoverStatus({
+              //   status: false,
+              //   id: index
+              // });
+            }}
+          />
+        </div>
+
+      </div>
+    );
+  };
+
   return (
-    <div style={{
-      marginLeft: '24%',
-      marginRight: '10%'
-    }}>
-
-      <div className='row'>
-        <div className='col-md-5'>
-          <Card
-            className="col"
+    <div>
+      <div
+        style={{
+          marginLeft: '15%',
+          marginRight: '15%',
+        }}
+      >
+        <div className='row'>
+          <div> 
+            <div>
+              <Carousel value={allProducts.slice(0, 4)} numVisible={1} numScroll={1} responsiveOptions={responsiveOptions2} itemTemplate={(x) => itemTemplate(x, x.id)} />
+            </div>
+          </div>
+        </div>
+        <div>
+          {/* BESTSELLERS/ NEW PRODUCTS */}
+          <div
             style={{
-              width: "100%",
-              border: "1px solid #ccc", // Border to distinguish
-              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)", // Subtle shadow
-              borderRadius: "8px", // Rounded corners
-              padding: "10px", // Padding inside the card
-              backgroundColor: "#f9f9f9", // Light background color
-              height: '730px'
-            }} />
-        </div>
-        <div className='col-md-6'>
-          <div className='row'>
-            <div className='col-md-6'>
-              <Card
-                className="col"
-                style={{
-                  width: "100%",
-                  border: "1px solid #ccc", // Border to distinguish
-                  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)", // Subtle shadow
-                  borderRadius: "8px", // Rounded corners
-                  padding: "10px", // Padding inside the card
-                  backgroundColor: "#f9f9f9",
-                  height: '350px'
-                }} />
-            </div>
-            <div className='col-md-6'>
-              <Card
-                className="col"
-                style={{
-                  width: "100%",
-                  border: "1px solid #ccc", // Border to distinguish
-                  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)", // Subtle shadow
-                  borderRadius: "8px", // Rounded corners
-                  padding: "10px", // Padding inside the card
-                  backgroundColor: "#f9f9f9", // Light background color
-                  height: '350px'
-                }} />
-            </div>
+              display: 'flex',
+              justifyContent: 'flex-start',
+              marginLeft: '100px',
+            }}
+          >
+            <span style={{ marginRight: '20px' }}>Bestsellery</span>
+            <Toggle
+              defaultChecked={toggle}
+              icons={false}
+              onChange={() => {
+                setToggle(!toggle)
+              }} />
+            <span style={{ marginLeft: '20px' }}>Nowości</span>
           </div>
-          <div className='row' style={{
-            marginTop: '3%'
-          }}>
-            <div className='col-md-6'>
-              <Card
-                className="col"
-                style={{
-                  width: "100%",
-                  border: "1px solid #ccc", // Border to distinguish
-                  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)", // Subtle shadow
-                  borderRadius: "8px", // Rounded corners
-                  padding: "10px", // Padding inside the card
-                  backgroundColor: "#f9f9f9",
-                  height: '350px'
-                }} />
-            </div>
-            <div className='col-md-6'>
-              <Card
-                className="col"
-                style={{
-                  width: "100%",
-                  border: "1px solid #ccc", // Border to distinguish
-                  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)", // Subtle shadow
-                  borderRadius: "8px", // Rounded corners
-                  padding: "10px", // Padding inside the card
-                  backgroundColor: "#f9f9f9", // Light background color
-                  height: '350px'
-                }} />
-            </div>
-          </div>
+          <Carousel value={allProducts} numVisible={4} numScroll={3} responsiveOptions={responsiveOptions} itemTemplate={(x) => productTemplate(x, x.id)} />
         </div>
-      </div>
-
-      <div>
-        {/* BESTSELLERS/ NEW PRODUCTS */}
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'flex-start',
-            marginLeft: '100px',
-            marginTop: '5%'
-          }}
-        >
-          <span style={{ marginRight: '20px' }}>Bestsellery</span>
-          <Toggle
-            defaultChecked={toggle}
-            icons={false}
-            onChange={() => {
-              setToggle(!toggle)
-            }} />
-          <span style={{ marginLeft: '20px' }}>Nowości</span>
+        <div>
+          <Carousel value={allProducts} numVisible={4} numScroll={3} responsiveOptions={responsiveOptions} itemTemplate={(x) => productTemplate(x, x.id)} />
         </div>
-        <Carousel value={allProducts} numVisible={4} numScroll={3} responsiveOptions={responsiveOptions} itemTemplate={(x) => productTemplate(x, x.id)} />
-      </div>
-      <div>
-        <Carousel value={allProducts} numVisible={4} numScroll={3} responsiveOptions={responsiveOptions} itemTemplate={(x) => productTemplate(x, x.id)} />
-      </div>
-      <div>
-        {/* <div className='col-md-6'>
-          <div className='row'>
-            <div className='col-md-4'>
-              <Card
-                className="col"
-                style={{
-                  width: "100%",
-                  border: "1px solid #ccc", // Border to distinguish
-                  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)", // Subtle shadow
-                  borderRadius: "8px", // Rounded corners
-                  padding: "10px", // Padding inside the card
-                  backgroundColor: "#f9f9f9",
-                  height:'350px'
-                }} />
-            </div>
-            <div className='col-md-4'>
-              <Card
-                className="col"
-                style={{
-                  width: "100%",
-                  border: "1px solid #ccc", // Border to distinguish
-                  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)", // Subtle shadow
-                  borderRadius: "8px", // Rounded corners
-                  padding: "10px", // Padding inside the card
-                  backgroundColor: "#f9f9f9", // Light background color
-                  height:'350px'
-                }} />
-            </div>
-          </div>
-          <div className='row' style={{
-            marginTop:'3%'
-          }}>
-            <div className='col-md-6'>
-              <Card
-                className="col"
-                style={{
-                  width: "100%",
-                  border: "1px solid #ccc", // Border to distinguish
-                  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)", // Subtle shadow
-                  borderRadius: "8px", // Rounded corners
-                  padding: "10px", // Padding inside the card
-                  backgroundColor: "#f9f9f9",
-                  height:'350px'
-                }} />
-            </div>
-            <div className='col-md-6'>
-              <Card
-                className="col"
-                style={{
-                  width: "100%",
-                  border: "1px solid #ccc", // Border to distinguish
-                  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)", // Subtle shadow
-                  borderRadius: "8px", // Rounded corners
-                  padding: "10px", // Padding inside the card
-                  backgroundColor: "#f9f9f9",
-                  height:'350px'
-                }} />
-            </div> */}
         <div className='col'
           style={{
             display: 'flex',
@@ -283,10 +195,10 @@ const ProductsShowcaseComponent = (props) => {
             className="col"
             style={{
               width: "100%",
-              border: "1px solid #ccc", // Border to distinguish
-              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)", // Subtle shadow
-              borderRadius: "8px", // Rounded corners
-              padding: "10px", // Padding inside the card
+              border: "1px solid #ccc",
+              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+              borderRadius: "8px",
+              padding: "10px",
               backgroundColor: "#f9f9f9",
               height: '250px'
             }} />
@@ -294,10 +206,10 @@ const ProductsShowcaseComponent = (props) => {
             className="col"
             style={{
               width: "100%",
-              border: "1px solid #ccc", // Border to distinguish
-              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)", // Subtle shadow
-              borderRadius: "8px", // Rounded corners
-              padding: "10px", // Padding inside the card
+              border: "1px solid #ccc",
+              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+              borderRadius: "8px",
+              padding: "10px",
               backgroundColor: "#f9f9f9",
               height: '250px'
             }} />
@@ -305,10 +217,10 @@ const ProductsShowcaseComponent = (props) => {
             className="col"
             style={{
               width: "100%",
-              border: "1px solid #ccc", // Border to distinguish
-              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)", // Subtle shadow
-              borderRadius: "8px", // Rounded corners
-              padding: "10px", // Padding inside the card
+              border: "1px solid #ccc",
+              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+              borderRadius: "8px",
+              padding: "10px",
               backgroundColor: "#f9f9f9",
               height: '250px'
             }} />
@@ -316,52 +228,16 @@ const ProductsShowcaseComponent = (props) => {
             className="col"
             style={{
               width: "100%",
-              border: "1px solid #ccc", // Border to distinguish
-              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)", // Subtle shadow
-              borderRadius: "8px", // Rounded corners
-              padding: "10px", // Padding inside the card
+              border: "1px solid #ccc",
+              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+              borderRadius: "8px",
+              padding: "10px",
               backgroundColor: "#f9f9f9",
               height: '250px'
             }} />
 
         </div>
-        <div className='row' style={{
-          marginTop: '10%',
-          gap: '30px'
-        }}>
-          <div className='col-md-5'>
-            <Card
-              className="col"
-              style={{
-                width: "100%",
-                border: "1px solid #ccc", // Border to distinguish
-                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)", // Subtle shadow
-                borderRadius: "8px", // Rounded corners
-                padding: "10px", // Padding inside the card
-                backgroundColor: "#f9f9f9", // Light background color
-                height: '330px'
-              }} />
-          </div>
-          <div className='col-md-6'>
-            <div className='row'>
-              <Card
-                className="col"
-                style={{
-                  width: "100%",
-                  border: "1px solid #ccc", // Border to distinguish
-                  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)", // Subtle shadow
-                  borderRadius: "8px", // Rounded corners
-                  padding: "10px", // Padding inside the card
-                  backgroundColor: "#f9f9f9", // Light background color
-                  height: '330px'
-                }} />
-            </div>
-          </div>
-        </div>
-        <div> 
-              //FOOTER KONTAKT, LINKI DO SOCIALI OBSLUGA KLIENTA, INFORMACJE, ITP.
-        </div>
-      </div>
+      </div>   
     </div>
   );
 };

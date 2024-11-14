@@ -6,6 +6,7 @@ import { Paginator } from 'primereact/paginator';
 import { useNavigate } from "react-router-dom/dist/umd/react-router-dom.development";
 import EnumService from "../services/EnumService";
 import { Button } from "primereact/button";
+import { TreeSelect } from 'primereact/treeselect';
 
 const CategoryListContainer = (props) => {
   const [loading, setLoading] = useState(true);
@@ -15,12 +16,17 @@ const CategoryListContainer = (props) => {
   const [totalRecords, setTotalRecords] = useState(undefined)
   const navigation = useNavigate()
   const [hoveredLikeButton,setHoveredLikeButton]=useState({})
+
+  const [nodes, setNodes] = useState(null);
+  const [categoriesOptions, setCategoriesOptions]=useState([])
+  const [categoriesSelected,setCategoriesSelected]=useState({})
+
   const [criteria, setCriteria] = useState({
     page: first,
     size: rows,
     sortAsc: true,
     sortField: 'id',
-    category: '',
+    categories: undefined,
     sortType: ''
   });
   const [hoverStatus,setHoverStatus]=useState({});
@@ -29,10 +35,48 @@ const CategoryListContainer = (props) => {
   const enumService = new EnumService();
   const [sortTypeOptions,setSortTypeOptions]=useState([])
 
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try{
+      const queryParameters = new URLSearchParams(window.location.search)
+      const categoriesParams = queryParameters.get("categories")
+      criteria.categories = categoriesParams;
+
+        const categories = await service.getAllCategories();
+        const categoriesJson = await categories.json();
+        setCategoriesOptions(categoriesJson);
+
+
+        const obj = {};
+        categoriesJson.forEach((x) => check(x, categoriesParams, obj));
+        setCategoriesSelected(obj);
+
+        let arr = [];
+        Object.keys(obj).forEach((key) => {
+          if (obj[key].checked) arr.push(key);
+        });
+        criteria.categories = arr;
+      
+      setCriteria({ ...criteria });
+    }catch(err){
+      console.log(err)
+    }
+    };
+  
+    fetchCategories();
+  }, []);
+
+
   const fetchData = async (criteria) => {
     props.setLoading(true)
     try {
+      const queryParameters = new URLSearchParams(window.location.search)
+      const categories = queryParameters.get("categories")
+      criteria.categories = categories;
+      
       const response = await service.getList(criteria);
+
       const json = await response.json();
       setProducts(json.content);
       setTotalRecords(json.totalElements)
@@ -49,18 +93,37 @@ const CategoryListContainer = (props) => {
       console.log("error", error);
     }
   }
+  const check = (model, ids, obj) => {
+    if (!model) {
+      return;
+    }
 
+    if (ids.includes(model.key)) {
+      console.log(ids, model,obj)
+      obj[model.key] = {
+        checked: true,
+        partialChecked: false
+      }
+    }
+
+    if (model.children && model.children.length) {
+      model.children.forEach((x) => {
+        check(x, ids, obj);
+      });
+    }
+  }
 
   useEffect(() => {
     const queryParameters = new URLSearchParams(window.location.search)
     const category = queryParameters.get("category")
+
     criteria.category = category;
+    
     setCriteria(criteria)
     fetchData(criteria);
-  }, []);
+  }, [criteria]);
 
-
-
+  
   const getSeverity = (product) => {
     switch (product.inventoryStatus) {
       case 'INSTOCK':
@@ -85,6 +148,49 @@ const CategoryListContainer = (props) => {
           className="row"
           style={{ marginLeft: "15%", marginTop: "5%", maxWidth: "100%" }}
         >
+           <TreeSelect
+            value={categoriesSelected}
+            style={{
+              width: "20%",
+              marginRight: "20px",
+            }}
+            valueTemplate={(e)=>{
+              return `Kategoria (2)`
+            }}
+            onChange={(e) => {
+              setCategoriesSelected(e.value)
+            }}
+            options={categoriesOptions}
+            metaKeySelection={false}
+            className="md:w-20rem w-full"
+            selectionMode="checkbox"
+            display="chip"
+            placeholder="Kategoria"
+            panelFooterTemplate={(e) => {
+              return (
+                <Button style={{
+                  width: '100%',
+                  textAlign: 'center',
+                }}
+                  label="Zastosuj"
+                  onClick={(e) => {
+                    let ids = []
+                    Object.keys(categoriesSelected).forEach(key => {
+                      if (categoriesSelected[key].checked)
+                        ids.push(key)
+                    })
+                    criteria.categories=ids;
+                    setCriteria(criteria)
+                    
+                    navigation('/category/list?categories=' + ids)
+                    fetchData(criteria)
+                  }}
+                >
+                </Button>
+              )
+            }}
+            >
+          </TreeSelect>
           <Dropdown
             placeholder="Sortuj"
             value={criteria.sortType}
@@ -94,13 +200,6 @@ const CategoryListContainer = (props) => {
               setCriteria(criteria)
               fetchData(criteria)
             }}
-            style={{
-              width: "20%",
-              marginRight: "20px",
-            }}
-          ></Dropdown>
-          <Dropdown
-            placeholder="Kategoria"
             style={{
               width: "20%",
               marginRight: "20px",

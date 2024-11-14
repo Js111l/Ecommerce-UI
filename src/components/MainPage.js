@@ -12,6 +12,8 @@ import { useAuth } from '../containers/auth/AuthContext';
 
 
 const MainPage = (props) => {
+  const navigation = useNavigate();
+  
   const authService = new AuthService()
   const { login } = useAuth();
   const { logout } = useAuth()
