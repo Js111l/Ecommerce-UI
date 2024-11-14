@@ -71,13 +71,6 @@ export default class AuthService extends BaseService {
 
     }
 
-    // isLoggedIn() {
-    //     const token = localStorage.getItem('token')
-    //     const decodedUser = this.getUserFromToken()
-    //     return token !== undefined && token !== null && moment().isBefore(moment.unix(decodedUser.exp))
-    // }
-
-
     getCurrentUser(){
         return fetch(this.url + '/auth/context/current-user', {
             method: 'GET',

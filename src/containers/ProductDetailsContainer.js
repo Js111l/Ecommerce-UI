@@ -171,6 +171,9 @@ const ProductDetailsContainer = (props) => {
                                 style={{
                                     marginLeft: "12px",
                                 }}
+                                onClick={()=>{
+                                    service.addToFavorite(Number(id))
+                                }}
                             />
                         </div>
                     </div>
