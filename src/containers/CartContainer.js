@@ -21,6 +21,7 @@ const CartContainer = (props) => {
              const response = await productService.getCheckoutProducts();
              const json = await response.json();
              setCart(json);
+             props.setShowNewsletter(false);              
              props.setLoading(false);
          } catch (error) {
              console.log(error);
@@ -108,12 +109,13 @@ const CartContainer = (props) => {
                     <div className='col-md-2'
                         style={{
                             backgroundColor: '#e8e8e8',
-                            width: '15%'
+                            width: '15%',
+                            maxHeight:'200px'
                         }}>
                         <div className='row'>
                             <div style={{
                                 display: 'flex',
-                                justifyContent: 'start'
+                                justifyContent: 'start',
                             }}>
                                 <span
                                     style={{

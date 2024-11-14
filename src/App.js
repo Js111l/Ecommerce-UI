@@ -23,6 +23,7 @@ import NotFoundComponent from './containers/NotFoundComponent';
 import PaymentConfirmedContainer from './containers/payment/PaymentConfirmedContainer';
 import { AuthProvider, useAuth } from './containers/auth/AuthContext';
 import AuthService from './services/AuthService';
+import NewsLetterComponent from './components/NewsLetterComponent';
 
 function App() {
   const [loading, setLoading] = useState(false);
@@ -30,10 +31,43 @@ function App() {
   const toast = useRef(null);
   const authService = new AuthService()
  
+  const [footerHoover, setFooterHoover] = useState([])
+  const [showNewsletter, setShowNewsletter] = useState(true);
 
   const showMessage = (type, message, summary, sticky) => {
     toast.current.show({ severity: type, summary: summary, detail: message, life: 3000, sticky: sticky });
   }
+  const items = [
+    "Wymiana i zwroty",
+    "Metody płatności",
+    "Reklamacje",
+    "Karta podarunkowa",
+    "Konto klienta",
+    "Lista życzeń"
+  ];
+  const items2 = [
+    "Regulamin",
+    "Polityka prywatności",
+    "Pliki cookies",
+    "FAQ"
+  ];
+
+  const genderItems = [
+    "Kobieta",
+    "Mężczyzna",
+    "Dziewczynka",
+    "Chłopiec"
+  ];
+
+  const divider = (
+    (
+      <hr style={{
+        marginTop: '3%',
+        marginBottom: '3%'
+      }} class="solid">
+      </hr>
+    )
+  )
   const [sessionChecked, setSessionChecked] = useState(false)
   const hasFetchedData = useRef(false)
 
@@ -74,7 +108,7 @@ function App() {
         >
           {renderMenuBar ?
             <MenuBarContainer
-              setLoading={setLoading}
+                setLoading={setLoading}
             >
             </MenuBarContainer>
             : null}
@@ -88,7 +122,8 @@ function App() {
                   loading={loading}
                   setLoading={setLoading}
                   showMessage={showMessage}
-                />}
+                  setShowNewsletter={setShowNewsletter}
+              />}
             />
             <Route path='/product/details/:id'
               element={
@@ -120,7 +155,8 @@ function App() {
                   loading={loading}
                   setLoading={setLoading} MainPage
                   showMessage={showMessage}
-                />}
+                  setShowNewsletter={setShowNewsletter}
+              />}
             />
             <Route path='/checkout'
               element={
@@ -128,7 +164,8 @@ function App() {
                   loading={loading}
                   setLoading={setLoading} MainPage
                   showMessage={showMessage}
-                />}
+                  setShowNewsletter={setShowNewsletter}
+              />}
             />
             <Route path='/payment/:id'
               element={
@@ -137,7 +174,8 @@ function App() {
                   setLoading={setLoading}
                   showMessage={showMessage}
                   setMenuBar={setMenuBar}
-                />}
+                  setShowNewsletter={setShowNewsletter}
+              />}
             />
             <Route path='/user/account'
               element={
@@ -232,8 +270,177 @@ function App() {
             >
               <LoaderContainer />
             </div>
-          )
-          }
+        )}
+        {showNewsletter ? divider : null}
+        {showNewsletter ?
+          <div className='row' style={{
+            display: 'flex',
+            justifyContent: 'center',
+            maxHeight: "300px",
+            marginLeft: '15%',
+            marginRight: '15%',
+          }}>
+            <div className="col"
+              style={{
+                backgroundColor: "#f9f9f9",
+              }}>
+              <div className='row' style={{
+                // border: '1px solid',
+                // borderColor: 'black'
+              }}>
+                <span style={{
+                  fontWeight: 'bold',
+                  marginBottom: '1%'
+                }}>O nas</span>
+              </div>
+              <div className='row' style={{
+                // border:'1px solid',
+                // borderColor: 'black',
+                // borderTop:'none'
+              }}>
+                <p className="m-0">
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                  Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+
+                </p>
+              </div>
+            </div>
+            <div className="col">
+              <NewsLetterComponent
+                setLoading={setLoading}
+                showMessage={showMessage}
+              />
+            </div>
+          </div>
+          : null}
+        {divider}
+        <div style={{
+          marginLeft: '15%',
+          marginRight: '15%',
+        }}>
+          <div className='row'>
+            <div className='col-md-3'>
+              <ul>
+                <span>Obsługa klienta</span>
+                {items.map((x, index) => {
+                  return (
+                    <div style={{
+                      marginTop: index === 0 ? '5%' : ''
+                    }}>
+                      <li>
+                        <span style={{
+                          textDecoration: footerHoover.id === index &&
+                            footerHoover.colIndex === 0 &&
+                            footerHoover.status
+                            ? 'underline' : '',
+                          cursor: 'pointer',
+                          width: 'fit-content',
+                        }}
+                          onMouseEnter={(e) => {
+                            setFooterHoover({
+                              id: index,
+                              colIndex: 0,
+                              status: true
+                            })
+                          }}
+                          onMouseLeave={(e) => {
+                            setFooterHoover({
+                              id: index,
+                              colIndex: 0,
+                              status: false
+                            })
+                          }}
+                        >
+                          {x}
+                        </span>
+                      </li>
+                    </div>
+                  )
+                })}
+              </ul>
+            </div>
+            <div className='col-md-3'>
+              <ul>
+                <span style={{
+                  marginBottom: '3%'
+                }}>Informacje</span>
+                {items2.map((x, index) => {
+                  return (
+                    <div style={{
+                      marginTop: index === 0 ? '5%' : ''
+                    }}>                      <li>
+                        <span style={{
+                          textDecoration: footerHoover.id === index &&
+                            footerHoover.colIndex === 1 &&
+                            footerHoover.status
+                            ? 'underline' : '',
+                          cursor: 'pointer',
+                          marginTop: index === 0 ? '5%' : ''
+                        }}
+                          onMouseEnter={(e) => {
+                            setFooterHoover({
+                              id: index,
+                              colIndex: 1,
+                              status: true
+                            })
+                          }}
+                          onMouseLeave={(e) => {
+                            setFooterHoover({
+                              id: index,
+                              colIndex: 1,
+                              status: false
+                            })
+                          }}
+                        >
+                          {x}
+                        </span>
+                      </li>
+                    </div>
+                  )
+                })}
+              </ul>
+            </div>
+            <div className='col-md-3'>
+              <ul>
+                <span>Kupuj</span>
+                {genderItems.map((x, index) => {
+                  return (
+                    <div style={{
+                      marginTop: index === 0 ? '5%' : ''
+                    }}>                      <li>
+                        <span style={{
+                          textDecoration: footerHoover.id === index &&
+                            footerHoover.colIndex === 2 &&
+                            footerHoover.status
+                            ? 'underline' : '',
+                          cursor: 'pointer',
+                          marginTop: index === 0 ? '5%' : ''
+                        }}
+                          onMouseEnter={(e) => {
+                            setFooterHoover({
+                              id: index,
+                              colIndex: 2,
+                              status: true
+                            })
+                          }}
+                          onMouseLeave={(e) => {
+                            setFooterHoover({
+                              id: index,
+                              colIndex: 2,
+                              status: false
+                            })
+                          }}
+                        >
+                          {x}
+                        </span>
+                      </li>
+                    </div>
+                    )
+                  })}
+              </ul>
+            </div>
+          </div>
+        </div>
         </BlockUI>
       </Router>
     </AuthProvider>
