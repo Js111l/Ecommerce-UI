@@ -1,9 +1,24 @@
 import { useEffect, useState } from "react";
 import PasswordCredentialsContainer from "./PasswordCredentialsContainer";
 import { Button } from "primereact/button";
+import { useNavigate } from "react-router-dom/dist/umd/react-router-dom.development";
+import { useNavigationType } from "react-router-dom";
 
 const LoginContainer = (props) => {
   const [register, setRegister] = useState(false);
+  const navigate = useNavigate()
+  const navigationType = useNavigationType();
+
+
+  const goBack = () => {
+    if (navigationType === 'PUSH') {
+      navigate(-1)
+    } else {
+      navigate('/')
+    }
+  }
+
+
   useEffect(() => {
     props.setShowNewsletter(false);              
   }, []);
@@ -46,7 +61,7 @@ const LoginContainer = (props) => {
                   setRegister(true)
                 }} />
               </div>
-              <Button label="Kontynuuj jako gość" variant="login-button" />
+              <Button label="Kontynuuj jako gość" variant="login-button" onClick={goBack}/>
             </div>
           </div>
         </div>

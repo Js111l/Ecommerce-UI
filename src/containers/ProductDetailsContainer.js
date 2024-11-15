@@ -18,28 +18,29 @@ const ProductDetailsContainer = (props) => {
     const { id } = useParams();
     const [quantity, setQuantity] = useState(1)
 
-    useEffect(() => {
-        const fetchProduct = async () => {
-            props.setLoading(true);
-            try {
-                const response = await service.getProductDetails(id);
-                const json = await response.json();
-                setProduct(json);
-                //TODO
-                const images = json.images?.map((imageModel) => ({
-                    itemImageSrc: imageModel.url,
-                    thumbnailImageSrc: imageModel.url,
-                    alt: imageModel.description,
-                    title: imageModel.title,
-                }));
-                
-                setImages(images)
+    const fetchProduct = async () => {
+        props.setLoading(true);
+        try {
+            const response = await service.getProductDetails(id);
+            const json = await response.json();
+            setProduct(json);
+            //TODO
+            const images = json.images?.map((imageModel) => ({
+                itemImageSrc: imageModel.url,
+                thumbnailImageSrc: imageModel.url,
+                alt: imageModel.description,
+                title: imageModel.title,
+            }));
+            
+            setImages(images)
 
-                props.setLoading(false);
-            } catch (error) {
-                console.log(error);
-            }
-        };
+            props.setLoading(false);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    useEffect(() => {
         fetchProduct();
     }, [id]);
 
@@ -97,6 +98,17 @@ const ProductDetailsContainer = (props) => {
             />
         );
     };
+
+    const addProduct = async () => {
+        props.setLoading(true)
+        const resp = await checkoutService.addProduct({
+            product: { id: id },
+            quantity: quantity
+        });
+        await resp
+        fetchProduct()
+        props.setLoading(false)
+    }
 
     return (
         <div className="content-container">
@@ -159,11 +171,7 @@ const ProductDetailsContainer = (props) => {
                                 }}
                                 label={"Dodaj do koszyka"}
                                 onClick={(e) => {
-                                    checkoutService.addProduct({
-                                        product: {id: id},
-                                        //authService.getUserIdFromToken(),
-                                        quantity: quantity
-                                    });
+                                    addProduct()
                                 }}
                             />
                             <Button

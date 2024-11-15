@@ -8,6 +8,7 @@ import AuthService from "../../services/AuthService";
 import { useNavigate } from 'react-router-dom/dist/umd/react-router-dom.development';
 import { useParams } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
+import CheckoutService from '../../services/CheckoutService';
 
  const stripePromise = loadStripe('${process.env.STRIPE_API_PUBLIC_KEY}'
     // `${process.env.STRIPE_API_PUBLIC_KEY}`
@@ -23,13 +24,37 @@ const PaymentContainer = (props) => {
   const [orderId, setOrderId] = useState(undefined)
   const [UUID,setUUID] = useState(undefined)
   const hasFetchedData = useRef(false); 
+  const [cart, setCart]=useState(undefined)
 
-  const [intentModel, setIntentModel] = useState({
-    client: {},
-    amount: '',
-    localCurrency: 'eur',
-    products: []
-  })
+
+  const checkoutService = new CheckoutService()
+  const productService = new ProductService()
+
+  const clearCart = async () => {
+    const ids = cart?.products.map(x => x.product.id);
+    try {
+      const resp = await checkoutService.deleteProducts(ids)
+      await resp
+    } catch (err) {
+      console.log(err)
+      props.setLoading(false);
+    }
+  }
+
+
+  const fetchCart = async () => {
+    props.setLoading(true)
+    try {
+      const response = await productService.getCheckoutProducts();
+      const json = await response.json();
+
+      setCart(json);
+      props.setLoading(false);
+    } catch (error) {
+      props.setLoading(false)
+      console.log(error);
+    }
+  };
 
 
   useEffect(() => {
@@ -44,6 +69,7 @@ const PaymentContainer = (props) => {
   
     const fetchData = async () => {
       try {
+   
         const uuid = sessionStorage.getItem(id) // id -> uuid
 
         const verifyResult = await authService.verifyPayToken();
@@ -66,7 +92,12 @@ const PaymentContainer = (props) => {
         console.log("error", error);
       }
     };
-  
+    props.setShowNewsletter(false)
+    props.setShowFooter(false)
+
+    
+    fetchCart()
+    clearCart()
     fetchData();
   
     return () => {
@@ -78,7 +109,7 @@ const PaymentContainer = (props) => {
 
 
   return (
-    secret
+    secret && cart
     ?
     <Elements stripe={stripePromise} options={{
       clientSecret: secret,
@@ -89,6 +120,7 @@ const PaymentContainer = (props) => {
       <CheckoutForm
         orderId={orderId}
         uuid={UUID}
+        cart={cart}
       />
     </Elements> : null
   )
