@@ -1,11 +1,9 @@
-import { Button } from 'primereact/button';
-import { InputText } from 'primereact/inputtext';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom/dist/umd/react-router-dom.development';
 import ProductService from '../../services/ProductService';
 import { Paginator } from 'primereact/paginator';
 import { Card } from 'primereact/card';
-import FinancialTransactionsService from '../../services/FinancialTransactionsService';
+import { useAuth } from '../auth/AuthContext';
 
 
 const UserOrdersList = (props) => {
@@ -18,6 +16,7 @@ const UserOrdersList = (props) => {
   const [rows, setRows] = useState(10);
   const [totalRecords, setTotalRecords] = useState(undefined)
   const [hoverStatus, setHoverStatus] = useState({});
+  const { isLoggedIn } = useAuth()
 
   const [criteria, setCriteria] = useState({
     page: first,
@@ -35,15 +34,15 @@ const UserOrdersList = (props) => {
     try {
       const response = await service.getUserFavoriteProducts(criteria);
       const json = await response.json();
-      
+
       setProducts(json.content);
       setTotalRecords(json.totalElements)
       setRows(json.pageable.pageSize)
       setFirst(json.pageable.offset)
 
-     // const enumServiceResponse = await enumService.getValuesByClassName('SortType');
-     // const enumJson = await enumServiceResponse.json()
-     // setSortTypeOptions(enumJson);
+      // const enumServiceResponse = await enumService.getValuesByClassName('SortType');
+      // const enumJson = await enumServiceResponse.json()
+      // setSortTypeOptions(enumJson);
 
       props.setLoading(false);
     } catch (error) {
@@ -53,6 +52,9 @@ const UserOrdersList = (props) => {
   }
 
   useEffect(() => {
+    // if(!isLoggedIn){
+    //   navigation('/login')
+    // }
     setCriteria(criteria)
     fetchData(criteria);
   }, []);
@@ -186,68 +188,41 @@ const UserOrdersList = (props) => {
 
   const sidebar = (
     <div className='col-md-2'>
-      <div
-        className='row'
-        style={{
-          marginTop: '5%',
-          cursor: 'pointer',
-          textDecoration: hover.id === 0 && hover.status ? 'underline' : ''
-        }}
-        onMouseEnter={() => setHover({ id: 0, status: true })}
-        onMouseLeave={() => setHover({ id: 0, status: false })}
-        onClick={(e) => {
-          navigation('/user/account')
-        }}
-      >
-        <span>Moje dane</span>
-      </div>
-      {/* <div
-        className='row'
-        style={{
-          marginTop: '5%',
-          cursor: 'pointer',
-          textDecoration: hover.id === 1 && hover.status ? 'underline' : ''
-        }}
-        onMouseEnter={() => setHover({ id: 1, status: true })}
-        onMouseLeave={() => setHover({ id: 1, status: false })}
-        onClick={(e) => {
-          navigation('/user/returns')
-        }}
-      >
-        <span>Zwroty</span>
-      </div>
-      <div
-        className='row'
-        style={{
-          marginTop: '5%',
-          cursor: 'pointer',
-          textDecoration: hover.id === 2 && hover.status ? 'underline' : ''
-        }}
-        onMouseEnter={() => setHover({ id: 2, status: true })}
-        onMouseLeave={() => setHover({ id: 2, status: false })}
-        onClick={(e) => {
-          navigation('/user/return-form')
-        }}
-      >
+      {isLoggedIn ? (
+        <>
+          <div
+            className="row"
+            style={{
+              marginTop: '5%',
+              cursor: 'pointer',
+              textDecoration: hover.id === 0 && hover.status ? 'underline' : ''
+            }}
+            onMouseEnter={() => setHover({ id: 0, status: true })}
+            onMouseLeave={() => setHover({ id: 0, status: false })}
+            onClick={() => {
+              navigation('/user/account');
+            }}
+          >
+            <span>Moje dane</span>
+          </div>
+          <div
+            className="row"
+            style={{
+              marginTop: '5%',
+              cursor: 'pointer',
+              textDecoration: hover.id === 3 && hover.status ? 'underline' : ''
+            }}
+            onMouseEnter={() => setHover({ id: 3, status: true })}
+            onMouseLeave={() => setHover({ id: 3, status: false })}
+            onClick={() => {
+              navigation('/user/orders');
+            }}
+          >
+            <span>Zamówienia</span>
+          </div>
+        </>
+      ) : null}
 
-        <span>Wykonaj zwrot</span>
-      </div> */}
-      <div
-        className='row'
-        style={{
-          marginTop: '5%',
-          cursor: 'pointer',
-          textDecoration: hover.id === 3 && hover.status ? 'underline' : ''
-        }}
-        onMouseEnter={() => setHover({ id: 3, status: true })}
-        onMouseLeave={() => setHover({ id: 3, status: false })}
-        onClick={(e) => {
-          navigation('/user/orders')
-        }}
-      >
-
-        <span>Zamówienia</span>
-      </div>
       {/* <div
         className='row'
         style={{

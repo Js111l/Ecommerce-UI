@@ -6,6 +6,7 @@ import ProductService from '../../services/ProductService';
 import { Paginator } from 'primereact/paginator';
 import { Card } from 'primereact/card';
 import FinancialTransactionsService from '../../services/FinancialTransactionsService';
+import { useAuth } from '../auth/AuthContext';
 
 const UserOrdersList = (props) => {
 
@@ -17,7 +18,7 @@ const UserOrdersList = (props) => {
   const [rows, setRows] = useState(10);
   const [totalRecords, setTotalRecords] = useState(undefined)
   const [hoverStatus, setHoverStatus] = useState({});
-
+  const { isLoggedIn } = useAuth()
   const [criteria, setCriteria] = useState({
     page: first,
     size: rows,
@@ -37,6 +38,9 @@ const UserOrdersList = (props) => {
   }
 
   useEffect(() => {
+    if(!isLoggedIn){
+      navigation('/login')
+    }
     props.setLoading(true)
     fetchData(criteria)
   }, [])
