@@ -20,6 +20,10 @@ const CategoryListContainer = (props) => {
   const [nodes, setNodes] = useState(null);
   const [categoriesOptions, setCategoriesOptions]=useState([])
   const [categoriesSelected,setCategoriesSelected]=useState({})
+  const [fabricOptions,setFabricOptions]= useState([])
+  const [sleeveLengthOptions, setSleeveLengthOptions]=useState([])
+  const [styleOptions,setStyleOptions]=useState([])
+
 
   const [criteria, setCriteria] = useState({
     page: first,
@@ -34,41 +38,91 @@ const CategoryListContainer = (props) => {
   const service = new ProductService();
   const enumService = new EnumService();
   const [sortTypeOptions,setSortTypeOptions]=useState([])
-
+  const [brandOtions, setBrandsOptions]=useState([])
+  const [colorsOptions,setColorsOptions]=useState([])
 
   useEffect(() => {
     const fetchCategories = async () => {
-      try{
-      const queryParameters = new URLSearchParams(window.location.search)
-      const categoriesParams = queryParameters.get("categories")
-      criteria.categories = categoriesParams;
-
+      try {
+        const queryParameters = new URLSearchParams(window.location.search);
+        const categoriesParams = queryParameters.get("categories");
+        criteria.categories = categoriesParams;
+  
         const categories = await service.getAllCategories();
         const categoriesJson = await categories.json();
         setCategoriesOptions(categoriesJson);
-
-
+  
         const obj = {};
         categoriesJson.forEach((x) => check(x, categoriesParams, obj));
         setCategoriesSelected(obj);
-
+  
         let arr = [];
         Object.keys(obj).forEach((key) => {
           if (obj[key].checked) arr.push(key);
         });
         criteria.categories = arr;
-      
-      setCriteria({ ...criteria });
-    }catch(err){
-      console.log(err)
-    }
+  
+        setCriteria({ ...criteria });
+      } catch (err) {
+        console.log(err);
+      }
+    };
+  
+    const fetchBrands = async () => {
+      try {
+        const brands = await service.getAllBrands();
+        const brandsJson = await brands.json();
+        setBrandsOptions(brandsJson);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+  
+    const fetchColors = async () => {
+      try {
+        const colors = await service.getAllColors();
+        const colorsJson = await colors.json();
+        setColorsOptions(colorsJson);
+      } catch (err) {
+        console.log(err);
+      }
     };
   
     fetchCategories();
+    fetchBrands();
+    fetchColors();
   }, []);
+  
 
 
   const fetchData = async (criteria) => {
+    const fetchEnums = async () => {
+      try {
+        // Fetch SortType options
+        const sortTypeResponse = await enumService.getValuesByClassName('SortType');
+        const sortTypeJson = await sortTypeResponse.json();
+        setSortTypeOptions(sortTypeJson);
+    
+        // Fetch SleeveLength options
+        const sleeveLengthResponse = await enumService.getValuesByClassName('SleeveLength');
+        const sleeveLengthJson = await sleeveLengthResponse.json();
+        setSleeveLengthOptions(sleeveLengthJson);
+    
+        // Fetch Style options
+        const styleResponse = await enumService.getValuesByClassName('Style');
+        const styleJson = await styleResponse.json();
+        setStyleOptions(styleJson);
+    
+        // Fetch Fabric options
+        const fabricResponse = await enumService.getValuesByClassName('Fabric');
+        const fabricJson = await fabricResponse.json();
+        setFabricOptions(fabricJson);
+        
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
     props.setLoading(true)
     try {
       const queryParameters = new URLSearchParams(window.location.search)
@@ -83,9 +137,7 @@ const CategoryListContainer = (props) => {
       setRows(json.pageable.pageSize)
       setFirst(json.pageable.offset)
 
-      const enumServiceResponse = await enumService.getValuesByClassName('SortType');
-      const enumJson = await enumServiceResponse.json()
-      setSortTypeOptions(enumJson);
+      fetchEnums()
 
       props.setLoading(false);
     } catch (error) {
@@ -207,6 +259,8 @@ const CategoryListContainer = (props) => {
           ></Dropdown>
           <Dropdown
             placeholder="Marka"
+            value={criteria.sortType}
+            options={brandOtions}
             style={{
               width: "20%",
               marginRight: "20px",
@@ -214,6 +268,8 @@ const CategoryListContainer = (props) => {
           ></Dropdown>
           <Dropdown
             placeholder="Kolor"
+            value={criteria.sortType}
+            options={colorsOptions}
             style={{
               width: "20%",
               marginRight: "20px",
@@ -223,6 +279,8 @@ const CategoryListContainer = (props) => {
         <div className="row" style={{ marginLeft: "15%", marginTop: "1%" }}>
           <Dropdown
             placeholder="Faktura"
+            value={criteria.sortType}
+            options={fabricOptions}
             style={{
               width: "20%",
               marginRight: "20px",
@@ -237,6 +295,8 @@ const CategoryListContainer = (props) => {
           ></Dropdown>
           <Dropdown
             placeholder="Długość rękawa"
+            value={criteria.sortType}
+            options={sleeveLengthOptions}
             style={{
               width: "20%",
               marginRight: "20px",
@@ -244,6 +304,8 @@ const CategoryListContainer = (props) => {
           ></Dropdown>
           <Dropdown
             placeholder="Fason"
+            value={criteria.sortType}
+            options={styleOptions}
             style={{
               width: "20%",
               marginRight: "20px",

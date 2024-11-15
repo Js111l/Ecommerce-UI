@@ -15,7 +15,6 @@ export default class CheckoutService extends BaseService {
             credentials:'include',
             headers: {
                 'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
             },
             body: JSON.stringify(data)
         }).then(response => {
@@ -33,7 +32,6 @@ export default class CheckoutService extends BaseService {
             credentials:'include',
             headers: {
                 'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
             },
         }).then(response => {
             if (!response.ok) {
