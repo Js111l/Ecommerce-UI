@@ -3,6 +3,7 @@ import { InputText } from 'primereact/inputtext';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom/dist/umd/react-router-dom.development';
 import AuthService from '../../services/AuthService';
+import { useAuth } from '../auth/AuthContext';
 
 
 
@@ -12,6 +13,7 @@ const UserDetailsContainer = (props) => {
     const navigation = useNavigate()
     const [userData, setUserData] = useState(undefined)
     const authService = new AuthService()
+    const { isLoggedIn } = useAuth()
     useEffect(() => {
 
         const fetchData = async () => {
@@ -20,7 +22,9 @@ const UserDetailsContainer = (props) => {
     
             setUserData(json)
         }
-
+        if(!isLoggedIn){
+            navigation('/login')
+        }
         fetchData()
 
     }, [])
