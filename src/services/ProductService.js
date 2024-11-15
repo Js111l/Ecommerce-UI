@@ -147,7 +147,6 @@ export default class ProductService extends BaseService{
             credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
             }
         })
         .then(response => {
@@ -164,7 +163,6 @@ export default class ProductService extends BaseService{
             credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*',
             }
         })
         .then(response => {
