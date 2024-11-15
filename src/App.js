@@ -12,7 +12,7 @@ import CartContainer from './containers/CartContainer';
 import PaymentContainer from './containers/payment/PaymentContainer';
 import CheckoutContainer from './containers/CheckoutContainer';
 import ProductDetailsContainer from './containers/ProductDetailsContainer';
-import CategoryContainer from './containers/CategoryContainer'
+import CategoryContainer from './containers/ProductListContainer'
 import UserDetailsContainer from './containers/user/UserDetailsContainer';
 import UserReturnsContainers from './containers/user/UserReturnsContainers';
 import UserReturnFormContainer from './containers/user/UserReturnFormContainer';
@@ -33,6 +33,7 @@ function App() {
  
   const [footerHoover, setFooterHoover] = useState([])
   const [showNewsletter, setShowNewsletter] = useState(true);
+  const [showFooter, setShowFooter]=useState(true);
 
   const showMessage = (type, message, summary, sticky) => {
     toast.current.show({ severity: type, summary: summary, detail: message, life: 3000, sticky: sticky });
@@ -170,6 +171,7 @@ function App() {
             <Route path='/payment/:id'
               element={
                 <PaymentContainer
+                  setShowFooter={setShowFooter}
                   loading={loading}
                   setLoading={setLoading}
                   showMessage={showMessage}
@@ -313,6 +315,8 @@ function App() {
             </div>
           </div>
           : null}
+        {showFooter ?
+        <>
         {divider}
         <div style={{
           marginLeft: '15%',
@@ -441,6 +445,8 @@ function App() {
             </div>
           </div>
         </div>
+        </>
+        : null}
         </BlockUI>
       </Router>
     </AuthProvider>

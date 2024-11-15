@@ -68,6 +68,7 @@ const CategoryListContainer = (props) => {
       }
     };
   
+
     const fetchBrands = async () => {
       try {
         const brands = await service.getAllBrands();
@@ -192,6 +193,9 @@ const CategoryListContainer = (props) => {
     }
   };
 
+  const formatMoney = (value) => {
+    return (value / 100).toFixed(2);
+  }
 
   const renderFilters = () => {
     return (
@@ -431,7 +435,7 @@ const CategoryListContainer = (props) => {
                       color: 'gray',
                     }}
                   >
-                    {product?.price}
+                    {formatMoney(product?.price)}
                   </div>
                 </div>
               </div>

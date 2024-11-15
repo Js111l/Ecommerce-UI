@@ -5,112 +5,171 @@ import ProductCardContainer from './ProductCardContainer';
 import ProductService from '../services/ProductService';
 import { Checkbox } from 'primereact/checkbox';
 import { Dropdown } from 'primereact/dropdown';
-
+import { useAuth } from './auth/AuthContext';
+import CheckoutService from '../services/CheckoutService';
 
 const CartContainer = (props) => {
     const navigate = useNavigate()
     const productService = new ProductService();
     const [cart, setCart] = useState(undefined)
     const [selectedAll, setSelectedAll] = useState(true);
+    const { isLoggedIn } = useAuth()
+    const [selectedProducts, setSelectedProducts] = useState(new Map())
+    const [totalPrice, setTotalPrice] = useState({})
+    const checkoutService = new CheckoutService()
 
+    const fetchData = async () => {
+        //TODO 
+        props.setLoading(true);
+        try {
+            const response = await productService.getCheckoutProducts();
+            const json = await response.json();
+            setCart(json);
+            setTotalPrice(json.totalPrice)
+            setSelectedProducts(new Map(
+                json.products.map(x => [x.product.id,true])
+            ))
+            props.setShowNewsletter(false);
+            props.setLoading(false);
+        } catch (error) {
+            console.log(error);
+        }
+    };
     useEffect(() => {
-        const fetchData = async () => {
-         //TODO 
-         props.setLoading(true);
-         try {
-             const response = await productService.getCheckoutProducts();
-             const json = await response.json();
-             setCart(json);
-             props.setShowNewsletter(false);              
-             props.setLoading(false);
-         } catch (error) {
-             console.log(error);
-         }
-        };
+
         fetchData();
     }, []);
 
 
-    const formatMoney=(value)=>{
-        return (value / 100).toFixed(2);
+    const onSelectProduct = (checked, id)=>{
+        selectedProducts.set(id, checked);
+        setSelectedProducts(selectedProducts)
+        console.log(selectedProducts)
     }
-    return (
-        <div className="card flex justify-content-center"
-            style={{
-                display: 'flex',
-                justifyContent: 'center',
+    const formatMoney = (value) => {
+        //return (value / 100).toFixed(2);
+        return value
+    }
 
-            }}>
-            <div className="row"
+    const deleteProducts = async (ids) => {
+        try {
+            const resp = await checkoutService.deleteProducts(ids)
+            await resp
+            fetchData()
+        } catch (err) {
+
+        }
+    }
+
+    return (
+       cart?.products.length >= 1 ?
+            <div className="card flex justify-content-center"
                 style={{
-                    paddingTop: '40px'
+                    display: 'flex',
+                    justifyContent: 'center',
+
                 }}>
 
-                <div className="col-md-3"
+                <div className="row"
                     style={{
-                        marginLeft: '30%',
-                        marginRight:'30px'
+                        paddingTop: '40px'
                     }}>
-                    <span style={{
-                        fontWeight: 'bold',
-                        fontSize: '26px'
-                    }}>Koszyk</span>
-                    <div
-                    style={{
-                        width: '100%',
-                        marginBottom:'10px',
-                        border: "1px solid #ccc", // Border to distinguish
-                        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)", // Subtle shadow
-                        borderRadius: "8px", // Rounded corners
-                        padding: "10px", // Padding inside the card
-                        backgroundColor: "#f9f9f9",
-                        display:'flex',
-                        justifyContent:"start",
-                    }}
-                    >   
-                        <div
+
+                    <div className="col-md-3"
+                        style={{
+                            marginLeft: '30%',
+                            marginRight: '30px'
+                        }}>
+                        <span style={{
+                            fontWeight: 'bold',
+                            fontSize: '26px'
+                        }}>Koszyk</span>
+                        {/* <div
                             style={{
+                                width: '100%',
+                                marginBottom: '10px',
+                                border: "1px solid #ccc",
+                                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)", 
+                                borderRadius: "8px", 
+                                padding: "10px", 
+                                backgroundColor: "#f9f9f9",
+                                display: 'flex',
+                                justifyContent: "start",
+                            }}
+                        >
+                            <div
+                                style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    marginRight: '10px',
+                                    marginLeft: '15px'
+                                }}>
+                                <Checkbox checked={selectedAll} onChange={(e) => setSelectedAll(e.checked)}></Checkbox>
+                            </div>
+
+                            <span style={{
+                                marginLeft: '5px',
                                 display: 'flex',
                                 alignItems: 'center',
-                                marginRight: '10px',
-                                marginLeft:'15px'
-                            }}>
-                            <Checkbox checked={selectedAll} onChange={(e) => setSelectedAll(e.checked)}></Checkbox>
-                        </div>
+                                marginRight: '10px'
+                            }}>Cały koszyk</span>
+                            <Dropdown placeholder='USUŃ' style={{ marginLeft: 'auto' }} options={[
+                                {
+                                    label: 'Wszystkie zaznaczone',
+                                    value: 'ALL_SELECTED',
+                                    onClick: (e) => {
+                                        console.log('yoo yoyo')
+                                    }
+                                },
+                                {
+                                    label: 'Wszystkie w koszyku',
+                                    value: 'ALL'
+                                },
+                            ]}
+                                onChange={(e) => {
+                                    const value = e.target.value;
+                                    if (value === 'ALL_SELECTED') {
 
-                        <span style={{
-                            marginLeft: '5px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            marginRight: '10px'
-                        }}>Cały koszyk</span>                 
-                    <Dropdown placeholder='USUŃ' style={{marginLeft:'auto'}}></Dropdown>       
-                    </div>
-                    {cart?.products?.map((x,index) => {
-                        return (
-                            <div style={{
-                                marginTop: index===0 ? '0px' : '12px'
-                            }}>
-                                <ProductCardContainer
-                                    selectedAll={selectedAll}
-                                    element={{
-                                        id: x.product.id,
-                                        name: x.product.name,
-                                        brand: x.product?.brand,
-                                        color: '',
-                                        price: x.product?.price,
-                                        quantity: x.quantity,
-                                        size: ''
-                                    }} /></div>
+                                        const idsToDelete = Array.from(selectedProducts)
+                                            .filter(([key, value]) => value === true)
+                                            .map(([key]) => key);
+                                        console.log(idsToDelete);
+                                        deleteProducts(idsToDelete)
+                                    }
+                                    if (value === 'ALL') {
 
-                        )
-                    })}
+                                    }
+                                }}
+
+                            ></Dropdown>
+                        </div> */}
+                        {cart?.products?.map((x, index) => {
+                            return (
+                                <div style={{
+                                    marginTop: index === 0 ? '0px' : '12px'
+                                }}>
+                                    <ProductCardContainer
+                                        selectedAll={selectedAll}
+                                        refresh={fetchData}
+                                        onSelectProduct={onSelectProduct}
+                                        element={{
+                                            id: x.product.id,
+                                            name: x.product.name,
+                                            brand: x.product?.brand,
+                                            color: '',
+                                            price: x.product?.price,
+                                            quantity: x.quantity,
+                                            size: ''
+                                        }} /></div>
+
+                            )
+                        })}
                     </div>
                     <div className='col-md-2'
                         style={{
                             backgroundColor: '#e8e8e8',
                             width: '15%',
-                            maxHeight:'200px'
+                            maxHeight: '200px'
                         }}>
                         <div className='row'>
                             <div style={{
@@ -174,7 +233,7 @@ const CartContainer = (props) => {
                                         fontSize: '20px'
 
                                     }}
-                                >{formatMoney(cart?.totalPrice)}
+                                >{formatMoney(totalPrice)}
                                 </span>
                             </div>
                             <div style={{
@@ -195,6 +254,41 @@ const CartContainer = (props) => {
                     </div>
                 </div>
             </div>
+            :
+            cart ?
+            <div className='row' style={{
+                display: 'flex',
+                justifyContent: 'center',
+                textAlign: 'center',
+                marginTop: '1%',
+            }}>
+                <img src='/empty-cart.jpg' style={{
+                    maxHeight: '300px',
+                    maxWidth: '350px'
+                }} />
+                <span style={{
+                    marginTop: '2%',
+                    fontWeight: 'bold',
+                    fontSize: '25px'
+                }}>Twój koszyk jest pusty!</span>
+                {!isLoggedIn ?
+                    <Button
+                        style={{
+                            width: '10%',
+                            marginTop: '1%'
+                        }}
+                        label='Zaloguj sie'
+                        onClick={()=>{
+                            navigate('/login')
+                        }}
+                        >
+                    </Button>
+                    :
+                    null
+                }
+            </div>
+            :null
+
     )
 };
 

@@ -57,6 +57,9 @@ const ProductsShowcaseComponent = (props) => {
     }
   ];
 
+  const formatMoney = (value) => {
+    return (value / 100).toFixed(2);
+  }
 
   const [hoverStatus, setHoverStatus] = useState({});
 
@@ -99,7 +102,7 @@ const ProductsShowcaseComponent = (props) => {
             {product.category}
           </div>
           <div className='row' style={{ display: 'flex', justifyContent: 'center', marginTop: '5%', color: 'gray' }}>
-            {product.price}
+            {formatMoney(product.price)}
           </div>
         </div>
       </div>

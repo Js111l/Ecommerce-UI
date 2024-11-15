@@ -172,4 +172,6 @@ export default class ProductService extends BaseService{
             return response;
         }); 
     }
+
+  
 }

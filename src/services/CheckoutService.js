@@ -24,6 +24,22 @@ export default class CheckoutService extends BaseService {
             return response;
         });
     }
+    
+    
+    deleteProducts(ids){
+        return fetch(this.url + `/user-checkout?productIds=${ids}`, {
+            method: 'DELETE',
+            credentials:'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response;
+        });
+    }
 
     setQuantity(productId, quantity) {
 

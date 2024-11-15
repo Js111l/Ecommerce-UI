@@ -52,9 +52,9 @@ const UserOrdersList = (props) => {
   }
 
   useEffect(() => {
-    // if(!isLoggedIn){
-    //   navigation('/login')
-    // }
+    if(!isLoggedIn){
+      navigation('/login')
+    }
     setCriteria(criteria)
     fetchData(criteria);
   }, []);
