@@ -90,8 +90,8 @@ const CategoryListContainer = (props) => {
     };
   
     fetchCategories();
-    fetchBrands();
-    fetchColors();
+    //fetchBrands();
+    //fetchColors();
   }, []);
   
 

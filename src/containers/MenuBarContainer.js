@@ -146,20 +146,44 @@ const MenuBarContainer = (props) => {
 
   const start = () => {
     return (
-      <div style={{}}>
-        <img
-          alt="logo"
-          src="https://primefaces.org/cdn/primereact/images/logo.png"
-          height="40"
-          className="mr-2"
-        />
+      <div className="row" style={{
+        display:'flex',
+        justifyContent:'center'
+      }}>
+        <div style={{
+          width:'fit-content'
+        }}>
+          {/* <span
+            // alt="logo"
+            // src="/logo.jpg"
+            // height="40"
+            // className="mr-2"
+            style={{
+              fontWeight: '600',
+              fontSize: "30px",
+              color: 'black',
+              fontFamily: 'Roboto'
+            }}
+          > */}
+            <img style={{
+              width: '50px',
+              height: '50px',
+              cursor: 'pointer'
+            }} src='/logo.jpg'
+              onClick={() => {
+                navigation("/");
+              }}></img>
+          {/* </span> */}
+        </div>
+     
         <div
           style={{
             display: "flex",
             justifyContent: "center",
           }}
         >
-          {parentCategories.map((parent) => {
+        
+          {parentCategories.map((parent, index) => {
             return (
               <a
                 href=""
@@ -169,7 +193,7 @@ const MenuBarContainer = (props) => {
               >
                 <span
                   onMouseEnter={(e) => {
-                    setActive(true);
+                    setActive([true, index]);
                   }}
                   style={{
                     color:'black',
@@ -178,7 +202,7 @@ const MenuBarContainer = (props) => {
                 >
                   {parent.label}
                 </span>
-               {active ? (
+               {active[0] && active[1]===index  ? (
               <div
                 style={{
                   position: "absolute",
@@ -190,7 +214,7 @@ const MenuBarContainer = (props) => {
               >
                 <div
                   onMouseLeave={(e) => {
-                    setActive(false);
+                    setActive([false, index]);
                   }}
                   style={{
                     listStyleType: "none",

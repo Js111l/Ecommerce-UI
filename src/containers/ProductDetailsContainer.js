@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Galleria } from 'primereact/galleria';
 import { Button } from "primereact/button";
 import { Dropdown } from "primereact/dropdown";
@@ -6,6 +6,7 @@ import CheckoutService from "../services/CheckoutService";
 import { useParams } from "react-router-dom";
 import AuthService from "../services/AuthService";
 import ProductService from "../services/ProductService";
+import CloseIcon from "@mui/icons-material/Close";
 
 const ProductDetailsContainer = (props) => {
     const [register, setRegister] = useState(false);
@@ -17,6 +18,10 @@ const ProductDetailsContainer = (props) => {
     const service = new ProductService()
     const { id } = useParams();
     const [quantity, setQuantity] = useState(1)
+    const galleria = useRef(null);
+    const [fullScreen, setFullScreenMode] = useState(false);
+    const [isZoomed, setZoomed] = useState(false)
+
 
     const fetchProduct = async () => {
         props.setLoading(true);
@@ -25,11 +30,12 @@ const ProductDetailsContainer = (props) => {
             const json = await response.json();
             setProduct(json);
             //TODO
-            const images = json.images?.map((imageModel) => ({
-                itemImageSrc: imageModel.url,
-                thumbnailImageSrc: imageModel.url,
-                alt: imageModel.description,
-                title: imageModel.title,
+            console.log(json,2137)
+            const images = json.imageUrls?.map((url) => ({
+                itemImageSrc: url,
+                thumbnailImageSrc: url,
+                // alt: imageModel.description,
+                // title: imageModel.title,
             }));
             
             setImages(images)
@@ -46,58 +52,76 @@ const ProductDetailsContainer = (props) => {
 
     const [position, setPosition] = useState("bottom");
 
-    const positionOptions = [
-        {
-            label: "Bottom",
-            value: "bottom",
-        },
-        {
-            label: "Top",
-            value: "top",
-        },
-        {
-            label: "Left",
-            value: "left",
-        },
-        {
-            label: "Right",
-            value: "right",
-        },
-    ];
+  
     const responsiveOptions = [
         {
-            breakpoint: "991px",
-            numVisible: 4,
+            breakpoint: '1500px',
+            numVisible: 5
         },
         {
-            breakpoint: "767px",
-            numVisible: 3,
+            breakpoint: '1024px',
+            numVisible: 3
         },
         {
-            breakpoint: "575px",
-            numVisible: 1,
+            breakpoint: '768px',
+            numVisible: 2
         },
+        {
+            breakpoint: '560px',
+            numVisible: 1
+        }
     ];
+
 
     const itemTemplate = (item) => {
         return (
             <img
                 src={item.itemImageSrc}
                 alt={item.alt}
-                style={{ width: "100%", display: "block" }}
+                style={{
+                    width: '50%',
+                    display: "block",
+                    cursor: 'pointer',
+                }}
+                onClick={(e) => {
+                    galleria.current.show()
+                    setZoomed(false)
+                    setFullScreenMode(true)
+                }}
             />
-        );
-    };
+        )
+    }
+
+    
+    const fullScreenTemplate = (item) =>{
+
+        return (
+            <img
+                src={item.itemImageSrc}
+                alt={item.alt}
+                className={isZoomed ? 'zoomed' : ''}
+                style={{
+                    width:isZoomed ? '140%' : '70%',
+                    display: "block",
+                    cursor: isZoomed ? 'zoom-out' : 'zoom-in'
+                }}
+                onClick={(e) => {
+                    setZoomed(!isZoomed)
+                }}
+            />
+        )
+    }
 
     const thumbnailTemplate = (item) => {
         return (
             <img
                 src={item.thumbnailImageSrc}
                 alt={item.alt}
-                style={{ width: "100%", display: "block" }}
+                style={{ width: "110px", display: "block" }}
             />
-        );
-    };
+        )
+    }
+
 
     const addProduct = async () => {
         props.setLoading(true)
@@ -109,24 +133,74 @@ const ProductDetailsContainer = (props) => {
         fetchProduct()
         props.setLoading(false)
     }
+    
+
+    const renderImages = () => {
+        const resultArray = [];
+        for (let i = 0; i < images.length; i += 2) {
+            const firstElement = images[i];
+            const secondElement = i + 1 < images.length ? images[i + 1] : null;
+
+            resultArray.push(
+                <div
+                    key={i} // Added unique key for each div
+                    className="col"
+                    style={{
+                        display: 'flex',
+                        gap: '2px',
+                        justifyContent: 'start',
+                        marginTop:'1%',
+                        gap:'1%'
+                    }}
+                >
+                    {itemTemplate(firstElement)}
+                    {secondElement && itemTemplate(secondElement)}
+                </div>
+            );
+        }
+        return resultArray;
+    };
+
 
     return (
         <div className="content-container">
+            <Galleria
+                ref={galleria}
+                value={images}
+                responsiveOptions={responsiveOptions}
+                numVisible={9}
+                style={{ maxWidth: '50%' }}
+                circular
+                fullScreen
+                showItemNavigators
+                item={fullScreenTemplate}
+                thumbnail={thumbnailTemplate}
+                thumbnailsPosition={'left'}
+                closeIcon={(e) => {
+                    return (
+                        <CloseIcon
+                            onClick={() => {
+                                setFullScreenMode(false)
+                                setZoomed(false)
+                                galleria.current.hide()
+                            }}
+                            style={{
+                                fontSize: "36px",
+                                cursor: "pointer",
+                            }}
+                        />
+                    );
+                }}
+            /> 
             <div className="row">
-                <div className="col">
-                    <Galleria
-                        style={{
-                            maxWidth: "440px",
-                            marginLeft: "190px",
-                            marginTop: "40px",
-                        }}
-                        value={images}
-                        responsiveOptions={responsiveOptions}
-                        numVisible={5}
-                        item={itemTemplate}
-                        thumbnailsPosition={position}
-                        thumbnail={thumbnailTemplate}
-                    />
+                <div className="col" style={{
+                    cursor:'pointer'
+                }}
+                onClick={(e)=>{
+                    setFullScreenMode(true)
+                }}
+                >
+                    {images ? renderImages(images) : null}
                 </div>
                 <div className="col" style={{ marginLeft: "80px" }}>
                     <label style={{ marginTop: "40px" }}>{product?.name}</label>
