@@ -202,3 +202,11 @@ hr.rounded {
 .p-treenode-children ul{
   padding-left: 0rem;
 }
+
+
+
+
+.zoomed img {
+  max-width: 200%;
+  transition: transform 0.3s ease;
+}

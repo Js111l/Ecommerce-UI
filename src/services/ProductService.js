@@ -172,6 +172,21 @@ export default class ProductService extends BaseService{
             return response;
         }); 
     }
-
+    getBannerData(){
+        return fetch(this.url +  `/banner-data`,//`/products/categories/parents/options?checkedPath=${path}`,
+            {
+           method: 'GET',
+           credentials: 'include',
+           headers: {
+               'Content-Type': 'application/json',
+           }
+       })
+       .then(response => {
+           if (!response.ok) {
+               throw new Error('Network response was not ok');
+           }
+           return response;
+       }); 
+    }
   
 }

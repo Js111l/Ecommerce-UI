@@ -159,7 +159,8 @@ const CartContainer = (props) => {
                                             color: '',
                                             price: x.product?.price,
                                             quantity: x.quantity,
-                                            size: ''
+                                            size: '',
+                                            imageUrl: x.product?.imageUrl
                                         }} /></div>
 
                             )

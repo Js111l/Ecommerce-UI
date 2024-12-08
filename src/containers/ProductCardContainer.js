@@ -51,7 +51,6 @@ const ProductCardContainer = (props) => {
     const formatMoney = (value) => {
         return (value / 100).toFixed(2);
     }
-      
     return (
         <div className='row'
         style={{
@@ -92,36 +91,40 @@ const ProductCardContainer = (props) => {
                         }}>
                         <img
                             className="w-9 shadow-2 border-round"
-                            src={`https://primefaces.org/cdn/primereact/images/galleria/galleria3s.jpg`}
-                            alt={"product.name"}
+                            //src={element?.imageUrl} TODO
+                            src={element?.imageUrl}
+                            alt={element?.name}
+                            style={{
+                                width:'100px',
+                                height: '100px'
+                            }}
                         />
                     </div>
                     <div style={{
                         fontSize: '12px',
                         width:'100%'
                     }}>
-                        <div className='col-md-2' 
+                        <span>{element?.name}</span>
+                        <div
                             style={{
                                 display: 'flex',
-                                justifyContent: 'start',
-                                width:"100%"
+                                justifyContent: 'end',
+                                width: "100%",
+                                gap:'10px'
                             }}>
-                            <span>{element?.name}</span>
                             <Dropdown
-                            style={{
-                                marginLeft: 'auto'
-                            }}
-                            disabled={viewMode[0] === 'VIEW'}
-                            value={quantity}
-                            options={quantityOptions}
-                            onChange={(e)=>{
-                                updateQuantity(e)
-                            }}
+                                style={{
+                                }}
+                                disabled={viewMode[0] === 'VIEW'}
+                                value={quantity}
+                                options={quantityOptions}
+                                onChange={(e) => {
+                                    updateQuantity(e)
+                                }}
                             >
                             </Dropdown>
                             {viewMode[0] === 'VIEW' ? null :
                                 <Button style={{
-                                    marginLeft: 'auto'
                                 }}
                                     icon="pi pi-times"
                                     onClick={(e) => {

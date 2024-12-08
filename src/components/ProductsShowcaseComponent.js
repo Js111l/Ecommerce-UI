@@ -21,8 +21,23 @@ const ProductsShowcaseComponent = (props) => {
   const {isLoggedIn} = useAuth();  const [mainBanerItems, setMainBanerItems] = useState([])
   const service = new ProductService();
   const [hovered, setHovered] = useState({})
+  const [bannerImgs, setBannerImgs]=useState([])
+
 
   useEffect(() => {
+    const fetchBannerImgs= async ()=>{
+      props.setLoading(true)
+      try {
+        const response = await service.getBannerData();
+        const json = await response.json();
+        setBannerImgs(json);
+        props.setLoading(false);
+      } catch (error) {
+        props.setLoading(false);
+        console.log("error", error);
+      }
+    }
+
     const fetchData = async () => {
       props.setLoading(true)
       try {
@@ -35,8 +50,9 @@ const ProductsShowcaseComponent = (props) => {
         console.log("error", error);
       }
     };
+      fetchBannerImgs();
       fetchData();
-    
+  
   }, []);
 
   const responsiveOptions = [
@@ -114,21 +130,20 @@ const ProductsShowcaseComponent = (props) => {
 
   ];
 
-  const itemTemplate = (product, index) => {
+  const itemTemplate = (bannerItem, index) => {
     return (
       <div
         style={{
-          //width: '100%'
         }}>
         <div className="mb-3">
-          <img src={hoverStatus?.status && hoverStatus?.id === index
-            ? product.detailUrl : product.imageUrl} alt={product.name} style={{
+          <img src={bannerItem.imageUrl}  style={{
               width: '100%',
               height: '600px',
               cursor: 'pointer',
               marginTop: '5%'
             }}
             onClick={() => {
+              //TODO
               //navigation(`/product/details/${product.id}`)
             }}
             onMouseEnter={() => {
@@ -161,7 +176,7 @@ const ProductsShowcaseComponent = (props) => {
         <div className='row'>
           <div> 
             <div>
-              <Carousel value={allProducts.slice(0, 4)} numVisible={1} numScroll={1} responsiveOptions={responsiveOptions2} itemTemplate={(x) => itemTemplate(x, x.id)} />
+              <Carousel value={bannerImgs.slice(0, 4)} numVisible={1} numScroll={1} responsiveOptions={responsiveOptions2} itemTemplate={(x) => itemTemplate(x, x.id)} />
             </div>
           </div>
         </div>
