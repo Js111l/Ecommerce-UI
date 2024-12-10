@@ -17,6 +17,7 @@ const CartContainer = (props) => {
     const [selectedProducts, setSelectedProducts] = useState(new Map())
     const [totalPrice, setTotalPrice] = useState({})
     const checkoutService = new CheckoutService()
+    const [currency, setCurrency] =useState(undefined)
 
     const fetchData = async () => {
         //TODO 
@@ -38,6 +39,7 @@ const CartContainer = (props) => {
     useEffect(() => {
 
         fetchData();
+        setCurrency('zł')
     }, []);
 
 
@@ -47,8 +49,7 @@ const CartContainer = (props) => {
         console.log(selectedProducts)
     }
     const formatMoney = (value) => {
-        //return (value / 100).toFixed(2);
-        return value
+        return `${value} ${currency}`
     }
 
     const deleteProducts = async (ids) => {

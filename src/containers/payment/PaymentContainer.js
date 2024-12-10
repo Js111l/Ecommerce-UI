@@ -121,6 +121,7 @@ const PaymentContainer = (props) => {
         orderId={orderId}
         uuid={UUID}
         cart={cart}
+        currency={'zł'} //TODO hardcoded currency
       />
     </Elements> : null
   )

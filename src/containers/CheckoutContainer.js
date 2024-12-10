@@ -28,7 +28,7 @@ const CheckoutContainer = (props) => {
     const productService = new ProductService();
     const checkoutService = new CheckoutService()
     const [cart, setCart] = useState(undefined)
-
+    const [currency, setCurrency]=useState(undefined)
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -103,6 +103,7 @@ const CheckoutContainer = (props) => {
             const json = await response.json();
 
             setCart(json);
+            setCurrency('zł') //TODO hardcoded currency
             props.setLoading(false);
         } catch (error) {
            props.setLoading(false)
@@ -115,7 +116,7 @@ const CheckoutContainer = (props) => {
     }, [])
 
     const formatMoney=(value)=>{
-        return (value / 100).toFixed(2);
+        return `${(value / 100).toFixed(2)} ${currency}`
     }
 
     return (

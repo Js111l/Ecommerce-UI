@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom/dist/umd/react-router-dom.developm
 import EnumService from "../services/EnumService";
 import { Button } from "primereact/button";
 import { TreeSelect } from 'primereact/treeselect';
+import { useAuth } from "./auth/AuthContext";
 
 const CategoryListContainer = (props) => {
   const [loading, setLoading] = useState(true);
@@ -15,15 +16,15 @@ const CategoryListContainer = (props) => {
   const [rows, setRows] = useState(10);
   const [totalRecords, setTotalRecords] = useState(undefined)
   const navigation = useNavigate()
-  const [hoveredLikeButton,setHoveredLikeButton]=useState({})
+  const [hoveredLikeButton, setHoveredLikeButton] = useState({})
 
   const [nodes, setNodes] = useState(null);
-  const [categoriesOptions, setCategoriesOptions]=useState([])
-  const [categoriesSelected,setCategoriesSelected]=useState({})
-  const [fabricOptions,setFabricOptions]= useState([])
-  const [sleeveLengthOptions, setSleeveLengthOptions]=useState([])
-  const [styleOptions,setStyleOptions]=useState([])
-
+  const [categoriesOptions, setCategoriesOptions] = useState([])
+  const [categoriesSelected, setCategoriesSelected] = useState({})
+  const [fabricOptions, setFabricOptions] = useState([])
+  const [sleeveLengthOptions, setSleeveLengthOptions] = useState([])
+  const [styleOptions, setStyleOptions] = useState([])
+  const [currency, setCurrency] = useState(undefined)
 
   const [criteria, setCriteria] = useState({
     page: first,
@@ -33,13 +34,15 @@ const CategoryListContainer = (props) => {
     categories: undefined,
     sortType: ''
   });
-  const [hoverStatus,setHoverStatus]=useState({});
+  const [hoverStatus, setHoverStatus] = useState({});
 
   const service = new ProductService();
   const enumService = new EnumService();
-  const [sortTypeOptions,setSortTypeOptions]=useState([])
-  const [brandOtions, setBrandsOptions]=useState([])
-  const [colorsOptions,setColorsOptions]=useState([])
+  const [sortTypeOptions, setSortTypeOptions] = useState([])
+  const [brandOtions, setBrandsOptions] = useState([])
+  const [colorsOptions, setColorsOptions] = useState([])
+  const { isLoggedIn } = useAuth();
+
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -47,27 +50,27 @@ const CategoryListContainer = (props) => {
         const queryParameters = new URLSearchParams(window.location.search);
         const categoriesParams = queryParameters.get("categories");
         criteria.categories = categoriesParams;
-  
+
         const categories = await service.getAllCategories();
         const categoriesJson = await categories.json();
         setCategoriesOptions(categoriesJson);
-  
+
         const obj = {};
         categoriesJson.forEach((x) => check(x, categoriesParams, obj));
         setCategoriesSelected(obj);
-  
+
         let arr = [];
         Object.keys(obj).forEach((key) => {
           if (obj[key].checked) arr.push(key);
         });
         criteria.categories = arr;
-  
+
         setCriteria({ ...criteria });
       } catch (err) {
         console.log(err);
       }
     };
-  
+
 
     const fetchBrands = async () => {
       try {
@@ -78,7 +81,7 @@ const CategoryListContainer = (props) => {
         console.log(err);
       }
     };
-  
+
     const fetchColors = async () => {
       try {
         const colors = await service.getAllColors();
@@ -88,12 +91,12 @@ const CategoryListContainer = (props) => {
         console.log(err);
       }
     };
-  
-    fetchCategories();
+
+    //fetchCategories();
     //fetchBrands();
     //fetchColors();
   }, []);
-  
+
 
 
   const fetchData = async (criteria) => {
@@ -103,22 +106,22 @@ const CategoryListContainer = (props) => {
         const sortTypeResponse = await enumService.getValuesByClassName('SortType');
         const sortTypeJson = await sortTypeResponse.json();
         setSortTypeOptions(sortTypeJson);
-    
+
         // Fetch SleeveLength options
         const sleeveLengthResponse = await enumService.getValuesByClassName('SleeveLength');
         const sleeveLengthJson = await sleeveLengthResponse.json();
         setSleeveLengthOptions(sleeveLengthJson);
-    
+
         // Fetch Style options
         const styleResponse = await enumService.getValuesByClassName('Style');
         const styleJson = await styleResponse.json();
         setStyleOptions(styleJson);
-    
+
         // Fetch Fabric options
         const fabricResponse = await enumService.getValuesByClassName('Fabric');
         const fabricJson = await fabricResponse.json();
         setFabricOptions(fabricJson);
-        
+
       } catch (err) {
         console.log(err);
       }
@@ -129,7 +132,7 @@ const CategoryListContainer = (props) => {
       const queryParameters = new URLSearchParams(window.location.search)
       const categories = queryParameters.get("categories")
       criteria.categories = categories;
-      
+
       const response = await service.getList(criteria);
 
       const json = await response.json();
@@ -138,7 +141,8 @@ const CategoryListContainer = (props) => {
       setRows(json.pageable.pageSize)
       setFirst(json.pageable.offset)
 
-      fetchEnums()
+      //fetchEnums()
+      setCurrency('zł') //TODO hardcoded value for now
 
       props.setLoading(false);
     } catch (error) {
@@ -152,7 +156,7 @@ const CategoryListContainer = (props) => {
     }
 
     if (ids.includes(model.key)) {
-      console.log(ids, model,obj)
+      console.log(ids, model, obj)
       obj[model.key] = {
         checked: true,
         partialChecked: false
@@ -171,12 +175,12 @@ const CategoryListContainer = (props) => {
     const category = queryParameters.get("category")
 
     criteria.category = category;
-    
+
     setCriteria(criteria)
     fetchData(criteria);
   }, [criteria]);
 
-  
+
   const getSeverity = (product) => {
     switch (product.inventoryStatus) {
       case 'INSTOCK':
@@ -194,7 +198,7 @@ const CategoryListContainer = (props) => {
   };
 
   const formatMoney = (value) => {
-    return (value / 100).toFixed(2);
+    return `${(value / 100).toFixed(2)} ${currency}`;
   }
 
   const renderFilters = () => {
@@ -204,13 +208,13 @@ const CategoryListContainer = (props) => {
           className="row"
           style={{ marginLeft: "15%", marginTop: "5%", maxWidth: "100%" }}
         >
-           <TreeSelect
+          <TreeSelect
             value={categoriesSelected}
             style={{
               width: "20%",
               marginRight: "20px",
             }}
-            valueTemplate={(e)=>{
+            valueTemplate={(e) => {
               return `Kategoria (2)`
             }}
             onChange={(e) => {
@@ -235,9 +239,9 @@ const CategoryListContainer = (props) => {
                       if (categoriesSelected[key].checked)
                         ids.push(key)
                     })
-                    criteria.categories=ids;
+                    criteria.categories = ids;
                     setCriteria(criteria)
-                    
+
                     navigation('/category/list?categories=' + ids)
                     fetchData(criteria)
                   }}
@@ -245,7 +249,7 @@ const CategoryListContainer = (props) => {
                 </Button>
               )
             }}
-            >
+          >
           </TreeSelect>
           <Dropdown
             placeholder="Sortuj"
@@ -327,7 +331,7 @@ const CategoryListContainer = (props) => {
     fetchData(criteria)
   };
 
-  
+
   const getMappedProducts = (products) => {
     let result = []
     for (let i = 0; i < products.length; i += 3) {
@@ -335,112 +339,121 @@ const CategoryListContainer = (props) => {
       result.push(
         <div className="row">
           {products.slice(i, i + 3).map((product) => {
-          return (
-            <Card
+            return (
+              <Card
                 className="col-md-4"
                 style={{
                   //width: "600px",
                 }}
-                onClick={(e) => {
-                  navigation(`/product/details/${product?.id}`)
-                }}
               >
                 <div
                   style={{
-                    minHeight: '500px',   // Set the minimum height
-                    height: '100%'     
+                    minHeight: '500px',
+                    height: '100%'
                   }}
                 >
                   <div>
-                  <div style={{
-                    display:'flex',
-                    justifyContent:'start',
-                    position:'absolute',
-                    marginTop:'25px'
-                  }}>
-                    
-                    <Button
-                      icon={"pi pi-heart"}
-                      style={{
-                        background:'white',
-                        border:'none',
-                        color: hoveredLikeButton?.status && hoveredLikeButton?.id === product.id 
-                        ? 'red' : 'black'
-                      }}
-                      onMouseEnter={() => setHoveredLikeButton({
-                        id: product.id,
-                        status: true
-                      })}
-                      onMouseLeave={() => setHoveredLikeButton({
-                        id: product.id,
-                        status: false
-                      })}
-                    >
-                      
-                    </Button>
+                    <div style={{
+                      display: 'flex',
+                      justifyContent: 'start',
+                      position: 'absolute',
+                      marginTop: '25px'
+                    }}>
+
+                      <Button
+                        icon={"pi pi-heart"}
+                        style={{
+                          background: 'white',
+                          border: 'none',
+                          color: hoveredLikeButton?.status && hoveredLikeButton?.id === product.id
+                            ? 'red' : 'black'
+                        }}
+                        onMouseEnter={() => {
+                          setHoveredLikeButton({
+                            id: product.id,
+                            status: true
+                          })
+                        }}
+                        onMouseLeave={() => setHoveredLikeButton({
+                          id: product.id,
+                          status: false
+                        })}
+                        onClick={() => {
+                          if (isLoggedIn) {
+                            service.addToFavorite(Number(product?.id))
+                            //TODO komunikat o sukcesie
+                          } else {
+                            navigation('/login')
+                          }
+                        }}
+                      >
+
+                      </Button>
                     </div>
-                  <img
-                    src={hoverStatus.status && product.id === hoverStatus.id ? product?.detailUrl : product?.imageUrl}
-                    alt={product?.name}
-                    style={{
+                    <img
+                      src={hoverStatus.status && product.id === hoverStatus.id ? product?.detailUrl : product?.imageUrl}
+                      alt={product?.name}
+                      style={{
                         width: "100%",
                         height: "100%",
                         cursor: "pointer",
                         marginTop: "5%",
                       }}
-                      onClick={() => { }}
-                    onMouseEnter={() => {
-                      setHoverStatus({
-                        status: true,
-                        id: product.id,
-                      });
-                    }}
-                    onMouseLeave={() => {
-                      setHoverStatus({
-                        status: false,
-                        id: product.id,
-                      });
-                    }}
-                  />
+                      onClick={() => {
+                        navigation(`/product/details/${product?.id}`)
+                      }}
+                      onMouseEnter={() => {
+                        setHoverStatus({
+                          status: true,
+                          id: product.id,
+                        });
+                      }}
+                      onMouseLeave={() => {
+                        setHoverStatus({
+                          status: false,
+                          id: product.id,
+                        });
+                      }}
+                    />
+                  </div>
+
+                  <div className="container">
+                    <div
+                      className="row"
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        marginTop: '10%',
+                      }}
+                    >
+                      {product?.name + product?.id}
+                    </div>
+                    <div
+                      className="row"
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        marginTop: '5%',
+                        color: 'gray',
+                      }}
+                    >
+                      {product?.category}
+                    </div>
+                    <div
+                      className="row"
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        marginTop: '5%',
+                        color: 'gray',
+                      }}
+                    >
+                      {formatMoney(product?.price)}
+                    </div>
+                  </div>
                 </div>
-          
-                <div className="container">
-                  <div
-                    className="row"
-                    style={{
-                      display: 'flex',
-                      justifyContent: 'center',
-                      marginTop: '10%',
-                    }}
-                  >
-                    {product?.name + product?.id}
-                  </div>
-                  <div
-                    className="row"
-                    style={{
-                      display: 'flex',
-                      justifyContent: 'center',
-                      marginTop: '5%',
-                      color: 'gray',
-                    }}
-                  >
-                    {product?.category}
-                  </div>
-                  <div
-                    className="row"
-                    style={{
-                      display: 'flex',
-                      justifyContent: 'center',
-                      marginTop: '5%',
-                      color: 'gray',
-                    }}
-                  >
-                    {formatMoney(product?.price)}
-                  </div>
-                </div>
-              </div>
-            </Card>
-          );
+              </Card>
+            );
           })}
         </div>
       )
@@ -452,7 +465,7 @@ const CategoryListContainer = (props) => {
   return (
     (
       <div style={{
-        marginLeft:'5%',
+        marginLeft: '5%',
         marginRight: '5%'
       }}>
         <div style={{ maxWidth: '100%' }}>

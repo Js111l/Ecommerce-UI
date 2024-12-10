@@ -14,10 +14,12 @@ const ProductCardContainer = (props) => {
     const refresh = useState(props.refresh)
     const selectedProducts = useState(props.selectedProducts)
     const viewMode = useState(props.viewMode)
+    const [currency, setCurrency]=useState(undefined)  
+
 
     useEffect(() => {
         setChecked(props.selectedAll)
-        
+        setCurrency('zł') //TODO hardcoded currency
         return () => {
         };
       }, [props.selectedAll]); 
@@ -39,6 +41,7 @@ const ProductCardContainer = (props) => {
             const resp = await service.setQuantity(element.id, e.target.value)
             await resp
             setQuantity(e.target.value)
+        
             props.refresh()
         } catch (err) {
             console.log(err)
@@ -49,8 +52,9 @@ const ProductCardContainer = (props) => {
     const service=new CheckoutService()
 
     const formatMoney = (value) => {
-        return (value / 100).toFixed(2);
+        return `${(value / 100).toFixed(2)} ${currency}`
     }
+
     return (
         <div className='row'
         style={{

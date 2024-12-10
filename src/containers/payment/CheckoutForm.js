@@ -11,6 +11,7 @@ const CheckoutForm = (props) => {
   const elements = useElements();
   const service = new FinancialTransactionsService();
   const cart = useState(1308)
+  const currency = useState(props.currency)
   
   const handleSubmit = async (event) => {
     // We don't want to let default form submission happen here,
@@ -43,7 +44,7 @@ const CheckoutForm = (props) => {
   };
 
   const formatMoney = (value) => {
-    return (value / 100).toFixed(2);
+    return `${(value / 100).toFixed(2)} ${currency}`
   }
 
   return (

@@ -9,20 +9,19 @@ import Toggle from 'react-toggle';
 import "react-toggle/style.css" // for ES6 modules
 import ProductService from '../services/ProductService';
 import { Card } from 'primereact/card';
-import NewsLetterComponent from './NewsLetterComponent';
 import { useAuth } from '../containers/auth/AuthContext';
+import { Button } from 'primereact/button';
 
 
 const ProductsShowcaseComponent = (props) => {
   const navigation = useNavigate();
   const [allProducts, setItems] = useState([]);
   const [toggle, setToggle] = useState(false);
-  const [loadData, setLoadData] = useState(false);
-  const {isLoggedIn} = useAuth();  const [mainBanerItems, setMainBanerItems] = useState([])
   const service = new ProductService();
-  const [hovered, setHovered] = useState({})
   const [bannerImgs, setBannerImgs]=useState([])
-
+  const [hoveredLikeButton,setHoveredLikeButton]=useState({})
+  const {isLoggedIn} = useAuth();
+  const [currency, setCurrency]=useState(undefined)
 
   useEffect(() => {
     const fetchBannerImgs= async ()=>{
@@ -52,7 +51,7 @@ const ProductsShowcaseComponent = (props) => {
     };
       fetchBannerImgs();
       fetchData();
-  
+      setCurrency('zł')//TODO hardcoded currency
   }, []);
 
   const responsiveOptions = [
@@ -74,7 +73,7 @@ const ProductsShowcaseComponent = (props) => {
   ];
 
   const formatMoney = (value) => {
-    return (value / 100).toFixed(2);
+    return `${(value / 100).toFixed(2)} ${currency}`;
   }
 
   const [hoverStatus, setHoverStatus] = useState({});
@@ -86,6 +85,44 @@ const ProductsShowcaseComponent = (props) => {
           width: '300px'
         }}>
         <div className="mb-3">
+          <div style={{
+            display: 'flex',
+            justifyContent: 'start',
+            position: 'absolute',
+            marginTop: '25px'
+          }}>
+
+            <Button
+              icon={"pi pi-heart"}
+              style={{
+                background: 'white',
+                border: 'none',
+                color: hoveredLikeButton?.status && hoveredLikeButton?.id === product.id
+                  ? 'red' : 'black'
+              }}
+              onMouseEnter={() => {
+                setHoveredLikeButton({
+                  id: product.id,
+                  status: true
+                })
+              }}
+              onMouseLeave={() => setHoveredLikeButton({
+                id: product.id,
+                status: false
+              })}
+              onClick={(e) => {
+                if (isLoggedIn) {
+                  service.addToFavorite(Number(product?.id))
+                  //TODO komuniikat o sukcesie
+                } else {
+                  navigation('/login')
+                
+                }
+              }}
+            >
+
+            </Button>
+          </div>
           <img src={hoverStatus?.status && hoverStatus?.id === index
             ? product.detailUrl : product.imageUrl} alt={product.name} style={{
               width: '300px',
