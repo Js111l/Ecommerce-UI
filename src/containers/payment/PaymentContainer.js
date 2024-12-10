@@ -25,7 +25,7 @@ const PaymentContainer = (props) => {
   const [UUID,setUUID] = useState(undefined)
   const hasFetchedData = useRef(false); 
   const [cart, setCart]=useState(undefined)
-
+  const [clientEmail, setEmail]=useState(undefined)
 
   const checkoutService = new CheckoutService()
   const productService = new ProductService()
@@ -69,12 +69,15 @@ const PaymentContainer = (props) => {
   
     const fetchData = async () => {
       try {
-   
-        const uuid = sessionStorage.getItem(id) // id -> uuid
+        const array = sessionStorage.getItem(id).split(',')
+        const uuid = array[0] // id -> uuid
+        console.log(array)
 
         const verifyResult = await authService.verifyPayToken();
         await verifyResult;
-  
+      
+        setEmail(array[1]);
+
         props.setLoading(true);
         props.setMenuBar(false);
   
@@ -84,6 +87,7 @@ const PaymentContainer = (props) => {
           setOrderId(response.orderId);         
           setUUID(uuid);
         }
+      
 
         window.onbeforeunload = handleBeforeUnload;
         props.setLoading(false);
@@ -111,18 +115,30 @@ const PaymentContainer = (props) => {
   return (
     secret && cart
     ?
-    <Elements stripe={stripePromise} options={{
-      clientSecret: secret,
-      appearance: {
-        theme: 'stripe'
-      }
-    }}>
-      <CheckoutForm
-        orderId={orderId}
-        uuid={UUID}
-        cart={cart}
-      />
-    </Elements> : null
+      <div style={{
+        backgroundImage: 'url(/p_back.jpg)',
+        height:'100vh'
+      }}>
+        <Elements stripe={stripePromise} options={{
+          clientSecret: secret,
+          appearance: {
+            theme: 'stripe'
+          }
+        }}>
+          <div style={{
+            paddingTop:'5%'
+          }}>
+          <CheckoutForm
+            orderId={orderId}
+            uuid={UUID}
+            cart={cart}
+            clientEmail={clientEmail}
+          />
+          </div>
+      
+        </Elements>    
+      </div>
+  : null
   )
 
 };

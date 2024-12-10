@@ -84,8 +84,8 @@ const CheckoutContainer = (props) => {
 
             const uuid = uuidv4()
             const tokenResp = await fetchSecret(uuid) //zapisz zamowienie, utworz payment intent, zapisz w bazie klucz: uuid wartosc: client secret
-            sessionStorage.setItem(uuid, tokenResp.intentId) //intent id to klucz do client secret z bazy 
-            
+            sessionStorage.setItem(uuid, [tokenResp.intentId, formData.email]) //intent id to klucz do client secret z bazy 
+      
             const response = await authService.getPaymentToken(uuid)
             await response
             navigate(`/payment/${uuid}`) // w payment container secret bedzie wyslany z backendu, kluczem jest ten intentId. Autoryzacja operacji tym 1-razowym tokenem.
