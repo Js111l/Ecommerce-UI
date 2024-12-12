@@ -6,6 +6,7 @@ export default class AuthService extends BaseService {
     constructor() {
         super()
         this.url = "http://localhost:8081/auth"
+        this.userUrl = "http://localhost:8081/user"
     }
 
     isLoggedIn() {
@@ -135,6 +136,38 @@ export default class AuthService extends BaseService {
     }
     getUserData(){
         return fetch(this.url + `/session/user`, {
+            method: 'GET',
+            credentials:"include",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response;
+        });
+    }
+
+    getCurrentUserAddresses(){//MOVE TO USER SERVICE
+        return fetch(this.userUrl + `/addresses`, {
+            method: 'GET',
+            credentials:"include",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response;
+        });
+    }
+
+    getCurrentUserDefaultAddresses(){//MOVE TO USER SERVICE
+        return fetch(this.userUrl + `/default-addresses`, {
             method: 'GET',
             credentials:"include",
             headers: {

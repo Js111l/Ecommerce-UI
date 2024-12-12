@@ -93,7 +93,7 @@ const UserDetailsContainer = (props) => {
 
                 <span>Zamówienia</span>
             </div>
-            {/* <div
+            <div
                 className='row'
                 style={{
                     marginTop: '5%',
@@ -108,7 +108,7 @@ const UserDetailsContainer = (props) => {
             >
 
                 <span>Adresy</span>
-            </div> */}
+            </div>
             <div
                 className='row'
                 style={{
