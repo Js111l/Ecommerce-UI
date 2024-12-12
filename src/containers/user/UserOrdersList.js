@@ -151,103 +151,104 @@ const UserOrdersList = (props) => {
   };
 
 
+
   const sidebar = (
     <div className='col-md-2'>
-      <div
-        className='row'
-        style={{
-          marginTop: '5%',
-          cursor: 'pointer',
-          textDecoration: hover.id === 0 && hover.status ? 'underline' : ''
-        }}
-        onMouseEnter={() => setHover({ id: 0, status: true })}
-        onMouseLeave={() => setHover({ id: 0, status: false })}
-        onClick={(e) => {
-          navigation('/user/account')
-        }}
-      >
-        <span>Moje dane</span>
-      </div>
-      {/* <div
-        className='row'
-        style={{
-          marginTop: '5%',
-          cursor: 'pointer',
-          textDecoration: hover.id === 1 && hover.status ? 'underline' : ''
-        }}
-        onMouseEnter={() => setHover({ id: 1, status: true })}
-        onMouseLeave={() => setHover({ id: 1, status: false })}
-        onClick={(e) => {
-          navigation('/user/returns')
-        }}
-      >
-        <span>Zwroty</span>
-      </div>
-      <div
-        className='row'
-        style={{
-          marginTop: '5%',
-          cursor: 'pointer',
-          textDecoration: hover.id === 2 && hover.status ? 'underline' : ''
-        }}
-        onMouseEnter={() => setHover({ id: 2, status: true })}
-        onMouseLeave={() => setHover({ id: 2, status: false })}
-        onClick={(e) => {
-          navigation('/user/return-form')
-        }}
-      >
+        <div
+            className='row'
+            style={{
+                marginTop: '5%',
+                cursor: 'pointer',
+                textDecoration: hover.id === 0 && hover.status ? 'underline' : ''
+            }}
+            onMouseEnter={() => setHover({ id: 0, status: true })}
+            onMouseLeave={() => setHover({ id: 0, status: false })}
+            onClick={(e) => {
+                navigation('/user/account')
+            }}
+        >
+            <span>Moje dane</span>
+        </div>
+        {/* <div
+            className='row'
+            style={{
+                marginTop: '5%',
+                cursor: 'pointer',
+                textDecoration: hover.id === 1 && hover.status ? 'underline' : ''
+            }}
+            onMouseEnter={() => setHover({ id: 1, status: true })}
+            onMouseLeave={() => setHover({ id: 1, status: false })}
+            onClick={(e) => {
+                navigation('/user/returns')
+            }}
+        >
+            <span>Zwroty</span>
+        </div>
+        <div
+            className='row'
+            style={{
+                marginTop: '5%',
+                cursor: 'pointer',
+                textDecoration: hover.id === 2 && hover.status ? 'underline' : ''
+            }}
+            onMouseEnter={() => setHover({ id: 2, status: true })}
+            onMouseLeave={() => setHover({ id: 2, status: false })}
+            onClick={(e) => {
+                navigation('/user/return-form')
+            }}
+        >
 
-        <span>Wykonaj zwrot</span>
-      </div> */}
-      <div
-        className='row'
-        style={{
-          marginTop: '5%',
-          cursor: 'pointer',
-          textDecoration: hover.id === 3 && hover.status ? 'underline' : ''
-        }}
-        onMouseEnter={() => setHover({ id: 3, status: true })}
-        onMouseLeave={() => setHover({ id: 3, status: false })}
-        onClick={(e) => {
-          navigation('/user/orders')
-        }}
-      >
+            <span>Wykonaj zwrot</span>
+        </div> */}
+        <div
+            className='row'
+            style={{
+                marginTop: '5%',
+                cursor: 'pointer',
+                textDecoration: hover.id === 3 && hover.status ? 'underline' : ''
+            }}
+            onMouseEnter={() => setHover({ id: 3, status: true })}
+            onMouseLeave={() => setHover({ id: 3, status: false })}
+            onClick={(e) => {
+                navigation('/user/orders')
+            }}
+        >
 
-        <span>Zamówienia</span>
-      </div>
-      {/* <div
-        className='row'
-        style={{
-          marginTop: '5%',
-          cursor: 'pointer',
-          textDecoration: hover.id === 4 && hover.status ? 'underline' : ''
-        }}
-        onMouseEnter={() => setHover({ id: 4, status: true })}
-        onMouseLeave={() => setHover({ id: 4, status: false })}
-        onClick={(e) => {
-          navigation('/user/addresses')
-        }}
-      >
+            <span>Zamówienia</span>
+        </div>
+        <div
+            className='row'
+            style={{
+                marginTop: '5%',
+                cursor: 'pointer',
+                textDecoration: hover.id === 4 && hover.status ? 'underline' : ''
+            }}
+            onMouseEnter={() => setHover({ id: 4, status: true })}
+            onMouseLeave={() => setHover({ id: 4, status: false })}
+            onClick={(e) => {
+                navigation('/user/addresses')
+            }}
+        >
 
-        <span>Adresy</span>
-      </div> */}
-      <div
-        className='row'
-        style={{
-          marginTop: '5%',
-          cursor: 'pointer',
-          textDecoration: hover.id === 5 && hover.status ? 'underline' : ''
-        }}
-        onMouseEnter={() => setHover({ id: 5, status: true })}
-        onMouseLeave={() => setHover({ id: 5, status: false })}
-        onClick={(e) => {
-          navigation('/user/favorites')
-        }}
-      >
-        <span>Lista życzeń</span>
-      </div>
+            <span>Adresy</span>
+        </div>
+        <div
+            className='row'
+            style={{
+                marginTop: '5%',
+                cursor: 'pointer',
+                textDecoration: hover.id === 5 && hover.status ? 'underline' : ''
+            }}
+            onMouseEnter={() => setHover({ id: 5, status: true })}
+            onMouseLeave={() => setHover({ id: 5, status: false })}
+            onClick={(e) => {
+                navigation('/user/favorites')
+            }}
+        >
+            <span>Lista życzeń</span>
+        </div>
     </div>
-  )
+)
 
 
   const divider = (
@@ -280,6 +281,8 @@ const UserOrdersList = (props) => {
                 <span>{`Order ID - ${order?.orderId}`}</span>
                 <Button label="Zobacz zamowenie" className="p-button-text" style={{
                   color:'black', fontSize:'20px'
+                }} onClick={()=>{
+                  navigation(`/user/order/${order?.id}`)
                 }}/>
               </div>
             }

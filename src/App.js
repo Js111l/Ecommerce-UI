@@ -24,6 +24,7 @@ import PaymentConfirmedContainer from './containers/payment/PaymentConfirmedCont
 import { AuthProvider, useAuth } from './containers/auth/AuthContext';
 import AuthService from './services/AuthService';
 import NewsLetterComponent from './components/NewsLetterComponent';
+import UserOrderDetails from './containers/UserOrderDetails';
 
 function App() {
   const [loading, setLoading] = useState(false);
@@ -178,6 +179,15 @@ function App() {
                   setMenuBar={setMenuBar}
                   setShowNewsletter={setShowNewsletter}
               />}
+            />
+         <Route path='/user/order/:id'
+              element={
+                <UserOrderDetails
+                  loading={loading}
+                  setLoading={setLoading}
+                  showMessage={showMessage}
+                  setMenuBar={setMenuBar}
+                />}
             />
             <Route path='/user/account'
               element={
