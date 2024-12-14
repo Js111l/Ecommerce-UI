@@ -52,18 +52,24 @@ const CheckoutContainer = (props) => {
             name: x.product.name,
             price: x.product.price,
             quantity: x.quantity,
-            imageUrl: '/jeans.jpg'
+            imageUrl: x.product.imageUrl
         }));
+        
         intentModel.amount = cart.totalPrice;
         intentModel.uuid = uuid
         intentModel.email = formData.email
+        intentModel.paymentMethod=''
+
+        intentModel.shippingAddress = `${formData.address},${formData.postalCode},${formData.city}`
+        intentModel.billingAddress = `${formData.address},${formData.postalCode},${formData.city}`
+                       
+
         const response = await service.getClientSecret(intentModel);
         return response
     }
 
 
 
-    
 
     const handleGoToPayment = async (event) => {
         event.preventDefault();
@@ -71,6 +77,7 @@ const CheckoutContainer = (props) => {
         const verifySession = async () => {
             props.setLoading(true);
             try {
+ 
                 const resp = await authService.isLoggedIn()
                 const json = await resp.json()
             } catch (err) {
@@ -91,7 +98,6 @@ const CheckoutContainer = (props) => {
             navigate(`/payment/${uuid}`) // w payment container secret bedzie wyslany z backendu, kluczem jest ten intentId. Autoryzacja operacji tym 1-razowym tokenem.
         } catch (error) {
             props.setLoading(false);
-            console.log(error);
         }
     };
 

@@ -2,13 +2,14 @@ import React, { useEffect, useRef, useState } from 'react';
 import FinancialTransactionsService from '../services/FinancialTransactionsService';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
-import { useNavigate } from 'react-router-dom/dist/umd/react-router-dom.development';
+import { useNavigate, useParams } from 'react-router-dom/dist/umd/react-router-dom.development';
 import ProductCardContainer from './ProductCardContainer';
 import ProductService from '../services/ProductService';
 import AuthService from '../services/AuthService';
 import { v4 as uuidv4 } from 'uuid';
 import CheckoutService from '../services/CheckoutService';
 import { Card } from 'primereact/card';
+import moment from 'moment/moment';
 
 const UserOrderDetails = (props) => {
     const service = new FinancialTransactionsService();
@@ -30,6 +31,8 @@ const UserOrderDetails = (props) => {
     const checkoutService = new CheckoutService()
     const [cart, setCart] = useState(undefined)
     const [currency, setCurrency] = useState('zł')
+    const { id } = useParams();
+    const [element, setElement]=useState(undefined)
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -103,10 +106,16 @@ const UserOrderDetails = (props) => {
     const fetchData = async () => {
         props.setLoading(true)
         try {
+
+            const orderResponse = await service.getUserOrderDetails(id)
+            const details = await orderResponse//.json()
+
             const response = await productService.getCheckoutProducts();
             const json = await response.json();
 
             setCart(json);
+            setElement(details)
+
             props.setLoading(false);
         } catch (error) {
             props.setLoading(false)
@@ -141,16 +150,16 @@ const UserOrderDetails = (props) => {
                     }}>
                     <div className='col-md-2'>
                         <div className='row'>
-                            <span style={{ fontWeight: 'bold', fontSize: '20px' }}>Zamowienie 2903098709788</span>
+                            <span style={{ fontWeight: 'bold', fontSize: '20px' }}>{`Zamowienie ${element?.id}`}</span>
                             <label>Data zamówienia</label>
-                            <span>{'hiui'}</span>
+                            <span>{moment(element?.orderDate).format('YYYY-MM-DD')}</span>
                         </div>
                     </div>
                     <div className='col-md-2'>
                         <div className='row'>
                             <label>&nbsp;</label> 
                             <label>Metoda płatności</label>
-                            <span>{'k'}</span>
+                            <span>{element?.paymentMethod}</span>
                         </div>
                     </div>
                 </div>  
@@ -161,7 +170,7 @@ const UserOrderDetails = (props) => {
     const renderProductsList = () => {
         return <div className="col-md-4">
             <span style={{ fontWeight: 'bold', fontSize: '24px' }}>Zamówione produkty</span>
-            {cart?.products?.map((x, index) => {
+            {element?.products?.map((x, index) => {
                 return (
                     <div style={{
                         marginTop: index === 0 ? '0px' : '12px'
@@ -170,14 +179,14 @@ const UserOrderDetails = (props) => {
                             viewMode={'VIEW'}
                             refresh={fetchData}
                             element={{
-                                id: x.product.id,
-                                name: x.product.name,
-                                brand: x.product?.brand,
-                                color: '',
-                                price: x.product?.price,
+                                id: x.productId,
+                                name: x.name,
+                                // brand: x.product?.brand,
+                                // color: '',
+                                price: x?.price,
                                 quantity: x.quantity,
-                                size: '',
-                                imageUrl: x.product.imageUrl
+                                // size: '',
+                                imageUrl: x.imageUrl
                             }} />
                     </div>
                 )
@@ -208,7 +217,7 @@ const UserOrderDetails = (props) => {
                             <span>{'Wartość produktów: '}</span>
                             <span style={{
                                 marginLeft: 'auto'
-                            }}>{`${cart?.totalPrice} ${currency}`}</span>
+                            }}>{`${element?.totalPrice} ${currency}`}</span>
                         </div>
                         <div style={{
                             display: 'flex',
@@ -217,7 +226,7 @@ const UserOrderDetails = (props) => {
                             <span>{'Dostawa: '}</span>
                             <span style={{
                                 marginLeft: "auto"
-                            }}>{`${cart?.totalPrice} ${currency}`}</span>
+                            }}>{`${element?.totalPrice} ${currency}`}</span>
                         </div>
                         <div style={{
                             display: 'flex',
@@ -226,7 +235,7 @@ const UserOrderDetails = (props) => {
                             <span>{'Łącznie: '}</span>
                             <span style={{
                                 marginLeft: "auto"
-                            }}>{`${cart?.totalPrice} ${currency}`}</span>
+                            }}>{`${element?.totalPrice} ${currency}`}</span>
                         </div>
                     </div>
                 </div>
@@ -247,9 +256,7 @@ const UserOrderDetails = (props) => {
 
                     }}>Adres dostawy</span>
                     <div className='row'>
-                        <span>{'Jakub Świercz'}</span>
-                        <span>{'Barcin-Wieś 229/1'}</span>
-                        <span>{'88-190 Barcin-Wieś'}</span>
+                        <span>{element?.shippingAddress}</span>
                     </div>
                 </div>
                 <div className='col-md-2'>
@@ -258,10 +265,7 @@ const UserOrderDetails = (props) => {
                         fontWeight: 'bold'
                     }}>Adres do rachunku</span>
                     <div className='row'>
-                        <label>Adres do rachunku</label>
-                        <span>{'Jakub Świercz'}</span>
-                        <span>{'Barcin-Wieś 229/1'}</span>
-                        <span>{'88-190 Barcin-Wieś'}</span>
+                        <span>{element?.billingAddress}</span>
                     </div>
                 </div>
             </div>

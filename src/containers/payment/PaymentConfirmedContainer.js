@@ -83,7 +83,9 @@ const PaymentConfirmedContainer = (props) => {
                     <Button style={{
                         width: "400px",
                         textAlign: 'center'
-                    }} label='SPRAWDŹ SZCZEGÓŁY' />
+                    }} onClick={()=>{
+                        navigate(`/user/order/${orderId}`)
+                    }}label='SPRAWDŹ SZCZEGÓŁY' />
                 </div>
                 <div style={{
                     display: 'flex',

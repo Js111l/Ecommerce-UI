@@ -216,7 +216,7 @@ const UserOrdersList = (props) => {
 
             <span>Zamówienia</span>
         </div>
-        <div
+        {/* <div
             className='row'
             style={{
                 marginTop: '5%',
@@ -231,7 +231,7 @@ const UserOrdersList = (props) => {
         >
 
             <span>Adresy</span>
-        </div>
+        </div> */}
         <div
             className='row'
             style={{
@@ -282,7 +282,7 @@ const UserOrdersList = (props) => {
                 <Button label="Zobacz zamowenie" className="p-button-text" style={{
                   color:'black', fontSize:'20px'
                 }} onClick={()=>{
-                  navigation(`/user/order/${order?.id}`)
+                  navigation(`/user/order/${order?.orderId}`)
                 }}/>
               </div>
             }
