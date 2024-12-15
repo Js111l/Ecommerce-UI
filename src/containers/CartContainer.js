@@ -3,10 +3,10 @@ import { Button } from 'primereact/button';
 import { useNavigate } from 'react-router-dom/dist/umd/react-router-dom.development';
 import ProductCardContainer from './ProductCardContainer';
 import ProductService from '../services/ProductService';
-import { Checkbox } from 'primereact/checkbox';
-import { Dropdown } from 'primereact/dropdown';
 import { useAuth } from './auth/AuthContext';
 import CheckoutService from '../services/CheckoutService';
+import { t } from 'i18next';
+
 
 const CartContainer = (props) => {
     const navigate = useNavigate()
@@ -83,7 +83,7 @@ const CartContainer = (props) => {
                         <span style={{
                             fontWeight: 'bold',
                             fontSize: '26px'
-                        }}>Koszyk</span>
+                        }}>{t('cart.header')}</span>
                         {/* <div
                             style={{
                                 width: '100%',
@@ -182,7 +182,7 @@ const CartContainer = (props) => {
                                         marginTop: '5%',
                                         paddingLeft: '5%'
                                     }}
-                                >Wartość produktów
+                                >{t('cart.products-total')}
                                 </span>
                                 <span
                                     style={{
@@ -202,7 +202,7 @@ const CartContainer = (props) => {
                                         marginTop: '5%',
                                         paddingLeft: '5%'
                                     }}
-                                >Dostawa
+                                >{t('cart.shipping')}
                                 </span>
                                 <span
                                     style={{
@@ -224,7 +224,7 @@ const CartContainer = (props) => {
                                         fontWeight: 'bold',
                                         fontSize: '20px'
                                     }}
-                                >Do zapłaty
+                                >{t('cart.total')}
                                 </span>
                                 <span
                                     style={{
@@ -249,7 +249,7 @@ const CartContainer = (props) => {
                                     onClick={(e) => {
                                         navigate('/checkout')
                                     }}
-                                >Przejdź do kasy</Button>
+                                >{t('cart.go-to-checkout')}</Button>
                             </div>
                         </div>
                     </div>
@@ -271,14 +271,14 @@ const CartContainer = (props) => {
                     marginTop: '2%',
                     fontWeight: 'bold',
                     fontSize: '25px'
-                }}>Twój koszyk jest pusty!</span>
+                }}>{t('cart.empty-basket')}</span>
                 {!isLoggedIn ?
                     <Button
                         style={{
                             width: '10%',
                             marginTop: '1%'
                         }}
-                        label='Zaloguj sie'
+                        label={t('cart.login')}
                         onClick={()=>{
                             navigate('/login')
                         }}

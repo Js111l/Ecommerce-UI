@@ -7,6 +7,7 @@ import { useParams } from "react-router-dom";
 import AuthService from "../services/AuthService";
 import ProductService from "../services/ProductService";
 import CloseIcon from "@mui/icons-material/Close";
+import { useTranslation, i18n } from "react-i18next";
 
 const ProductDetailsContainer = (props) => {
     const [register, setRegister] = useState(false);
@@ -21,7 +22,7 @@ const ProductDetailsContainer = (props) => {
     const galleria = useRef(null);
     const [fullScreen, setFullScreenMode] = useState(false);
     const [isZoomed, setZoomed] = useState(false)
-
+    const { t } = useTranslation();
 
     const fetchProduct = async () => {
         props.setLoading(true);
@@ -30,7 +31,6 @@ const ProductDetailsContainer = (props) => {
             const json = await response.json();
             setProduct(json);
             //TODO
-            console.log(json,2137)
             const images = json.imageUrls?.map((url) => ({
                 itemImageSrc: url,
                 thumbnailImageSrc: url,
@@ -219,7 +219,8 @@ const ProductDetailsContainer = (props) => {
                         ></Dropdown>
                     </div>
                     <div className="row">
-                        <label>KOLOR: Czarny</label>
+                        <label>KOLOR: Czarny</label> 
+                        {/* //TODO */}
                         <div
                             className="col"
                             style={{ display: "flex", justifyContent: "start" }}

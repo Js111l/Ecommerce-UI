@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom/dist/umd/react-router-dom.developm
 import ProductService from '../../services/ProductService';
 import { Paginator } from 'primereact/paginator';
 import { Card } from 'primereact/card';
+import { t } from 'i18next';
 
 
 
@@ -172,6 +173,7 @@ const UserReturnsContainers = (props) => {
     };
 
 
+
     const sidebar = (
         <div className='col-md-2'>
             <div
@@ -187,9 +189,9 @@ const UserReturnsContainers = (props) => {
                     navigation('/user/account')
                 }}
             >
-                <span>Moje dane</span>
+                <span>{t('user.my-data')}</span>
             </div>
-            <div
+            {/* <div
                 className='row'
                 style={{
                     marginTop: '5%',
@@ -219,7 +221,7 @@ const UserReturnsContainers = (props) => {
             >
 
                 <span>Wykonaj zwrot</span>
-            </div>
+            </div> */}
             <div
                 className='row'
                 style={{
@@ -234,9 +236,9 @@ const UserReturnsContainers = (props) => {
                 }}
             >
 
-                <span>Zamówienia</span>
+                <span>{t('user.orders')}</span>
             </div>
-            <div
+            {/* <div
                 className='row'
                 style={{
                     marginTop: '5%',
@@ -251,7 +253,7 @@ const UserReturnsContainers = (props) => {
             >
 
                 <span>Adresy</span>
-            </div>
+            </div> */}
             <div
                 className='row'
                 style={{
@@ -265,10 +267,11 @@ const UserReturnsContainers = (props) => {
                     navigation('/user/favorites')
                 }}
             >
-                <span>Lista życzeń</span>
+                <span>{t('user.wishlist')}</span>
             </div>
         </div>
     )
+
 
 
     const divider = (

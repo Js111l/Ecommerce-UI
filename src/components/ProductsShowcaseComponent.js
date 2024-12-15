@@ -11,6 +11,7 @@ import ProductService from '../services/ProductService';
 import { Card } from 'primereact/card';
 import NewsLetterComponent from './NewsLetterComponent';
 import { useAuth } from '../containers/auth/AuthContext';
+import { useTranslation, i18n } from 'react-i18next';
 
 
 const ProductsShowcaseComponent = (props) => {
@@ -22,7 +23,7 @@ const ProductsShowcaseComponent = (props) => {
   const service = new ProductService();
   const [hovered, setHovered] = useState({})
   const [bannerImgs, setBannerImgs]=useState([])
-
+  const { t } = useTranslation();
 
   useEffect(() => {
     const fetchBannerImgs= async ()=>{
@@ -189,14 +190,14 @@ const ProductsShowcaseComponent = (props) => {
               marginLeft: '100px',
             }}
           >
-            <span style={{ marginRight: '20px' }}>Bestsellery</span>
+            <span style={{ marginRight: '20px' }}>{t('products-toggle.bestseller')}</span>
             <Toggle
               defaultChecked={toggle}
               icons={false}
               onChange={() => {
                 setToggle(!toggle)
               }} />
-            <span style={{ marginLeft: '20px' }}>Nowości</span>
+            <span style={{ marginLeft: '20px' }}>{t('products-toggle.new')}</span>
           </div>
           <Carousel value={allProducts} numVisible={4} numScroll={3} responsiveOptions={responsiveOptions} itemTemplate={(x) => productTemplate(x, x.id)} />
         </div>

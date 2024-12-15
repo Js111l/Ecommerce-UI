@@ -6,52 +6,16 @@ import AuthService from "../services/AuthService";
 import { useNavigate } from "react-router-dom";
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { Card } from "primereact/card";
+import { useTranslation, i18n } from 'react-i18next';
+
 
 const NewsLetterComponent = (props) => {
   const [password, setPassword] = useState(undefined);
   const [login, setLogin] = useState(undefined);
+  const { t } = useTranslation();
 
   const service = new AuthService();
   const navigate=useNavigate();
-
- const loginUser = () => {
-  props.setLoading(true);
-    service
-      .login({
-        email: login,
-        password: password
-      }).then((response) => {
-          service.setToken(response);
-          props.setLoading(false);
-          props.showMessage('success','Pomyślnie zalogowano')
-          navigate('/');
-      }).catch((err) => {
-        props.setLoading(false);
-        //error message TODO
-        console.log(err);
-        props.showMessage('error','Wystapil blad poczas logowania '+err)
-      })
-  }
-  const registerUser = () => {
-    console.log(props)
-
-    props.setLoading(true);
-    service
-      .register({
-        email: login,
-        password: password
-      }).then((response) => {
-        service.setToken(response);
-        props.setLoading(false);
-        props.setRegister(false);
-        props.showMessage('success', 'Aby dokończyć proces rejestracji prosimy o kliknięcie w link aktywacyjny wysłany na podany adres e-mail', null, true)
-      }).catch((err) => {
-        props.setLoading(false);
-        //error message TODO
-        console.log(err);
-        props.showMessage('error', 'Wystapil blad poczas rejestracji ' + err)
-      })
-  }
 
     return (
         <Card
@@ -65,13 +29,14 @@ const NewsLetterComponent = (props) => {
                     fontWeight: 'bold',
                     fontSize: '20px',
                     textAlign:'center'
-                }}>Nie przegap niczego!</span>
+                }}>{t('newsletter.header')}</span>
                 <span style={{
                     fontWeight: 'bold',
                     textAlign:'center',
                     marginTop:'3%',
                     marginBottom:'3%'
-                }}>Zapisz się do newslettera i otrzymuj ekskluzywne oferty oraz 10% rabatu!
+                }}>
+                    {t('newsletter.message')}
                 </span>
             </div>
             <div className="options" style={{
@@ -90,7 +55,7 @@ const NewsLetterComponent = (props) => {
                         //onChange={() => setSelected('female')}
                     />
                     <span className="radio-button"></span>
-                    Dla kobiet
+                    {t('newsletter.female')}
                 </label>
                 <label className="option">
                     <input
@@ -102,7 +67,7 @@ const NewsLetterComponent = (props) => {
                         //onChange={() => setSelected('male')}
                     />
                     <span className="radio-button"></span>
-                    Dla mężczyzn
+                    {t('newsletter.male')}
                 </label>
             </div>
 
@@ -128,7 +93,7 @@ const NewsLetterComponent = (props) => {
                 marginTop:'3%'
             }}>
                 <Button>
-                    <span>Zapisz sie</span>
+                    <span>{t('newsletter.save')}</span>
                 </Button>
             </div>
         </Card>

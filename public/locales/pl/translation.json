@@ -1,0 +1,137 @@
+{
+  "global": {
+    "summary": "Podsumowanie",
+    "firstName": "Imię *",
+    "lastName": "Nazwisko *",
+    "address": "Adres *",
+    "number": "Numer *",
+    "postalCode": "Kod pocztowy *",
+    "city": "Miasto *",
+    "email": "Email *",
+    "phone": "Telefon *",
+    "loading": "Proszę czekać, operacja w toku...",
+    "info": "Informacje",
+    "customer-service": "Obsługa klienta",
+    "about-us": "O nas",
+    "global.about-us-message" :"message",
+    "edit-button": "Edytuj"
+  },
+  "products-toggle": {
+    "bestseller": "Bestseller",
+    "new": "Nowości"
+  },
+  "newsletter": {
+    "header": "Nie przegap niczego!",
+    "message": "Zapisz się do newslettera i otrzymuj ekskluzywne oferty oraz 10% rabatu!",
+    "female": "Dla kobiet",
+    "male": "Dla mężczyzn",
+    "save": "Zapisz się"
+  },
+  "payment": {
+    "pay-button": "Zapłać"
+  },
+  "payment-confirm": {
+    "header": "Dziękujemy za zakupy!",
+    "order-success": "Twoje zamówienie o numerze {{orderId}} zostało pomyślnie złożone!",
+    "message": "Wkrótce otrzymasz wiadomość e-mail z potwierdzeniem oraz wszelkimi szczegółami dotyczącymi zamówienia. W razie potrzeby możesz sprawdzić status swojego zamówienia na swoim koncie w zakładce Zamówienia. ",
+    "order-details-button-label": "SPRAWDŹ SZCZEGÓŁY",
+    "main-page-redirect-label": "Przejdź do strony głównej",
+    "footer-message": "Dziękujemy, że nam zaufałeś! Jeśli masz jakiekolwiek pytania dotyczące zamówienia, prosimy o kontakt z naszym Biurem Obsługi Klienta. Mamy nadzieję, że nasz produkt spełni Twoje oczekiwania i umili Ci czas!"
+  },
+  "user": {
+    "my-data": "Moje dane",
+    "returns": "Zwroty",
+    "init-return": "Wykonaj zwrot",
+    "orders": "Zamówienia",
+    "addresses": "Adresy",
+    "wishlist": "Lista życzeń",
+    "name": "Imię i nazwisko",
+    "number": "Numer telefonu",
+    "email":"Email",
+    "password":" Hasło"
+  },
+  "cart": {
+    "total": "Do zapłaty",
+    "products-total": "Wartość produktów",
+    "shipping": "Dostawa",
+    "go-to-checkout": "Przejdź do kasy",
+    "empty-basket": "Twój koszyk jest pusty!",
+    "login": "Zaloguj się"
+  },
+  "checkout": {
+    "your-data": "Twoje dane",
+    "shipping-methods": "Metody dostawy",
+    "courier": "Kurier",
+    "personal": "Odbiór osobisty",
+    "pay": "Kupuje i płacę",
+    "products-total": "Wartość produktów",
+    "shipping": "Dostawa",
+    "total": "Do zapłaty"
+  },
+  "login": {
+    "title": "Logowanie",
+    "description": "Jeśli posiadasz już konto, zaloguj się przy użyciu adresu e-mail.",
+    "noAccount": "Nie masz konta?",
+    "registerWelcomeText": "Zarejestruj się i otrzymaj dostęp do wielu udogodnień!",
+    "registerBenefitsIntro": "Zarejestrowani użytkownicy mają dostęp do wielu udogodnień:",
+    "benefits": {
+      "discount": "15% rabatu na nowości przy pierwszych zakupach",
+      "loyaltyDiscounts": "Atrakcyjny system zniżek lojalnościowych",
+      "timeSaving": "Oszczędność czasu przy składaniu zamówień",
+      "orderHistory": "Historia zamówień",
+      "more": "I wiele więcej!"
+    },
+    "buttons": {
+      "register": "Załóż konto",
+      "continueAsGuest": "Kontynuuj jako gość"
+    }
+  },
+  "register": {
+    "title": "Rejestracja",
+    "description": "Wypełnij formularz, aby ukończyć proces rejestracji"
+  },
+  "menu": {
+    "cart": "Koszyk",
+    "favorites": "Ulubione",
+    "account": "Moje konto",
+    "orders": "Zamówienia",
+    "logout": "Wyloguj się",
+    "login": "Zaloguj się"
+},
+"not-found-page": {
+    "title": "Strona nieodnaleziona",
+    "message": "Przepraszamy, strona o takim adresie nie istnieje",
+    "goHome": "Przejdź do strony głównej"
+},
+"password-credentials": {
+  "emailLabel": "E-mail",
+  "passwordLabel": "Hasło",
+  "forgotPassword": "Nie pamiętasz hasła?",
+  "registerButton": "Zarejestruj",
+  "loginButton": "Zaloguj"
+},"product-card": {
+  "priceLabel": "Za sztukę",
+  "colorLabel": "Kolor",
+  "sizeLabel": "Rozmiar"
+},
+"product-list":{
+  "category": "Kategoria",
+  "apply": "Zastosuj",
+  "sort": "Sortuj",
+  "brand": "Marka",
+  "color": "Kolor",
+  "texture": "Faktura",
+  "style": "Fason",
+  "price": "Cena"
+},
+"account-menu": {
+  "clientAccount": "Konto klienta",
+  "wishlist": "Lista życzeń"
+},
+"footer-menu": {
+  "terms": "Regulamin",
+  "privacyPolicy": "Polityka prywatności",
+  "cookies": "Pliki cookies",
+  "faq": "FAQ"
+}
+}

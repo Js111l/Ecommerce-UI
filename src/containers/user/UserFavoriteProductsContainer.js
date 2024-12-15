@@ -4,6 +4,7 @@ import ProductService from '../../services/ProductService';
 import { Paginator } from 'primereact/paginator';
 import { Card } from 'primereact/card';
 import { useAuth } from '../auth/AuthContext';
+import { t } from 'i18next';
 
 
 const UserOrdersList = (props) => {
@@ -186,76 +187,104 @@ const UserOrdersList = (props) => {
   };
 
 
-  const sidebar = (
-    <div className='col-md-2'>
-      {isLoggedIn ? (
-        <>
-          <div
-            className="row"
-            style={{
-              marginTop: '5%',
-              cursor: 'pointer',
-              textDecoration: hover.id === 0 && hover.status ? 'underline' : ''
-            }}
-            onMouseEnter={() => setHover({ id: 0, status: true })}
-            onMouseLeave={() => setHover({ id: 0, status: false })}
-            onClick={() => {
-              navigation('/user/account');
-            }}
-          >
-            <span>Moje dane</span>
-          </div>
-          <div
-            className="row"
-            style={{
-              marginTop: '5%',
-              cursor: 'pointer',
-              textDecoration: hover.id === 3 && hover.status ? 'underline' : ''
-            }}
-            onMouseEnter={() => setHover({ id: 3, status: true })}
-            onMouseLeave={() => setHover({ id: 3, status: false })}
-            onClick={() => {
-              navigation('/user/orders');
-            }}
-          >
-            <span>Zamówienia</span>
-          </div>
-        </>
-      ) : null}
+    const sidebar = (
+        <div className='col-md-2'>
+            <div
+                className='row'
+                style={{
+                    marginTop: '5%',
+                    cursor: 'pointer',
+                    textDecoration: hover.id === 0 && hover.status ? 'underline' : ''
+                }}
+                onMouseEnter={() => setHover({ id: 0, status: true })}
+                onMouseLeave={() => setHover({ id: 0, status: false })}
+                onClick={(e) => {
+                    navigation('/user/account')
+                }}
+            >
+                <span>{t('user.my-data')}</span>
+            </div>
+            {/* <div
+                className='row'
+                style={{
+                    marginTop: '5%',
+                    cursor: 'pointer',
+                    textDecoration: hover.id === 1 && hover.status ? 'underline' : ''
+                }}
+                onMouseEnter={() => setHover({ id: 1, status: true })}
+                onMouseLeave={() => setHover({ id: 1, status: false })}
+                onClick={(e) => {
+                    navigation('/user/returns')
+                }}
+            >
+                <span>Zwroty</span>
+            </div>
+            <div
+                className='row'
+                style={{
+                    marginTop: '5%',
+                    cursor: 'pointer',
+                    textDecoration: hover.id === 2 && hover.status ? 'underline' : ''
+                }}
+                onMouseEnter={() => setHover({ id: 2, status: true })}
+                onMouseLeave={() => setHover({ id: 2, status: false })}
+                onClick={(e) => {
+                    navigation('/user/return-form')
+                }}
+            >
 
-      {/* <div
-        className='row'
-        style={{
-          marginTop: '5%',
-          cursor: 'pointer',
-          textDecoration: hover.id === 4 && hover.status ? 'underline' : ''
-        }}
-        onMouseEnter={() => setHover({ id: 4, status: true })}
-        onMouseLeave={() => setHover({ id: 4, status: false })}
-        onClick={(e) => {
-          navigation('/user/addresses')
-        }}
-      >
+                <span>Wykonaj zwrot</span>
+            </div> */}
+            <div
+                className='row'
+                style={{
+                    marginTop: '5%',
+                    cursor: 'pointer',
+                    textDecoration: hover.id === 3 && hover.status ? 'underline' : ''
+                }}
+                onMouseEnter={() => setHover({ id: 3, status: true })}
+                onMouseLeave={() => setHover({ id: 3, status: false })}
+                onClick={(e) => {
+                    navigation('/user/orders')
+                }}
+            >
 
-        <span>Adresy</span>
-      </div> */}
-      <div
-        className='row'
-        style={{
-          marginTop: '5%',
-          cursor: 'pointer',
-          textDecoration: hover.id === 5 && hover.status ? 'underline' : ''
-        }}
-        onMouseEnter={() => setHover({ id: 5, status: true })}
-        onMouseLeave={() => setHover({ id: 5, status: false })}
-        onClick={(e) => {
-          navigation('/user/favorites')
-        }}
-      >
-        <span>Lista życzeń</span>
-      </div>
-    </div>
-  )
+                <span>{t('user.orders')}</span>
+            </div>
+            {/* <div
+                className='row'
+                style={{
+                    marginTop: '5%',
+                    cursor: 'pointer',
+                    textDecoration: hover.id === 4 && hover.status ? 'underline' : ''
+                }}
+                onMouseEnter={() => setHover({ id: 4, status: true })}
+                onMouseLeave={() => setHover({ id: 4, status: false })}
+                onClick={(e) => {
+                    navigation('/user/addresses')
+                }}
+            >
+
+                <span>Adresy</span>
+            </div> */}
+            <div
+                className='row'
+                style={{
+                    marginTop: '5%',
+                    cursor: 'pointer',
+                    textDecoration: hover.id === 5 && hover.status ? 'underline' : ''
+                }}
+                onMouseEnter={() => setHover({ id: 5, status: true })}
+                onMouseLeave={() => setHover({ id: 5, status: false })}
+                onClick={(e) => {
+                    navigation('/user/favorites')
+                }}
+            >
+                <span>{t('user.wishlist')}</span>
+            </div>
+        </div>
+    )
+
 
   const divider = (
     (

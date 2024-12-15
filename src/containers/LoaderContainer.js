@@ -1,7 +1,7 @@
 import { ColorRing } from "react-loader-spinner";
+import { t } from 'i18next';
 
 const LoaderContainer = ()=>{
-
 
     return (
         <div >
@@ -14,7 +14,7 @@ const LoaderContainer = ()=>{
             />
             <label
                 style={{ marginTop: '10px', width: '200px', display: 'block' }}>
-                Proszę czekać, operacja w toku...
+                {t('global.loading')}
             </label>
         </div>
     )

@@ -1,0 +1,138 @@
+{
+  "global": {
+    "summary": "Summary",
+    "firstName": "First Name *",
+    "lastName": "Last Name *",
+    "address": "Address *",
+    "number": "Number *",
+    "postalCode": "Postal Code *",
+    "city": "City *",
+    "email": "Email *",
+    "phone": "Phone *",
+    "loading": "Please wait, operation in progress...",
+    "info": "Information",
+    "customer-service": "Customer Service",
+    "about-us": "About Us",
+    "global.about-us-message": "message",
+    "edit-button": "Edit"
+  },
+  "products-toggle": {
+    "bestseller": "Bestseller",
+    "new": "New Arrivals"
+  },
+  "newsletter": {
+    "header": "Don't miss out!",
+    "message": "Sign up for the newsletter and get exclusive offers and a 10% discount!",
+    "female": "For Women",
+    "male": "For Men",
+    "save": "Sign Up"
+  },
+  "payment": {
+    "pay-button": "Pay"
+  },
+  "payment-confirm": {
+    "header": "Thank you for your purchase!",
+    "order-success": "Your order with number {{orderId}} has been successfully placed!",
+    "message": "You will soon receive an email confirmation with all the details about your order. If needed, you can check your order status in your account under Orders.",
+    "order-details-button-label": "CHECK DETAILS",
+    "main-page-redirect-label": "Go to Homepage",
+    "footer-message": "Thank you for trusting us! If you have any questions about your order, please contact our Customer Service. We hope our product meets your expectations and makes your time enjoyable!"
+  },
+  "user": {
+    "my-data": "My Data",
+    "returns": "Returns",
+    "init-return": "Make a Return",
+    "orders": "Orders",
+    "addresses": "Addresses",
+    "wishlist": "Wishlist",
+    "name": "Full Name",
+    "number": "Phone Number",
+    "email": "Email",
+    "password": "Password"
+  },
+  "cart": {
+    "total": "Total to Pay",
+    "products-total": "Products Total",
+    "shipping": "Shipping",
+    "go-to-checkout": "Go to Checkout",
+    "empty-basket": "Your cart is empty!",
+    "login": "Login"
+  },
+  "checkout": {
+    "your-data": "Your Data",
+    "shipping-methods": "Shipping Methods",
+    "courier": "Courier",
+    "personal": "Pick-up",
+    "pay": "Buy and Pay",
+    "products-total": "Products Total",
+    "shipping": "Shipping",
+    "total": "Total to Pay"
+  },
+  "login": {
+    "title": "Login",
+    "description": "If you already have an account, log in with your email address.",
+    "noAccount": "Don't have an account?",
+    "registerWelcomeText": "Sign up and get access to many benefits!",
+    "registerBenefitsIntro": "Registered users have access to many benefits:",
+    "benefits": {
+      "discount": "15% discount on new arrivals on your first purchase",
+      "loyaltyDiscounts": "Attractive loyalty discount system",
+      "timeSaving": "Time-saving when placing orders",
+      "orderHistory": "Order History",
+      "more": "And much more!"
+    },
+    "buttons": {
+      "register": "Create Account",
+      "continueAsGuest": "Continue as Guest"
+    }
+  },
+  "register": {
+    "title": "Register",
+    "description": "Fill out the form to complete the registration process"
+  },
+  "menu": {
+    "cart": "Cart",
+    "favorites": "Favorites",
+    "account": "My Account",
+    "orders": "Orders",
+    "logout": "Log out",
+    "login": "Login"
+  },
+  "not-found-page": {
+    "title": "Page Not Found",
+    "message": "Sorry, a page with that address doesn't exist",
+    "goHome": "Go to Homepage"
+  },
+  "password-credentials": {
+    "emailLabel": "Email",
+    "passwordLabel": "Password",
+    "forgotPassword": "Forgot password?",
+    "registerButton": "Register",
+    "loginButton": "Login"
+  },
+  "product-card": {
+    "priceLabel": "Per Item",
+    "colorLabel": "Color",
+    "sizeLabel": "Size"
+  },
+  "product-list": {
+    "category": "Category",
+    "apply": "Apply",
+    "sort": "Sort",
+    "brand": "Brand",
+    "color": "Color",
+    "texture": "Texture",
+    "style": "Style",
+    "price": "Price"
+  },
+  "account-menu": {
+    "clientAccount": "Client Account",
+    "wishlist": "Wishlist"
+  },
+  "footer-menu": {
+    "terms": "Terms and Conditions",
+    "privacyPolicy": "Privacy Policy",
+    "cookies": "Cookies",
+    "faq": "FAQ"
+  }
+}

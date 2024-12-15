@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom/dist/umd/react-router-dom.development';
 import AuthService from '../../services/AuthService';
 import { useAuth } from '../auth/AuthContext';
+import { t } from 'i18next';
 
 
 
@@ -44,7 +45,7 @@ const UserDetailsContainer = (props) => {
                     navigation('/user/account')
                 }}
             >
-                <span>Moje dane</span>
+                <span>{t('user.my-data')}</span>
             </div>
             {/* <div
                 className='row'
@@ -91,7 +92,7 @@ const UserDetailsContainer = (props) => {
                 }}
             >
 
-                <span>Zamówienia</span>
+                <span>{t('user.orders')}</span>
             </div>
             {/* <div
                 className='row'
@@ -122,7 +123,7 @@ const UserDetailsContainer = (props) => {
                     navigation('/user/favorites')
                 }}
             >
-                <span>Lista życzeń</span>
+                <span>{t('user.wishlist')}</span>
             </div>
         </div>
     )
@@ -149,14 +150,14 @@ const UserDetailsContainer = (props) => {
                 }}>
                 <div className='col-md-4'>
                     <div className='row'>
-                        <label>Imie i nazwisko</label>
+                        <label>{t('user.name')}</label>
                         <span>{userData?.firstName + ' ' + userData?.lastName}</span>
                     </div>
 
                 </div>
                 <div className='col-md-4'>
                     <div className='row'>
-                        <label>Numer telefonu</label>
+                        <label>{t('user.number')}</label>
                         <span>{userData?.phoneNumber}</span>
                     </div>
                 </div>
@@ -171,14 +172,14 @@ const UserDetailsContainer = (props) => {
             }}>
                 <div className='col-md-4'>
                     <div className='row'>
-                        <label>Email</label>
+                        <label>{t('user.email')}</label>
                         <span>{userData?.email}</span>
                     </div>
                 </div>
                 <Button style={{
                     marginLeft: 'auto'
                 }}>
-                    Edytuj
+                    {t('global.edit-button')}
                 </Button>
             </div>
             {divider}
@@ -189,14 +190,14 @@ const UserDetailsContainer = (props) => {
             }}>
                 <div className='col-md-4'>
                     <div className='row'>
-                        <label>Hasło</label>
+                        <label>{t('user.password')}</label>
                         <span>********</span>
                     </div>
                 </div>
                 <Button style={{
                     marginLeft: 'auto'
                 }}>
-                    Edytuj
+                    {t('global.edit-button')}
                 </Button>
             </div>
             {divider}

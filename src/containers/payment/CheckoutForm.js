@@ -1,16 +1,10 @@
-import { popoverClasses } from '@mui/material';
 import {useStripe, useElements, PaymentElement} from '@stripe/react-stripe-js';
-import { useEffect, useState } from 'react';
-import FinancialTransactionsService from '../../services/FinancialTransactionsService';
-import { InputText } from 'primereact/inputtext';
-import { Card } from 'primereact/card';
-import ProductCardContainer from '../ProductCardContainer';
+import { useTranslation, i18n } from 'react-i18next';
 
 const CheckoutForm = (props) => {
   const stripe = useStripe();
   const elements = useElements();
-  const service = new FinancialTransactionsService();
-  const cart = useState(1308)
+  const { t } = useTranslation();
   
   const handleSubmit = async (event) => {
     // We don't want to let default form submission happen here,
@@ -52,7 +46,7 @@ const CheckoutForm = (props) => {
       <PaymentElement
       />
       <button type="submit" disabled={!stripe} style={{ marginTop: '20px', padding: '12px', width: '100%', backgroundColor: '#6772e5', color: '#fff', borderRadius: '6px', cursor: 'pointer' }}>
-        {`Zapłać ${cart[0].totalPrice}`}
+        {t('payment.pay-button')}
       </button>
     </form>
   );

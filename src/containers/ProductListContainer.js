@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom/dist/umd/react-router-dom.developm
 import EnumService from "../services/EnumService";
 import { Button } from "primereact/button";
 import { TreeSelect } from 'primereact/treeselect';
+import { t } from "i18next";
 
 const CategoryListContainer = (props) => {
   const [loading, setLoading] = useState(true);
@@ -211,7 +212,7 @@ const CategoryListContainer = (props) => {
               marginRight: "20px",
             }}
             valueTemplate={(e)=>{
-              return `Kategoria (2)`
+              return `Kategoria (2)` //TODO
             }}
             onChange={(e) => {
               setCategoriesSelected(e.value)
@@ -221,14 +222,14 @@ const CategoryListContainer = (props) => {
             className="md:w-20rem w-full"
             selectionMode="checkbox"
             display="chip"
-            placeholder="Kategoria"
+            placeholder={t('product-list.category')}
             panelFooterTemplate={(e) => {
               return (
                 <Button style={{
                   width: '100%',
                   textAlign: 'center',
                 }}
-                  label="Zastosuj"
+                  label={t('product-list.apply')}
                   onClick={(e) => {
                     let ids = []
                     Object.keys(categoriesSelected).forEach(key => {
@@ -248,7 +249,7 @@ const CategoryListContainer = (props) => {
             >
           </TreeSelect>
           <Dropdown
-            placeholder="Sortuj"
+            placeholder={t('product-list.sort')}
             value={criteria.sortType}
             options={sortTypeOptions}
             onChange={(e) => {
@@ -262,7 +263,7 @@ const CategoryListContainer = (props) => {
             }}
           ></Dropdown>
           <Dropdown
-            placeholder="Marka"
+            placeholder={t('product-list.brand')}
             value={criteria.sortType}
             options={brandOtions}
             style={{
@@ -271,7 +272,7 @@ const CategoryListContainer = (props) => {
             }}
           ></Dropdown>
           <Dropdown
-            placeholder="Kolor"
+            placeholder={t('product-list.color')}
             value={criteria.sortType}
             options={colorsOptions}
             style={{
@@ -282,7 +283,7 @@ const CategoryListContainer = (props) => {
         </div>
         <div className="row" style={{ marginLeft: "15%", marginTop: "1%" }}>
           <Dropdown
-            placeholder="Faktura"
+            placeholder={t('product-list.texture')}
             value={criteria.sortType}
             options={fabricOptions}
             style={{
@@ -291,13 +292,13 @@ const CategoryListContainer = (props) => {
             }}
           ></Dropdown>
           <Dropdown
-            placeholder="Cena"
+            placeholder={t('product-list.price')}
             style={{
               width: "20%",
               marginRight: "20px",
             }}
           ></Dropdown>
-          <Dropdown
+          {/* <Dropdown
             placeholder="Długość rękawa"
             value={criteria.sortType}
             options={sleeveLengthOptions}
@@ -305,9 +306,9 @@ const CategoryListContainer = (props) => {
               width: "20%",
               marginRight: "20px",
             }}
-          ></Dropdown>
+          ></Dropdown> */}
           <Dropdown
-            placeholder="Fason"
+            placeholder={t('product-list.style')}
             value={criteria.sortType}
             options={styleOptions}
             style={{
@@ -339,7 +340,6 @@ const CategoryListContainer = (props) => {
             <Card
                 className="col-md-4"
                 style={{
-                  //width: "600px",
                 }}
                 onClick={(e) => {
                   navigation(`/product/details/${product?.id}`)
@@ -347,7 +347,7 @@ const CategoryListContainer = (props) => {
               >
                 <div
                   style={{
-                    minHeight: '500px',   // Set the minimum height
+                    minHeight: '500px',   
                     height: '100%'     
                   }}
                 >

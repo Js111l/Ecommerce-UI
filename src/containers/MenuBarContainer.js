@@ -5,51 +5,52 @@ import { Badge } from 'primereact/badge'
 import ProductService from "../services/ProductService";
 import AuthService from "../services/AuthService";
 import { useAuth } from "./auth/AuthContext";
+import { t } from "i18next";
 
 const MenuBarContainer = (props) => {
   const navigation = useNavigate();
   const [active, setActive] = useState(false);
 
   const [checkoutCount, setCheckoutCount] = useState(0);
-  const [parentCategories, setCategories] = useState([])
+  const [parentCategories, setCategories] = useState([]);
 
-  const [hovered,setHovered]=useState({})
-  const service = new ProductService()
-  const authService = new AuthService()
-  const productService = new ProductService()
+  const [hovered, setHovered] = useState({});
+  const service = new ProductService();
+  const authService = new AuthService();
+  const productService = new ProductService();
   const [loadData, setLoadData] = useState(true);
   const { isLoggedIn } = useAuth();
-    const { login } = useAuth();
-    const { logout } = useAuth()
-  
-  const fetchCheckoutCount = async () => {
+  const { login } = useAuth();
+  const { logout } = useAuth();
 
+  const fetchCheckoutCount = async () => {
     const verifySession = async () => {
       try {
-        const resp = await authService.isLoggedIn()
-        const json = await resp.json()
+        const resp = await authService.isLoggedIn();
+        const json = await resp.json();
 
-        if (json.loggedIn) { //jesli user zalogowany
-          login() //ustaw w context ze jest zalogowany
+        if (json.loggedIn) {
+          //jesli user zalogowany
+          login(); //ustaw w context ze jest zalogowany
         } else {
-          logout() //ustaw w context ze nie jest zalogowany
+          logout(); //ustaw w context ze nie jest zalogowany
         }
       } catch (err) {
-        logout()
+        logout();
       }
-    }
-  
+    };
+
     try {
       const categories = await productService.getParentCategories();
       const categoriesJson = await categories.json();
 
-      setCategories(categoriesJson)
+      setCategories(categoriesJson);
 
       const response = await service.getCheckoutCount();
-      const json = await response.json()
+      const json = await response.json();
 
       props.setLoading(true);
-      verifySession()
+      verifySession();
       setCheckoutCount(json.quantity);
 
       props.setLoading(false);
@@ -62,127 +63,110 @@ const MenuBarContainer = (props) => {
     fetchCheckoutCount();
   }, []);
 
-
   const menuBarOnClickFunction = (path) => {
     navigation("/" + path);
   };
   const op = useRef(null);
 
-
   const updateCount = async () => {
     try {
       const response = await service.getCheckoutCount();
-      const json = await response.json()
+      const json = await response.json();
       setCheckoutCount(json.quantity);
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   const items = [
     {
       command: () => menuBarOnClickFunction("cart"),
-      className: 'cart',
+      className: "cart",
       template: (item, options) => (
         <div
           className={options.className}
           onMouseEnter={() => {
-            updateCount()
-          }
-          }
+            updateCount();
+          }}
         >
-          <> <i className="pi pi-fw pi-shopping-cart" />
+          <>
+            {" "}
+            <i className="pi pi-fw pi-shopping-cart" />
             <Badge value={checkoutCount} severity="warning" />
           </>
         </div>
-      )
+      ),
     },
     {
       icon: "pi pi-fw pi-heart",
-       command: () => menuBarOnClickFunction('user/favorites')
+      command: () => menuBarOnClickFunction("user/favorites"),
     },
     {
       icon: "pi pi-fw pi-user",
-      
-      items: isLoggedIn ? 
-      [
-        {
-          label: "Moje konto", //TODO -> tlumaczenia
-          className: "reddy",
-          command: () => menuBarOnClickFunction("user/account"),
-        },
-        {
-          label: "Zamówienia", //TODO -> tlumaczenia
-          className: "reddy",
-          command: () => menuBarOnClickFunction("user/orders"),
-        },
-        // {
-        //   label: "Adresy", //TODO -> tlumaczenia
-        //   //className: "reddy",
-        //   command: () => menuBarOnClickFunction("user/addresses"),
-        // },
-        {
-          label: "Wyloguj sie", //TODO -> tlumaczenia
-          //className: "reddy",
-          command: () => {
-            authService.logout()
-            navigation("/");
-          },
-        },
-
-      ]
-      :
-      [
-        {
-          label: "Zaloguj sie", //TODO -> tlumaczenia
-          //className: "reddy",
-          command: () => menuBarOnClickFunction("login"),
-        },
-      ]
+      items: isLoggedIn
+        ? [
+            {
+              label: t("menu.account"),
+              className: "reddy",
+              command: () => menuBarOnClickFunction("user/account"),
+            },
+            {
+              label: t("menu.orders"),
+              className: "reddy",
+              command: () => menuBarOnClickFunction("user/orders"),
+            },
+            {
+              label: t("menu.logout"),
+              command: () => {
+                authService.logout();
+                navigation("/");
+              },
+            },
+          ]
+        : [
+            {
+              label: t("menu.login"),
+              command: () => menuBarOnClickFunction("login"),
+            },
+          ],
     },
-
   ];
-
 
   const start = () => {
     return (
-      <div className="row" style={{
-        display:'flex',
-        justifyContent:'center'
-      }}>
-        <div style={{
-          width:'fit-content'
-        }}>
-          {/* <span
-            // alt="logo"
-            // src="/logo.jpg"
-            // height="40"
-            // className="mr-2"
+      <div
+        className="row"
+        style={{
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
+        <div
+          style={{
+            width: "fit-content",
+          }}
+        >
+          <img
             style={{
-              fontWeight: '600',
-              fontSize: "30px",
-              color: 'black',
-              fontFamily: 'Roboto'
+              width: "50px",
+              height: "50px",
+              cursor: "pointer",
+              border: 'none',
+              padding:'none'
             }}
-          > */}
-            <img style={{
-              width: '50px',
-              height: '50px',
-              cursor: 'pointer'
-            }} src='/logo.jpg'
-              onClick={() => {
-                navigation("/");
-              }}></img>
-          {/* </span> */}
+            src="/logo.jpg"
+            onClick={() => {
+              navigation("/");
+            }}
+          ></img>
         </div>
-     
+
         <div
           style={{
             display: "flex",
             justifyContent: "center",
           }}
         >
-        
           {parentCategories.map((parent, index) => {
             return (
               <a
@@ -196,83 +180,99 @@ const MenuBarContainer = (props) => {
                     setActive([true, index]);
                   }}
                   style={{
-                    color:'black',
-
+                    color: "black",
                   }}
                 >
                   {parent.label}
                 </span>
-               {active[0] && active[1]===index  ? (
-              <div
-                style={{
-                  position: "absolute",
-                  paddingTop: "8px",
-                  width: "100vw",
-                  left: 0,
-                  zIndex: 10,
-                }}
-              >
-                <div
-                  onMouseLeave={(e) => {
-                    setActive([false, index]);
-                  }}
-                  style={{
-                    listStyleType: "none",
-                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-                    backgroundColor: "white",
-                  }}
-                >
+                {active[0] && active[1] === index ? (
+                  <div
+                    style={{
+                      position: "absolute",
+                      paddingTop: "8px",
+                      width: "100vw",
+                      left: 0,
+                      zIndex: 10,
+                    }}
+                  >
+                    <div
+                      onMouseLeave={(e) => {
+                        setActive([false, index]);
+                      }}
+                      style={{
+                        listStyleType: "none",
+                        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                        backgroundColor: "white",
+                      }}
+                    >
                       <div className="row">
-                        {Array.from({ length: Math.ceil(parent.firstLevelChildren.length / 3) }).map((_, colIndex) => (
+                        {Array.from({
+                          length: Math.ceil(
+                            parent.firstLevelChildren.length / 3
+                          ),
+                        }).map((_, colIndex) => (
                           <div className="col" key={colIndex}>
                             <ul>
-                              {parent.firstLevelChildren.slice(colIndex * 3, colIndex * 3 + 3).map((x, index) => (
-                                <div style={{
-                                  display: 'flex',
-                                  justifyContent: 'start',
-                                  alignItems: 'center',
-                                }}>
-                                  <i className="pi pi-angle-right" style={{ color: 'slateblue' }}></i>
-                                  <li
-                                    key={index}
-                                    style={{ 
-                                      padding: "8px 12px", 
-                                      color: 'black',
-                                      textDecoration: hovered.id === index && hovered.status
-                                      && hovered.colIndex === colIndex  ? 'underline' : 'none'
-                                    }}
-                                    onMouseEnter={(e)=>{
-                                      setHovered({
-                                        id: index,
-                                        colIndex: colIndex,
-                                        status: true
-                                      })
-                                    }}
-                                    onMouseLeave={(e)=>{
-                                      setHovered({
-                                        id: index,
-                                        colIndex: colIndex,
-                                        status: false
-                                      })
-                                    }}
-                                    onClick={(e) => {
-                                      navigation(`/category/list?categories=${x.id}`)
+                              {parent.firstLevelChildren
+                                .slice(colIndex * 3, colIndex * 3 + 3)
+                                .map((x, index) => (
+                                  <div
+                                    style={{
+                                      display: "flex",
+                                      justifyContent: "start",
+                                      alignItems: "center",
                                     }}
                                   >
-                                    {x.label}
-                                  </li>
-                                </div>
-                              ))}
+                                    <i
+                                      className="pi pi-angle-right"
+                                      style={{ color: "slateblue" }}
+                                    ></i>
+                                    <li
+                                      key={index}
+                                      style={{
+                                        padding: "8px 12px",
+                                        color: "black",
+                                        textDecoration:
+                                          hovered.id === index &&
+                                          hovered.status &&
+                                          hovered.colIndex === colIndex
+                                            ? "underline"
+                                            : "none",
+                                      }}
+                                      onMouseEnter={(e) => {
+                                        setHovered({
+                                          id: index,
+                                          colIndex: colIndex,
+                                          status: true,
+                                        });
+                                      }}
+                                      onMouseLeave={(e) => {
+                                        setHovered({
+                                          id: index,
+                                          colIndex: colIndex,
+                                          status: false,
+                                        });
+                                      }}
+                                      onClick={(e) => {
+                                        navigation(
+                                          `/category/list?categories=${x.id}`
+                                        );
+                                      }}
+                                    >
+                                      {x.label}
+                                    </li>
+                                  </div>
+                                ))}
                             </ul>
                           </div>
                         ))}
                       </div>
                     </div>
-              </div>
-                ) : null}   
+                  </div>
+                ) : null}
               </a>
-            )
-          })}         
+            );
+          })}
         </div>
       </div>
     );

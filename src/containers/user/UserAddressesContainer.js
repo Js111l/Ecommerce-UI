@@ -2,13 +2,15 @@ import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom/dist/umd/react-router-dom.development';
-
+import { useTranslation, i18n } from 'react-i18next';
 
 
 const UserAddressesContainer = (props) => {
 
     const [hover, setHover] = useState({})
     const navigation = useNavigate()
+    const { t } = useTranslation();
+    
     useEffect(() => {
 
         const fetchData = async () => { }
@@ -30,7 +32,7 @@ const UserAddressesContainer = (props) => {
                     navigation('/user/account')
                 }}
             >
-                <span>Moje dane</span>
+                <span>{t('user.my-data')}</span>
             </div>
             <div
                 className='row'
@@ -45,7 +47,7 @@ const UserAddressesContainer = (props) => {
                     navigation('/user/returns')
                 }}
             >
-                <span>Zwroty</span>
+                <span>{t('user.returns')}</span>
             </div>
             <div
                 className='row'
@@ -61,7 +63,7 @@ const UserAddressesContainer = (props) => {
                 }}
             >
 
-                <span>Wykonaj zwrot</span>
+                <span>{t('user.init-return')}</span>
             </div>
             <div
                 className='row'
@@ -77,7 +79,7 @@ const UserAddressesContainer = (props) => {
                 }}
             >
 
-                <span>Zamówienia</span>
+                <span>{t('user.orders')}</span>
             </div>
             <div
                 className='row'
@@ -93,7 +95,7 @@ const UserAddressesContainer = (props) => {
                 }}
             >
 
-                <span>Adresy</span>
+                <span>{t('user.addresses')}</span>
             </div>
             <div
                 className='row'
@@ -108,7 +110,7 @@ const UserAddressesContainer = (props) => {
                     navigation('/user/favorites')
                 }}
             >
-                <span>Lista życzeń</span>
+                <span>{t('user.wishlist')}</span>
             </div>
         </div>
     )
@@ -134,14 +136,14 @@ const UserAddressesContainer = (props) => {
                 }}>
                 <div className='col-md-4'>
                     <div className='row'>
-                        <label>Imie i nazwisko</label>
+                        <label>{t("user.name")}</label>
                         <span>Jakub Ś</span>
                     </div>
 
                 </div>
                 <div className='col-md-4'>
                     <div className='row'>
-                        <label>Numer telefonu</label>
+                        <label>{t('user.lastname')}</label>
                         <span>730163500</span>
                     </div>
                 </div>
@@ -159,14 +161,14 @@ const UserAddressesContainer = (props) => {
                 }}>
                 <div className='col-md-4'>
                     <div className='row'>
-                        <label>Imie i nazwisko</label>
+                        <label>{t('user.name')}</label>
                         <span>Jakub Ś</span>
                     </div>
 
                 </div>
                 <div className='col-md-4'>
                     <div className='row'>
-                        <label>Numer telefonu</label>
+                        <label>{t('user.number')}</label>
                         <span>730163500</span>
                     </div>
                 </div>
@@ -181,14 +183,14 @@ const UserAddressesContainer = (props) => {
             }}>
                 <div className='col-md-4'>
                     <div className='row'>
-                        <label>Email</label>
+                        <label>{t('user.email')}</label>
                         <span>jjakubs@wp.pl</span>
                     </div>
                 </div>
                 <Button style={{
                     marginLeft: 'auto'
                 }}>
-                    Edytuj
+                    {t('global.edit-button')}
                 </Button>
             </div>
             {divider}
@@ -199,14 +201,14 @@ const UserAddressesContainer = (props) => {
             }}>
                 <div className='col-md-4'>
                     <div className='row'>
-                        <label>Hasło</label>
+                        <label>{t('user.password')}</label>
                         <span>********</span>
                     </div>
                 </div>
                 <Button style={{
                     marginLeft: 'auto'
                 }}>
-                    Edytuj
+                    {t('global.edit-button')}
                 </Button>
             </div>
             {divider}
