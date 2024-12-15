@@ -210,3 +210,8 @@ hr.rounded {
   max-width: 200%;
   transition: transform 0.3s ease;
 }
+
+.error-message {
+  color: red;  
+  font-size: 14px;
+}

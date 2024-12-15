@@ -9,12 +9,13 @@ import AuthService from "../services/AuthService";
 import { v4 as uuidv4 } from "uuid";
 import CheckoutService from "../services/CheckoutService";
 import { useTranslation, i18n } from "react-i18next";
+import SimpleReactValidator from "simple-react-validator";
 
 const CheckoutContainer = (props) => {
   const service = new FinancialTransactionsService();
   const stepperRef = useRef(null);
   const [formData, setFormData] = useState({
-    firstName: "",
+    firstName: undefined,
     lastName: "",
     address: "",
     number: "",
@@ -30,8 +31,26 @@ const CheckoutContainer = (props) => {
   const checkoutService = new CheckoutService();
   const [cart, setCart] = useState(undefined);
 
+  SimpleReactValidator.addLocale('pl', {
+    required: 'Pole :attribute  jest wymagane '
+  });
+
+  const validator = useRef(
+    new SimpleReactValidator({
+      locale:'pl'
+    })
+  );//TODO dodac tez tlumaczenie pól!
+
+  const [formSubmitted, setFormSubmitted] = useState(false);
+  const [shippingMethod,setShippingMethod]=useState(undefined)
+  const [dataSubmitted, setDataSubmitted] = useState(false)
+  const [editFormData, setEditFormData]=useState(true);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    if (value && value.length >= 1) {
+      validator.current.hideMessageFor(name);
+    }
     setFormData({ ...formData, [name]: value });
   };
 
@@ -110,6 +129,16 @@ const CheckoutContainer = (props) => {
     return (value / 100).toFixed(2);
   };
 
+  const divider = (
+    <hr
+      style={{
+        marginTop: "3%",
+        marginBottom: "3%",
+      }}
+      class="solid"
+    ></hr>
+  );
+
   return (
     <div
       className="checkout-container card flex justify-content-center"
@@ -119,78 +148,234 @@ const CheckoutContainer = (props) => {
         justifyContent: "center",
       }}
     >
-      <div className="row" style={{ width: "100%" }}>
-        <div className="col-md-3">
+      <div className="row" >
+        <div className="col-md-3" style={{
+                transition: "width 0.5s ease", 
+                width: !editFormData ? "20%" : "", 
+        }}>
           <div className="login-description">{t("checkout.your-data")}</div>
-          <div className="column">
+          <div
+            className="column"
+            style={{
+              opacity: editFormData ? 1 : 0.5,
+            }}
+          >
             <InputText
               name="firstName"
               value={formData.firstName}
               placeholder={t("global.firstName")}
               onChange={handleInputChange}
-              style={{ width: "100%", marginBottom: "10px" }}
+              style={{ width: "100%" }}
+              disabled={!editFormData}
+              invalid={
+                formSubmitted && !validator.current.fieldValid("firstName")
+              }
             />
+            {validator.current.message(
+              "firstName",
+              formData.firstName,
+              "required",
+              {
+                className: "error-message",
+              }
+            )}
             <InputText
               name="lastName"
               value={formData.lastName}
               placeholder={t("global.lastName")}
               onChange={handleInputChange}
-              style={{ width: "100%", marginBottom: "10px" }}
+              style={{ width: "100%" }}
+              disabled={!editFormData}
+              invalid={
+                formSubmitted && !validator.current.fieldValid("lastName")
+              }
             />
-            <div style={{ display: "flex", marginBottom: "10px" }}>
-              <InputText
-                name="address"
-                value={formData.address}
-                placeholder={t("global.address")}
-                onChange={handleInputChange}
-                style={{ width: "70%", marginRight: "5px" }}
-              />
-              <InputText
-                name="number"
-                value={formData.number}
-                placeholder={t("global.number")}
-                onChange={handleInputChange}
-                style={{ width: "30%" }}
-              />
+            {validator.current.message(
+              "lastName",
+              formData.lastName,
+              "required",
+              {
+                className: "error-message",
+              }
+            )}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "start",
+                gap: "10px",
+                marginBottom: "5px",
+              }}
+            >
+              <div>
+                <InputText
+                  name="address"
+                  value={formData.address}
+                  placeholder={t("global.address")}
+                  onChange={handleInputChange}
+                  disabled={!editFormData}
+                  invalid={
+                    formSubmitted && !validator.current.fieldValid("address")
+                  }
+                />
+                {validator.current.message(
+                  "address",
+                  formData.address,
+                  "required",
+                  {
+                    className: "error-message",
+                  }
+                )}
+              </div>
+              <div>
+                <InputText
+                  name="number"
+                  value={formData.number}
+                  placeholder={t("global.number")}
+                  onChange={handleInputChange}
+                  style={{ width: "100%" }}
+                  disabled={!editFormData}
+                  invalid={
+                    formSubmitted && !validator.current.fieldValid("number")
+                  }
+                />
+                {validator.current.message(
+                  "number",
+                  formData.number,
+                  "required",
+                  {
+                    className: "error-message",
+                  }
+                )}
+              </div>
             </div>
-            <div style={{ display: "flex", marginBottom: "10px" }}>
-              <InputText
-                name="postalCode"
-                value={formData.postalCode}
-                placeholder={t("global.postalCode")}
-                onChange={handleInputChange}
-                style={{ width: "30%", marginRight: "5px" }}
-              />
-              <InputText
-                name="city"
-                value={formData.city}
-                placeholder={t("global.city")}
-                onChange={handleInputChange}
-                style={{ width: "70%" }}
-              />
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "start",
+                marginBottom: "5px",
+                gap: "10px",
+              }}
+            >
+              <div>
+                <InputText
+                  name="postalCode"
+                  value={formData.postalCode}
+                  placeholder={t("global.postalCode")}
+                  onChange={handleInputChange}
+                  disabled={!editFormData}
+                  invalid={
+                    formSubmitted && !validator.current.fieldValid("postalCode")
+                  }
+                />
+                {validator.current.message(
+                  "postalCode",
+                  formData.postalCode,
+                  "required",
+                  {
+                    className: "error-message",
+                  }
+                )}
+              </div>
+              <div
+                style={{
+                  width: "90%",
+                }}
+              >
+                <InputText
+                  name="city"
+                  value={formData.city}
+                  placeholder={t("global.city")}
+                  onChange={handleInputChange}
+                  disabled={!editFormData}
+                  style={{
+                    width: "100%",
+                  }}
+                  invalid={
+                    formSubmitted && !validator.current.fieldValid("city")
+                  }
+                />
+                {validator.current.message("city", formData.city, "required", {
+                  className: "error-message",
+                })}
+              </div>
             </div>
             <InputText
               name="email"
               value={formData.email}
               placeholder={t("global.email")}
               onChange={handleInputChange}
-              style={{ width: "100%", marginBottom: "10px" }}
+              disabled={!editFormData}
+              invalid={formSubmitted && !validator.current.fieldValid("email")}
             />
+            {validator.current.message("email", formData.email, "required", {
+              className: "error-message",
+            })}
             <InputText
               name="phone"
               value={formData.phone}
               placeholder={t("global.phone")}
               onChange={handleInputChange}
-              style={{ width: "100%", marginBottom: "10px" }}
+              style={{ width: "100%" }}
+              disabled={!editFormData}
+              invalid={formSubmitted && !validator.current.fieldValid("phone")}
             />
+            {validator.current.message("phone", formData.phone, "required", {
+              className: "error-message",
+            })}
+          </div>
+          <div
+            style={{
+              marginTop: "100%x",
+              marginLeft: "150%",
+            }}
+          >
+            {editFormData ? (
+              <Button
+                onClick={() => {
+                  if (validator.current.allValid()) {
+                    setDataSubmitted(true);
+                    setEditFormData(false);
+                  } else {
+                    validator.current.showMessages(true);
+                    setDataSubmitted(false);
+                    setFormSubmitted(true);
+                  }
+                }}
+                label="Dalej"
+              ></Button>
+            ) : (
+              <Button
+                style={{
+                  opacity: 1,
+                }}
+                onClick={() => {
+                  if (validator.current.allValid()) {
+                    setEditFormData(true);
+                  } else {
+                    validator.current.showMessages(true);
+                    setDataSubmitted(false);
+                    setFormSubmitted(true);
+                  }
+                }}
+                label="Edytuj"
+              ></Button>
+            )}
           </div>
         </div>
-        <div className="col-md-3">
+        <div className="col-md-3" style={{
+            transition: "width 0.5s ease", 
+            width: !editFormData ? "15%" : "", 
+        }}>
           <div className="login-description">
             {t("checkout.shipping-methods")}
           </div>
 
-          <div className="column">
+          <div
+            className="column"
+            style={{
+              opacity: editFormData ? 1 : 0.5,
+            }}
+          >
             <div
               className="row"
               style={{
@@ -210,14 +395,18 @@ const CheckoutContainer = (props) => {
               >
                 <input
                   type="radio"
-                  name="gender"
-                  value="female"
+                  name="shipping-method"
+                  value="COURIER"
                   className="custom-radio"
+                  disabled={!editFormData}
+                  style={{
+                    cursor: !editFormData ? "initial" : "pointer",
+                  }}
+                  onChange={(e) => setShippingMethod(e.target.value)}
                 />
                 <span className="radio-button">
-                  {t("checkout.courier", "14,99 zł")}
+                  {t("checkout.courier") + " 14,99 zł"} //TODO
                 </span>
-                //TODO
               </label>
               <label
                 className="option"
@@ -228,19 +417,41 @@ const CheckoutContainer = (props) => {
               >
                 <input
                   type="radio"
-                  name="gender"
-                  value="male"
+                  name="shipping-method"
+                  value="PERSONAL"
                   className="custom-radio"
-                  //checked={selected === 'male'}
-                  //onChange={() => setSelected('male')}
+                  disabled={!editFormData}
+                  style={{
+                    cursor: !editFormData ? "initial" : "pointer",
+                  }}
+                  onChange={(e) => setShippingMethod(e.target.value)}
                 />
                 <span className="radio-button">{t("checkout.personal")}</span>
               </label>
             </div>
           </div>
+          {validator.current.message(
+            "shipping-method",
+            shippingMethod,
+            "required",
+            {
+              className: "error-message",
+            }
+          )}
         </div>
-        <div className="col-md-3">
-          <span style={{ fontWeight: "bold", fontSize: "26px" }}>
+
+        <div
+          className="col-md-3"
+          style={{
+            opacity: editFormData ? 0.5 : 1,
+          }}
+        >
+          <span
+            style={{
+              fontWeight: "bold",
+              fontSize: "26px",
+            }}
+          >
             {t("global.summary")}
           </span>
           {cart?.products?.map((x, index) => {
@@ -271,7 +482,13 @@ const CheckoutContainer = (props) => {
 
         <div
           className="col-md-2"
-          style={{ backgroundColor: "#e8e8e8", padding: "20px" }}
+          style={{
+            backgroundColor: "#e8e8e8",
+            padding: "20px",
+            opacity: editFormData ? 0.5 : 1,
+            marginTop:'40px',
+            maxHeight: 'fit-content'
+          }}
         >
           <div style={{ marginBottom: "20px" }}>
             <div
@@ -284,6 +501,7 @@ const CheckoutContainer = (props) => {
               <span>{t("checkout.products-total")}</span>
               <span>{cart?.totalPrice}</span>
             </div>
+            {divider}
             <div
               style={{
                 display: "flex",
@@ -294,6 +512,7 @@ const CheckoutContainer = (props) => {
               <span>{t("checkout.shipping")}</span>
               <span>0,00 zł</span>
             </div>
+            {divider}
             <div
               style={{
                 display: "flex",
@@ -306,7 +525,7 @@ const CheckoutContainer = (props) => {
               <span>{cart?.totalPrice}</span>
             </div>
           </div>
-          <Button style={{ width: "100%" }} onClick={handleGoToPayment}>
+          <Button style={{ width: "100%", }} onClick={handleGoToPayment}>
             {t("checkout.pay")}
           </Button>
           <div
