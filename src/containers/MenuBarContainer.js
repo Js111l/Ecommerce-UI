@@ -6,6 +6,7 @@ import ProductService from "../services/ProductService";
 import AuthService from "../services/AuthService";
 import { useAuth } from "./auth/AuthContext";
 import { t } from "i18next";
+import { useTranslation } from "react-i18next";
 
 const MenuBarContainer = (props) => {
   const navigation = useNavigate();
@@ -22,7 +23,14 @@ const MenuBarContainer = (props) => {
   const { isLoggedIn } = useAuth();
   const { login } = useAuth();
   const { logout } = useAuth();
+  const { i18n } = useTranslation();
+  const [language, setLanguage] = useState(i18n.language);
 
+  const changeLanguage = (lng) => {
+    i18n.changeLanguage(lng);
+    setLanguage(lng);
+  };
+ 
   const fetchCheckoutCount = async () => {
     const verifySession = async () => {
       try {
@@ -79,6 +87,24 @@ const MenuBarContainer = (props) => {
   };
 
   const items = [
+    {
+      label: language,
+      items: [
+            {
+              label: 'pl',
+              command: () => {
+                changeLanguage('pl')
+              },
+            },
+            {
+              label: 'en',
+              command: () => {
+                changeLanguage('en')
+              },
+            },
+   
+          ]
+    },
     {
       command: () => menuBarOnClickFunction("cart"),
       className: "cart",
